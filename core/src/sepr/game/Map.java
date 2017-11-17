@@ -1,5 +1,8 @@
 package sepr.game;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import java.util.HashMap;
 
 /**
@@ -7,6 +10,12 @@ import java.util.HashMap;
  */
 public class Map {
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
+    private Texture map;
+
+    public Map() {
+        this.sectors = new HashMap<Integer, Sector>();
+        this.map = new Texture("map.jpg");
+    }
 
     /**
      * Checks to see if there is one player who controls every sector
@@ -37,6 +46,10 @@ public class Map {
     private int calculateReinforcementAmount(int playerId) {
 
         return 0;
+    }
+
+    public void render(SpriteBatch batch) {
+        batch.draw(map, 0, 0);
     }
 
 }

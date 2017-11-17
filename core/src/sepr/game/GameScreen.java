@@ -1,6 +1,11 @@
 package sepr.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.HashMap;
 
@@ -15,8 +20,11 @@ public class GameScreen implements Screen{
     private boolean turnTimerPaused;
     private int maxTurnTime;
     private int turnTimeElapsed;
-    private Integer[] turnOrder; // list of player ids in order of players turn;
+    private Integer[] turnOrder; // array of player ids in order of players' turns;
     private int currentPlayer; // index of current player
+
+    private SpriteBatch batch;
+    private OrthographicCamera camera;
 
     /**
      * Performs the game's initial setup
@@ -35,6 +43,9 @@ public class GameScreen implements Screen{
         this.turnTimeElapsed = 0;
         this.turnOrder = this.players.keySet().toArray(new Integer[0]);
         this.currentPlayer = 0;
+
+        this.batch = new SpriteBatch();
+        this.camera = new OrthographicCamera(1920, 1080);
 
         allocateSectors();
         playGame();
@@ -91,6 +102,23 @@ public class GameScreen implements Screen{
     @Override
     public void render(float delta) {
         //all game content to be drawn here
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            camera.translate(-Gdx.input.getDeltaX() * camera.zoom, Gdx.input.getDeltaY() * camera.zoom, 0);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+            camera.zoom -= 0.01;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.O)) {
+            camera.zoom += 0.01;
+        }
+
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        map.render(batch);
+        batch.end();
     }
 
     @Override
