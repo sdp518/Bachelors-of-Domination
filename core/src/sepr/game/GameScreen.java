@@ -3,9 +3,11 @@ package sepr.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.HashMap;
 
@@ -22,9 +24,11 @@ public class GameScreen implements Screen{
     private int turnTimeElapsed;
     private Integer[] turnOrder; // array of player ids in order of players' turns;
     private int currentPlayer; // index of current player
+    private Texture wheel;
 
     private SpriteBatch batch;
     private OrthographicCamera camera;
+    private Viewport viewport;
 
     /**
      * Performs the game's initial setup
@@ -44,8 +48,12 @@ public class GameScreen implements Screen{
         this.turnOrder = this.players.keySet().toArray(new Integer[0]);
         this.currentPlayer = 0;
 
+
+        this.wheel = Player.genAttackWheelTexture(30, 2, 1);
+
         this.batch = new SpriteBatch();
         this.camera = new OrthographicCamera(1920, 1080);
+        this.viewport = new ScreenViewport(this.camera);
 
         allocateSectors();
         playGame();
@@ -118,12 +126,15 @@ public class GameScreen implements Screen{
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         map.render(batch);
+        batch.draw(wheel, 400, 400);
         batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width, height);
+        camera.viewportWidth = width;
+        camera.viewportHeight = height;
     }
 
     @Override
