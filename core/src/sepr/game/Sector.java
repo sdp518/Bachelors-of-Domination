@@ -25,6 +25,6 @@ public class Sector {
      * @param amount number of units to change by, (can be negative to subtract units
      */
     public void addUnits(int amount) {
-
+        this.unitsInSector += amount;
     }
 }
