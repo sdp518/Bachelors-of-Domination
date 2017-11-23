@@ -32,8 +32,6 @@ public class Map {
     public Pixmap jamesPix1, jamesPix2, jamesPix3, jamesPix4;
     public Pixmap neutralPix1, neutralPix2, neutralPix3, neutralPix4, neutralPix5, neutralPix6;
 
-    Color test = new Color(0,0,0,0);
-
     public Map() {
         this.sectors = new HashMap<Integer, Sector>();
 
