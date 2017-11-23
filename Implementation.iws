@@ -1290,7 +1290,7 @@
       <workItem from="1511281953345" duration="1628000" />
       <workItem from="1511361403502" duration="7442000" />
       <workItem from="1511397353497" duration="4380000" />
-      <workItem from="1511455056829" duration="18868000" />
+      <workItem from="1511455056829" duration="18934000" />
     </task>
     <task id="LOCAL-00001" summary="Modified working directory, all assets should now be sourced from the core/assets">
       <created>1510743680262</created>
@@ -1355,11 +1355,18 @@
       <option name="project" value="LOCAL" />
       <updated>1511475464036</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="map rendering">
+      <created>1511475542875</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1511475542875</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33796000" />
+    <option name="totallyTimeSpent" value="33862000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
