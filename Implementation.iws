@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0ac49ec6-0c15-4c66-b89b-655b6bf8c695" name="Default" comment="map rendering">
+    <list default="true" id="0ac49ec6-0c15-4c66-b89b-655b6bf8c695" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Implementation.iws" afterPath="$PROJECT_DIR$/Implementation.iws" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -1290,7 +1290,7 @@
       <workItem from="1511281953345" duration="1628000" />
       <workItem from="1511361403502" duration="7442000" />
       <workItem from="1511397353497" duration="4380000" />
-      <workItem from="1511455056829" duration="18790000" />
+      <workItem from="1511455056829" duration="18868000" />
     </task>
     <task id="LOCAL-00001" summary="Modified working directory, all assets should now be sourced from the core/assets">
       <created>1510743680262</created>
@@ -1348,11 +1348,18 @@
       <option name="project" value="LOCAL" />
       <updated>1511475288854</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="map rendering">
+      <created>1511475464036</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1511475464036</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33718000" />
+    <option name="totallyTimeSpent" value="33796000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
