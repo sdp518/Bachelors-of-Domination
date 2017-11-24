@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -34,6 +35,7 @@ public class GameScreen implements Screen, InputProcessor{
     private Viewport viewport;
 
     Color test = new Color(0,0,0,0);
+    private HashMap<Integer, Pixmap> mapPix = new HashMap<Integer, Pixmap>();
 
     /**
      * Performs the game's initial setup
@@ -65,6 +67,7 @@ public class GameScreen implements Screen, InputProcessor{
 
         allocateSectors();
         playGame();
+        mapPix.put(1, map.hesEastPix1);
     }
 
 
@@ -215,12 +218,16 @@ public class GameScreen implements Screen, InputProcessor{
         int neutral5Pixel = map.neutralPix5.getPixel(screenX, screenY);
         int neutral6Pixel = map.neutralPix6.getPixel(screenX, screenY);
         if(hesEast1Pixel != -256){
+            map.changeSectorColor(0, "green");
             System.out.println("HIT HES1");
         } else if(hesEast2Pixel != -256) {
+            map.changeSectorColor(1, "green");
             System.out.println("HIT HES2");
         } else if(hesEast3Pixel !=-256) {
+            map.changeSectorColor(2, "green");
             System.out.println("HIT HES3");
         } else if(hesEast4Pixel != -256) {
+            map.changeSectorColor(3, "green");
             System.out.println("HIT HES4");
         } else if(halifax1Pixel != -256) {
             System.out.println("HIT HALIFAX1");
@@ -279,51 +286,6 @@ public class GameScreen implements Screen, InputProcessor{
         } else {
             System.out.println("MISS!");
         }
-
-        for (int x = 0; x < map.hesEastPix1.getWidth(); x++){
-            for (int y = 0; y < map.hesEastPix1.getHeight(); y++){
-                if(map.hesEastPix1.getPixel(x, y) != -256){
-                    Color.rgba8888ToColor(test, map.hesEastPix1.getPixel(x, y));
-                    test.add(0, -255, -255, 0);
-                    map.hesEastPix1.drawPixel(x, y, Color.rgba8888(test));
-                }
-            }
-        }
-        map.hesEast1 = new Texture(map.hesEastPix1);
-
-        for (int x = 0; x < map.hesEastPix2.getWidth(); x++){
-            for (int y = 0; y < map.hesEastPix2.getHeight(); y++){
-                if(map.hesEastPix2.getPixel(x, y) != -256){
-                    Color.rgba8888ToColor(test, map.hesEastPix2.getPixel(x, y));
-                    test.add(0, -255, -255, 0);
-                    map.hesEastPix2.drawPixel(x, y, Color.rgba8888(test));
-                }
-            }
-        }
-        map.hesEast2 = new Texture(map.hesEastPix2);
-
-        for (int x = 0; x < map.hesEastPix3.getWidth(); x++){
-            for (int y = 0; y < map.hesEastPix3.getHeight(); y++){
-                if(map.hesEastPix3.getPixel(x, y) != -256){
-                    Color.rgba8888ToColor(test, map.hesEastPix3.getPixel(x, y));
-                    test.add(0, -255, -255, 0);
-                    map.hesEastPix3.drawPixel(x, y, Color.rgba8888(test));
-                }
-            }
-        }
-        map.hesEast3 = new Texture(map.hesEastPix3);
-
-        for (int x = 0; x < map.hesEastPix4.getWidth(); x++){
-            for (int y = 0; y < map.hesEastPix4.getHeight(); y++){
-                if(map.hesEastPix4.getPixel(x, y) != -256){
-                    Color.rgba8888ToColor(test, map.hesEastPix4.getPixel(x, y));
-                    test.add(0, -255, -255, 0);
-                    map.hesEastPix4.drawPixel(x, y, Color.rgba8888(test));
-                }
-            }
-        }
-        map.hesEast4 = new Texture(map.hesEastPix4);
-
         return true;
     }
 

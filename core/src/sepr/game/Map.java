@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sun.xml.internal.ws.config.management.policy.ManagementPolicyValidator;
 
 import java.util.HashMap;
 
@@ -13,6 +14,10 @@ import java.util.HashMap;
  */
 public class Map {
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
+    private HashMap<Integer, Pixmap> mapPix;
+    private HashMap<Integer, Texture> mapText;
+    private HashMap<String, Color> mapColor;
+    private HashMap<Integer, String> mapImage;
 
     public Texture hesEast1, hesEast2, hesEast3, hesEast4;
     public Texture halifax1, halifax2, halifax3, halifax4;
@@ -22,6 +27,7 @@ public class Map {
     public Texture wentworth1, wentworth2;
     public Texture james1, james2, james3, james4;
     public Texture neutral1, neutral2, neutral3, neutral4, neutral5, neutral6;
+    public Texture lake1, lake2;
 
     public Pixmap hesEastPix1, hesEastPix2, hesEastPix3, hesEastPix4;
     public Pixmap halifaxPix1, halifaxPix2, halifaxPix3, halifaxPix4;
@@ -31,6 +37,11 @@ public class Map {
     public Pixmap wentworthPix1, wentworthPix2;
     public Pixmap jamesPix1, jamesPix2, jamesPix3, jamesPix4;
     public Pixmap neutralPix1, neutralPix2, neutralPix3, neutralPix4, neutralPix5, neutralPix6;
+
+    Color changeGreen = new Color(0.5f, 0, 1f, 0f);
+    Color changeBlue = new Color(0.8f, 0.5f, 0f, 0f);
+    Color changeWhite =  new Color(0,0,0,0);
+
 
     public Map() {
         this.sectors = new HashMap<Integer, Sector>();
@@ -105,6 +116,45 @@ public class Map {
         this.neutral4 = new Texture(neutralPix4);
         this.neutral5 = new Texture(neutralPix5);
         this.neutral6 = new Texture(neutralPix6);
+
+        this.lake1 = new Texture("lake1.png");
+        this.lake2 = new Texture("lake2.png");
+
+        mapPix = new HashMap<Integer, Pixmap>(){{
+            put(0, hesEastPix1); put(1, hesEastPix2); put(2, hesEastPix3); put(3, hesEastPix4);
+            put(4, halifaxPix1); put(5, halifaxPix2); put(6, halifaxPix3); put(7, halifaxPix4);
+            put(8, derwentPix1); put(9, derwentPix2); put(10, derwentPix3); put(11, derwentPix4);
+            put(12, alcuinPix1); put(13, alcuinPix2); put(14, alcuinPix3);
+            put(15, vanbrughPix1); put(16, vanbrughPix2); put(17, vanbrughPix3); put(18, vanbrughPix4);
+            put(19, wentworthPix1); put(20, wentworthPix2);
+            put(21, jamesPix1); put(22, jamesPix2); put(23, jamesPix3); put(24, jamesPix4);
+            put(25, neutralPix1); put(26, neutralPix2); put(27, neutralPix3); put(28, neutralPix4);put(29, neutralPix5); put(30, neutralPix6);
+        }};
+        mapText = new HashMap<Integer, Texture>(){{
+            put(0, hesEast1); put(1, hesEast2); put(2, hesEast3); put(3, hesEast4);
+            put(4, halifax1); put(5, halifax2); put(6, halifax3); put(7, halifax4);
+            put(8, derwent1); put(9, derwent2); put(10, derwent3); put(11, derwent4);
+            put(12, alcuin1); put(13, alcuin2); put(14, alcuin3);
+            put(15, vanbrugh1); put(16, vanbrugh2); put(17, vanbrugh3); put(18, vanbrugh4);
+            put(19, wentworth1); put(20, wentworth2);
+            put(21, james1); put(22, james2); put(23, james3); put(24, james4);
+            put(25, neutral1); put(26, neutral2); put(27, neutral3); put(28, neutral4);put(29, neutral5); put(30, neutral6);
+        }};
+        mapImage = new HashMap<Integer, String>(){{
+            put(0, "hesEast1.png"); put(1, "hesEast2.png"); put(2, "hesEast3.png"); put(3, "hesEast4.png");
+            put(4, "halifax1.png"); put(5, "halifax2.png"); put(6, "halifax3.png"); put(7, "halifax4.png");
+            put(8, "derwent1.png"); put(9, "derwent2.png"); put(10, "derwent3.png"); put(11, "derwent4.png");
+            put(12, "alcuin1.png"); put(13, "alcuin2.png"); put(14, "alcuin3.png");
+            put(15, "vanbrugh1.png"); put(16, "vanbrugh2.png"); put(17, "vanbrugh3.png"); put(18, "vanbrugh4.png");
+            put(19, "wentworth1.png"); put(20, "wentworth2.png");
+            put(21, "james1.png"); put(22, "james2.png"); put(23, "james3.png"); put(24, "james4.png");
+            put(25, "neutral1.png"); put(26, "neutral2.png"); put(27, "neutral3.png"); put(28, "neutral4.png");put(29, "neutral5.png"); put(30, "neutral6.png");
+        }};
+        mapColor = new HashMap<String, Color>(){{
+            put("blue", changeBlue);
+            put("green", changeGreen);
+            put("white", changeWhite);
+        }};
     }
 
     /**
@@ -178,7 +228,24 @@ public class Map {
         batch.draw(neutral5, 0, 0);
         batch.draw(neutral6, 0, 0);
 
+        batch.draw(lake1, 0, 0);
+        batch.draw(lake2, 0, 0);
+    }
 
+    public void changeSectorColor(int sectorRef, String newColor){
+        Color tempColor = new Color(0,0,0,0);
+        Pixmap temp = new Pixmap(Gdx.files.internal(mapImage.get(sectorRef)));
+        for (int x = 0; x < mapPix.get(sectorRef).getWidth(); x++){
+            for (int y = 0; y < mapPix.get(sectorRef).getHeight(); y++){
+                if(temp.getPixel(x, y) != -256){
+                    Color.rgba8888ToColor(tempColor, temp.getPixel(x, y));
+                    tempColor.sub(mapColor.get(newColor));
+                    temp.drawPixel(x, y, Color.rgba8888(tempColor));
+                }
+            }
+        }
+        mapText.get(sectorRef).draw(temp, 0, 0);
+        temp.dispose();
     }
 
 }
