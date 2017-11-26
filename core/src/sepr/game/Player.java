@@ -90,5 +90,4 @@ public abstract class Player {
 
         return wheel.getColorBufferTexture();
     }
-
 }

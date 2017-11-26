@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -111,6 +112,22 @@ public class GameScreen implements Screen, InputProcessor{
      */
     private void loadGameState(String gameState) {
 
+    }
+
+    /**
+     *
+     * @return returns the x position of the mouse with respect to the camera position and zoom
+     */
+    public float getMouseX() {
+        return camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)).x;
+    }
+
+    /**
+     *
+     * @return returns the y position of the mouse with respect to the camera position and zoom
+     */
+    public float getMouseY() {
+        return camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)).y;
     }
 
     @Override

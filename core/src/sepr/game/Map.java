@@ -179,12 +179,11 @@ public class Map {
     }
 
     /**
-     * calculates how many reinforcements the given player should receive based on the sectors they control
+     * calculates how many reinforcements the given player should receive based on the sectors they control by summing reinforcementsProvided for each Sector they control
      * @param playerId player who calculation is for
      * @return returns the amount of reinforcements the player should be allocated
      */
     private int calculateReinforcementAmount(int playerId) {
-
         return 0;
     }
 
