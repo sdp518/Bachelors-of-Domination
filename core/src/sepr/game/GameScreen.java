@@ -221,22 +221,26 @@ public class GameScreen implements Screen, InputProcessor{
             map.changeSectorColor(0, "green");
             System.out.println("HIT HES1");
         } else if(hesEast2Pixel != -256) {
-            map.changeSectorColor(1, "green");
+            map.changeSectorColor(1, "blue");
             System.out.println("HIT HES2");
         } else if(hesEast3Pixel !=-256) {
             map.changeSectorColor(2, "green");
             System.out.println("HIT HES3");
         } else if(hesEast4Pixel != -256) {
-            map.changeSectorColor(3, "green");
+            map.changeSectorColor(3, "blue");
             System.out.println("HIT HES4");
         } else if(halifax1Pixel != -256) {
             System.out.println("HIT HALIFAX1");
+            map.changeSectorColor(4, "green");
         } else if(halifax2Pixel != -256) {
             System.out.println("HIT HALIFAX2");
+            map.changeSectorColor(5, "blue");
         } else if(halifax3Pixel != -256) {
             System.out.println("HIT HALIFAX3");
+            map.changeSectorColor(6, "green");
         } else if(halifax4Pixel != -256) {
             System.out.println("HIT HALIFAX4");
+            map.changeSectorColor(7, "blue");
         } else if(derwent1Pixel != -256) {
             System.out.println("HIT DERWENT1");
         } else if(derwent2Pixel != -256) {
