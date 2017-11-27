@@ -31,8 +31,8 @@ public class GameScreen implements Screen, InputProcessor{
     private int currentPlayer; // index of current player
     private Texture wheel;
 
-    private SpriteBatch batch;
-    private OrthographicCamera camera;
+    private SpriteBatch batch; // batch for rendering the non-ui graphics, i.e. map
+    private OrthographicCamera camera; // camera for rendering non-ui graphics
     private Viewport viewport;
 
     Color test = new Color(0,0,0,0);
@@ -64,6 +64,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.camera = new OrthographicCamera(1920, 1080);
         camera.position.x = 1920 / 2;
         camera.position.y = 1080 / 2;
+
         this.viewport = new ScreenViewport(this.camera);
 
         allocateSectors();
@@ -132,7 +133,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -183,9 +184,9 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void dispose() {
-
+        batch.dispose();
     }
-    public boolean keyPressed;
+
     @Override
     public boolean keyDown(int keycode) {
         return false;
