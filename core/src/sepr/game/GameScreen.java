@@ -58,7 +58,7 @@ public class GameScreen implements Screen, InputProcessor{
 
         Gdx.input.setInputProcessor(this);
 
-        this.wheel = Player.genAttackWheelTexture(30, 2, 1);
+        this.wheel = Player.genAttackWheelTexture();
 
         this.batch = new SpriteBatch();
         this.camera = new OrthographicCamera(1920, 1080);
