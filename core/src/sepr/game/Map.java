@@ -1,7 +1,6 @@
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +11,7 @@ import java.util.HashMap;
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
  */
-public class Map {
+public class Map{
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
     private HashMap<String, Color> colors; // mapping of color name to color ***NOT QUITE TRUE***
 
@@ -78,6 +77,7 @@ public class Map {
         this.colors.put("green", changeGreen);
         this.colors.put("blue", changeBlue);
         this.colors.put("white", changeWhite);
+
     }
 
     /**
@@ -110,17 +110,21 @@ public class Map {
         return 0;
     }
 
-    public void touchDown(int screenX, int screenY, int pointer, int button) {
+    public void detectSectorClick(int screenX, int screenY) {
         for (Sector sector : sectors.values()) {
+            if (screenX < 0 || screenY < 0 || screenX > sector.getSectorTexture().getWidth() || screenY > sector.getSectorTexture().getHeight()) {
+                continue;
+            }
             int pixelValue = sector.getSectorPixmap().getPixel(screenX, screenY);
             if (pixelValue != -256) {
                 System.out.println("Hit: " + sector.getDisplayName());
                 changeSectorColor(sector.getId(), "green");
+                break; // only one sector should be changed at a time so
             }
         }
     }
 
-    public void render(SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
         for (Sector sector : sectors.values()) {
             batch.draw(sector.getSectorTexture(), 0, 0);
         }

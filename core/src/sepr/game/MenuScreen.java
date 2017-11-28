@@ -28,7 +28,6 @@ public class MenuScreen implements Screen {
 
         this.stage = new Stage();
         this.stage.setViewport(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
 
         this.table = new Table();
         this.table.setFillParent(true); // make ui table fill the entire screen

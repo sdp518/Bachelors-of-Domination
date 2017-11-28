@@ -4,14 +4,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 import java.util.HashMap;
@@ -19,25 +27,22 @@ import java.util.HashMap;
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
  */
-public class GameScreen implements Screen, InputProcessor{
+public class GameScreen implements Screen{
     private Main main;
-    
+
+    private Stage stage;
+    private Table table;
+
     private Map map;
     private HashMap<Integer, Player> players; // player id mapping to the relevant player
+    private HashMap<Integer, Boolean> keysDown; // mapping from key, (Input.Keys), to whether it has been pressed down
+
     private boolean turnTimerEnabled;
     private boolean turnTimerPaused;
     private int maxTurnTime;
     private int turnTimeElapsed;
     private Integer[] turnOrder; // array of player ids in order of players' turns;
     private int currentPlayer; // index of current player
-    private Texture wheel;
-
-    private SpriteBatch batch; // batch for rendering the non-ui graphics, i.e. map
-    private OrthographicCamera camera; // camera for rendering non-ui graphics
-    private Viewport viewport;
-
-    Color test = new Color(0,0,0,0);
-    private HashMap<Integer, Pixmap> mapPix = new HashMap<Integer, Pixmap>();
 
     /**
      * Performs the game's initial setup
@@ -48,8 +53,22 @@ public class GameScreen implements Screen, InputProcessor{
      */
     public GameScreen(Main main, HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
         this.main = main;
-        this.players = players;
+
+        this.stage = new Stage();
+        this.stage.setViewport(new ScreenViewport());
+        this.stage.getCamera().translate(1920/2, 1080/2, 0);
+
         this.map = new Map();
+        this.stage.addActor(map);
+
+        this.players = players;
+
+        this.keysDown = new HashMap<Integer, Boolean>();
+        this.keysDown.put(Input.Keys.W, false);
+        this.keysDown.put(Input.Keys.A, false);
+        this.keysDown.put(Input.Keys.S, false);
+        this.keysDown.put(Input.Keys.D, false);
+
         this.turnTimerEnabled = turnTimerEnabled;
         this.turnTimerPaused = false;
         this.maxTurnTime = maxTurnTime;
@@ -57,19 +76,74 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnOrder = this.players.keySet().toArray(new Integer[0]);
         this.currentPlayer = 0;
 
-        this.wheel = Player.genAttackWheelTexture(30, 2, 1);
+        this.stage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                super.keyDown(event, keycode);
+                if (keycode == Input.Keys.W) {
+                    keysDown.put(Input.Keys.W, true);
+                }
+                if (keycode == Input.Keys.S) {
+                    keysDown.put(Input.Keys.S, true);
+                }
+                if (keycode == Input.Keys.A) {
+                    keysDown.put(Input.Keys.A, true);
+                }
+                if (keycode == Input.Keys.D) {
+                    keysDown.put(Input.Keys.D, true);
+                }
+                return true;
+            }
 
-        this.batch = new SpriteBatch();
-        this.camera = new OrthographicCamera(1920, 1080);
-        camera.position.x = 1920 / 2;
-        camera.position.y = 1080 / 2;
+            @Override
+            public boolean keyUp(InputEvent event, int keycode) {
+                super.keyUp(event, keycode);
+                if (keycode == Input.Keys.W) {
+                    keysDown.put(Input.Keys.W, false);
+                }
+                if (keycode == Input.Keys.S) {
+                    keysDown.put(Input.Keys.S, false);
+                }
+                if (keycode == Input.Keys.A) {
+                    keysDown.put(Input.Keys.A, false);
+                }
+                if (keycode == Input.Keys.D) {
+                    keysDown.put(Input.Keys.D, false);
+                }
+                return true;
+            }
+        });
+        this.stage.addListener(new ClickListener(Input.Buttons.LEFT) {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                Vector2 stageCoord = stage.stageToScreenCoordinates(new Vector2(x, y)); // works @ 1920x1080 but performs incorrectly if resized or cam moved
+                System.out.println(stageCoord.x + "  " + stageCoord.y);
+                map.detectSectorClick((int) stageCoord.x, (int) stageCoord.y);
+            }
+        });
 
-        this.viewport = new ScreenViewport(this.camera);
+        setupUi();
 
         allocateSectors();
         playGame();
     }
 
+    private void setupUi() {
+        this.table = new Table();
+        this.table.setFillParent(true);
+        this.stage.addActor(table);
+        this.table.setDebug(true);
+
+        Texture buttons = new Texture("ui/buttons.png"); // texture sheet for buttons
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); // create style for buttons to use
+        style.up = new TextureRegionDrawable(new TextureRegion(buttons, 0, 0, 400, 150)); // image for button to use in default state
+        style.down = new TextureRegionDrawable(new TextureRegion(buttons, 0, 150, 400, 150)); // image for button to use when pressed down
+        style.font = new BitmapFont(); // set button font to the default Bitmap Font
+
+        final TextButton startGameBtn = new TextButton("New Game", style);
+        table.add(startGameBtn);
+    }
 
     private void playGame() {
 
@@ -113,57 +187,39 @@ public class GameScreen implements Screen, InputProcessor{
 
     }
 
-    /**
-     *
-     * @return returns the x position of the mouse with respect to the camera position and zoom
-     */
-    public float getMouseX() {
-        return camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)).x;
-    }
+    private void controlCamera() {
+        if (this.keysDown.get(Input.Keys.W)) {
+            this.stage.getCamera().translate(0, 4, 0);
+        }
+        if (this.keysDown.get(Input.Keys.S)) {
+            this.stage.getCamera().translate(0, -4, 0);
+        }
+        if (this.keysDown.get(Input.Keys.A)) {
+            this.stage.getCamera().translate(-4, 0, 0);
+        }
+        if (this.keysDown.get(Input.Keys.D)) {
+            this.stage.getCamera().translate(4, 0, 0);
+        }
 
-    /**
-     *
-     * @return returns the y position of the mouse with respect to the camera position and zoom
-     */
-    public float getMouseY() {
-        return camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)).y;
     }
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(this);
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        //all game content to be drawn here
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            camera.translate(-4,0,0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            camera.translate(4,0,0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            camera.translate(0,4,0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            camera.translate(0,-4,0);
-        }
-
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-
-        map.render(batch);
-
-        batch.end();
+        this.controlCamera();
+        this.stage.act(Gdx.graphics.getDeltaTime());
+        this.stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
-        camera.viewportWidth = width;
-        camera.viewportHeight = height;
+        this.stage.getViewport().update(width, height);
+        this.stage.getCamera().viewportWidth = width;
+        this.stage.getCamera().viewportHeight = height;
     }
 
     @Override
@@ -183,54 +239,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void dispose() {
-        batch.dispose();
+        stage.dispose();
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
-        this.map.touchDown(screenX, screenY, pointer, button);
-
-        return true;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        if (amount == 1){
-            camera.zoom += 0.1;
-        } else {
-            camera.zoom -= 0.1;
-        }
-        return true;
-    }
 }
