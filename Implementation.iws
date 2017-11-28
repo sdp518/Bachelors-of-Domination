@@ -2,26 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ac49ec6-0c15-4c66-b89b-655b6bf8c695" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/assets/ui/background.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/assets/ui/bottomBar.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/assets/ui/buttons.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/assets/ui/mapGraphic.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/assets/ui/topBar.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/sepr/ui/UiPanel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/sepr/ui/UiPanelFactory.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Bachelors-of-Domination.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/core/core.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/core/core_main.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/core/core_test.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/desktop/desktop.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/desktop/desktop_main.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/desktop/desktop_test.iml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Implementation.ipr" afterPath="$PROJECT_DIR$/Implementation.ipr" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/assets/lake1.png" afterPath="$PROJECT_DIR$/core/assets/lake1.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Implementation.iws" afterPath="$PROJECT_DIR$/Implementation.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sepr/game/GameScreen.java" afterPath="$PROJECT_DIR$/core/src/sepr/game/GameScreen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sepr/game/Main.java" afterPath="$PROJECT_DIR$/core/src/sepr/game/Main.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sepr/game/Map.java" afterPath="$PROJECT_DIR$/core/src/sepr/game/Map.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sepr/game/MenuScreen.java" afterPath="$PROJECT_DIR$/core/src/sepr/game/MenuScreen.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/sepr/game/Sector.java" afterPath="$PROJECT_DIR$/core/src/sepr/game/Sector.java" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -106,12 +91,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
-      <file leaf-file-name="DesktopLauncher.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/desktop/src/sepr/game/desktop/DesktopLauncher.java">
+      <file leaf-file-name="GameScreen.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/core/src/sepr/game/GameScreen.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="16" column="1" lean-forward="false" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
-              <folding />
+            <state relative-caret-position="297">
+              <caret line="23" column="4" lean-forward="false" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
+              <folding>
+                <element signature="e#1401#1418#0" expanded="true" />
+                <element signature="e#5312#5313#0" expanded="true" />
+                <element signature="e#5340#5341#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -126,108 +115,49 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MenuScreen.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/core/src/sepr/game/MenuScreen.java">
+      <file leaf-file-name="Map.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Map.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1867">
-              <caret line="66" column="23" lean-forward="true" selection-start-line="66" selection-start-column="23" selection-end-line="66" selection-end-column="23" />
+            <state relative-caret-position="462">
+              <caret line="14" column="17" lean-forward="false" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3398#3570#0" expanded="true" />
-                <element signature="e#3569#3570#0" expanded="true" />
-                <element signature="e#3606#3793#0" expanded="true" />
-                <element signature="e#3792#3793#0" expanded="true" />
-                <element signature="e#3828#4003#0" expanded="true" />
-                <element signature="e#4002#4003#0" expanded="true" />
-                <element signature="e#4035#4201#0" expanded="true" />
-                <element signature="e#4200#4201#0" expanded="true" />
-                <element signature="e#4248#4249#0" expanded="true" />
-                <element signature="e#4298#4299#0" expanded="true" />
-                <element signature="e#4805#4806#0" expanded="true" />
-                <element signature="e#4841#4842#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bottomBar.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/assets/ui/bottomBar.png">
+      <file leaf-file-name="Pixmap.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.5/df0e6a52ed42009b20ab64cc81e57c3ae24d9109/gdx-1.9.5-sources.jar!/com/badlogic/gdx/graphics/Pixmap.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="299" column="0" lean-forward="false" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
+              <folding>
+                <element signature="e#11741#11742#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lake1.png" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/assets/lake1.png">
           <provider selected="true" editor-type-id="images">
             <state />
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameScreen.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/sepr/game/GameScreen.java">
+      <file leaf-file-name="Sector.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Sector.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4158">
-              <caret line="186" column="24" lean-forward="false" selection-start-line="186" selection-start-column="24" selection-end-line="186" selection-end-column="24" />
+            <state relative-caret-position="-66">
+              <caret line="16" column="32" lean-forward="true" selection-start-line="16" selection-start-column="32" selection-end-line="16" selection-end-column="32" />
               <folding>
-                <element signature="e#3920#3921#0" expanded="true" />
-                <element signature="e#3969#3970#0" expanded="true" />
-                <element signature="e#5039#5040#0" expanded="true" />
-                <element signature="e#5070#5071#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#1023#1024#0" expanded="true" />
+                <element signature="e#1048#1049#0" expanded="true" />
+                <element signature="e#1734#1735#0" expanded="true" />
+                <element signature="e#1769#1770#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Map.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Map.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="6" column="49" lean-forward="false" selection-start-line="6" selection-start-column="49" selection-end-line="6" selection-end-column="49" />
-              <folding>
-                <element signature="e#8716#8717#0" expanded="false" />
-                <element signature="e#8741#8742#0" expanded="false" />
-                <element signature="e#9706#9707#0" expanded="false" />
-                <element signature="e#9730#9731#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UiPanel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/sepr/ui/UiPanel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="99">
-              <caret line="3" column="39" lean-forward="false" selection-start-line="3" selection-start-column="39" selection-end-line="3" selection-end-column="39" />
-              <folding>
-                <element signature="e#386#387#0" expanded="false" />
-                <element signature="e#420#421#0" expanded="false" />
-                <element signature="e#446#447#0" expanded="false" />
-                <element signature="e#471#472#0" expanded="false" />
-                <element signature="e#519#520#0" expanded="false" />
-                <element signature="e#562#563#0" expanded="false" />
-                <element signature="e#596#597#0" expanded="false" />
-                <element signature="e#645#646#0" expanded="false" />
-                <element signature="e#754#755#0" expanded="false" />
-                <element signature="e#782#783#0" expanded="false" />
-                <element signature="e#837#838#0" expanded="false" />
-                <element signature="e#865#866#0" expanded="false" />
-                <element signature="e#926#927#0" expanded="false" />
-                <element signature="e#954#955#0" expanded="false" />
-                <element signature="e#1051#1052#0" expanded="false" />
-                <element signature="e#1079#1080#0" expanded="false" />
-                <element signature="e#1174#1175#0" expanded="false" />
-                <element signature="e#1202#1203#0" expanded="false" />
-                <element signature="e#1290#1291#0" expanded="false" />
-                <element signature="e#1318#1319#0" expanded="false" />
-                <element signature="e#1391#1392#0" expanded="false" />
-                <element signature="e#1419#1420#0" expanded="false" />
-                <element signature="e#1476#1477#0" expanded="false" />
-                <element signature="e#1504#1505#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UiPanelFactory.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/sepr/ui/UiPanelFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -992,7 +922,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/core/src/sepr/game/Sector.java" />
         <option value="$PROJECT_DIR$/core/src/sepr/game/Game.java" />
         <option value="$PROJECT_DIR$/core/src/sepr/game/GameContainer.java" />
         <option value="$PROJECT_DIR$/core/src/sepr/game/OptionsScreen.java" />
@@ -1002,11 +931,12 @@
         <option value="$PROJECT_DIR$/Implementation.iws" />
         <option value="$PROJECT_DIR$/core/src/sepr/ui/UiManager.java" />
         <option value="$PROJECT_DIR$/core/src/sepr/ui/UiPanelFactory.java" />
-        <option value="$PROJECT_DIR$/core/src/sepr/game/Map.java" />
         <option value="$PROJECT_DIR$/core/src/sepr/ui/UiPanel.java" />
         <option value="$PROJECT_DIR$/core/src/sepr/game/Main.java" />
-        <option value="$PROJECT_DIR$/core/src/sepr/game/GameScreen.java" />
         <option value="$PROJECT_DIR$/core/src/sepr/game/MenuScreen.java" />
+        <option value="$PROJECT_DIR$/core/src/sepr/game/Sector.java" />
+        <option value="$PROJECT_DIR$/core/src/sepr/game/Map.java" />
+        <option value="$PROJECT_DIR$/core/src/sepr/game/GameScreen.java" />
       </list>
     </option>
   </component>
@@ -1052,8 +982,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1146,31 +1077,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Implementation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Bachelors-of-Domination" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="AndroidView" />
     </panes>
   </component>
@@ -1564,7 +1472,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511543744418</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="menu screen basic setup">
+      <created>1511781145223</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1511781145223</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1581,12 +1496,12 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-13" y="-13" width="3026" height="1946" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22171946" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3374778" sideWeight="0.4945055" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14801657" sideWeight="0.4945055" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1598,7 +1513,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22261693" sideWeight="0.4924812" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18887363" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16620879" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1650,40 +1565,25 @@
     <MESSAGE value="Setup the initial architectures" />
     <MESSAGE value="basic amp rendering and camera contols" />
     <MESSAGE value="map rendering" />
-    <option name="LAST_COMMIT_MESSAGE" value="map rendering" />
+    <MESSAGE value="menu screen basic setup" />
+    <option name="LAST_COMMIT_MESSAGE" value="menu screen basic setup" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="10" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="pixelValue != -256" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Map.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="22" column="43" lean-forward="false" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
-          <folding>
-            <element signature="e#8716#8717#0" expanded="false" />
-            <element signature="e#8741#8742#0" expanded="false" />
-            <element signature="e#9706#9707#0" expanded="false" />
-            <element signature="e#9730#9731#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1452">
-          <caret line="44" column="40" lean-forward="false" selection-start-line="44" selection-start-column="40" selection-end-line="44" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Sector.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
@@ -1726,10 +1626,9 @@
         <state relative-caret-position="792">
           <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding>
-            <element signature="e#3920#3921#0" expanded="true" />
-            <element signature="e#3969#3970#0" expanded="true" />
-            <element signature="e#5039#5040#0" expanded="true" />
-            <element signature="e#5070#5071#0" expanded="true" />
+            <element signature="e#1401#1418#0" expanded="true" />
+            <element signature="e#5312#5313#0" expanded="true" />
+            <element signature="e#5340#5341#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1739,10 +1638,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#8716#8717#0" expanded="false" />
-            <element signature="e#8741#8742#0" expanded="false" />
-            <element signature="e#9706#9707#0" expanded="false" />
-            <element signature="e#9730#9731#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1796,10 +1692,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#3920#3921#0" expanded="true" />
-            <element signature="e#3969#3970#0" expanded="true" />
-            <element signature="e#5039#5040#0" expanded="true" />
-            <element signature="e#5070#5071#0" expanded="true" />
+            <element signature="e#1401#1418#0" expanded="true" />
+            <element signature="e#5312#5313#0" expanded="true" />
+            <element signature="e#5340#5341#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1809,10 +1704,7 @@
         <state relative-caret-position="165">
           <caret line="5" column="16" lean-forward="false" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
           <folding>
-            <element signature="e#8716#8717#0" expanded="false" />
-            <element signature="e#8741#8742#0" expanded="false" />
-            <element signature="e#9706#9707#0" expanded="false" />
-            <element signature="e#9730#9731#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1950,13 +1842,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Sector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="17" column="51" lean-forward="false" selection-start-line="17" selection-start-column="51" selection-end-line="17" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Implementation.iws">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-6561">
@@ -1993,48 +1878,59 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Map.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="6" column="49" lean-forward="false" selection-start-line="6" selection-start-column="49" selection-end-line="6" selection-end-column="49" />
-          <folding>
-            <element signature="e#8716#8717#0" expanded="false" />
-            <element signature="e#8741#8742#0" expanded="false" />
-            <element signature="e#9706#9707#0" expanded="false" />
-            <element signature="e#9730#9731#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/sepr/ui/UiPanel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="99">
           <caret line="3" column="39" lean-forward="false" selection-start-line="3" selection-start-column="39" selection-end-line="3" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/assets/ui/bottomBar.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/assets/ui/buttons.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/MenuScreen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1815">
+          <caret line="68" column="38" lean-forward="false" selection-start-line="68" selection-start-column="38" selection-end-line="68" selection-end-column="38" />
           <folding>
-            <element signature="e#386#387#0" expanded="false" />
-            <element signature="e#420#421#0" expanded="false" />
-            <element signature="e#446#447#0" expanded="false" />
-            <element signature="e#471#472#0" expanded="false" />
-            <element signature="e#519#520#0" expanded="false" />
-            <element signature="e#562#563#0" expanded="false" />
-            <element signature="e#596#597#0" expanded="false" />
-            <element signature="e#645#646#0" expanded="false" />
-            <element signature="e#754#755#0" expanded="false" />
-            <element signature="e#782#783#0" expanded="false" />
-            <element signature="e#837#838#0" expanded="false" />
-            <element signature="e#865#866#0" expanded="false" />
-            <element signature="e#926#927#0" expanded="false" />
-            <element signature="e#954#955#0" expanded="false" />
-            <element signature="e#1051#1052#0" expanded="false" />
-            <element signature="e#1079#1080#0" expanded="false" />
-            <element signature="e#1174#1175#0" expanded="false" />
-            <element signature="e#1202#1203#0" expanded="false" />
-            <element signature="e#1290#1291#0" expanded="false" />
-            <element signature="e#1318#1319#0" expanded="false" />
-            <element signature="e#1391#1392#0" expanded="false" />
-            <element signature="e#1419#1420#0" expanded="false" />
-            <element signature="e#1476#1477#0" expanded="false" />
-            <element signature="e#1504#1505#0" expanded="false" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Sector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-66">
+          <caret line="16" column="32" lean-forward="true" selection-start-line="16" selection-start-column="32" selection-end-line="16" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1023#1024#0" expanded="true" />
+            <element signature="e#1048#1049#0" expanded="true" />
+            <element signature="e#1734#1735#0" expanded="true" />
+            <element signature="e#1769#1770#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/assets/lake1.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.5/df0e6a52ed42009b20ab64cc81e57c3ae24d9109/gdx-1.9.5-sources.jar!/com/badlogic/gdx/graphics/Pixmap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="299" column="0" lean-forward="false" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
+          <folding>
+            <element signature="e#11741#11742#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2047,47 +1943,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/assets/ui/bottomBar.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/GameScreen.java">
+    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/Map.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4158">
-          <caret line="186" column="24" lean-forward="false" selection-start-line="186" selection-start-column="24" selection-end-line="186" selection-end-column="24" />
+        <state relative-caret-position="462">
+          <caret line="14" column="17" lean-forward="false" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
           <folding>
-            <element signature="e#3920#3921#0" expanded="true" />
-            <element signature="e#3969#3970#0" expanded="true" />
-            <element signature="e#5039#5040#0" expanded="true" />
-            <element signature="e#5070#5071#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/assets/ui/buttons.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/MenuScreen.java">
+    <entry file="file://$PROJECT_DIR$/core/src/sepr/game/GameScreen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1867">
-          <caret line="66" column="23" lean-forward="true" selection-start-line="66" selection-start-column="23" selection-end-line="66" selection-end-column="23" />
+        <state relative-caret-position="297">
+          <caret line="23" column="4" lean-forward="false" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3398#3570#0" expanded="true" />
-            <element signature="e#3569#3570#0" expanded="true" />
-            <element signature="e#3606#3793#0" expanded="true" />
-            <element signature="e#3792#3793#0" expanded="true" />
-            <element signature="e#3828#4003#0" expanded="true" />
-            <element signature="e#4002#4003#0" expanded="true" />
-            <element signature="e#4035#4201#0" expanded="true" />
-            <element signature="e#4200#4201#0" expanded="true" />
-            <element signature="e#4248#4249#0" expanded="true" />
-            <element signature="e#4298#4299#0" expanded="true" />
-            <element signature="e#4805#4806#0" expanded="true" />
-            <element signature="e#4841#4842#0" expanded="true" />
+            <element signature="e#1401#1418#0" expanded="true" />
+            <element signature="e#5312#5313#0" expanded="true" />
+            <element signature="e#5340#5341#0" expanded="true" />
           </folding>
         </state>
       </provider>

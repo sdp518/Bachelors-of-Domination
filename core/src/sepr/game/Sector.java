@@ -1,21 +1,70 @@
 package sepr.game;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
  */
 public class Sector {
     private int id;
     private int ownerId;
+    private String displayName;
     private int unitsInSector;
     private int reinforcementsProvided;
-    private int[] adjacentSectorIds;
+    private int[] adjacentSectorIds; // <-- May want to reconsider structure
+    private Texture sectorTexture;
+    private Pixmap sectorPixmap;
 
-    public Sector(int id, int ownerId, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds) {
+    public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap) {
         this.id = id;
         this.ownerId = ownerId;
+        this.displayName = displayName;
         this.unitsInSector = unitsInSector;
         this.reinforcementsProvided = reinforcementsProvided;
         this.adjacentSectorIds = adjacentSectorIds;
+        this.sectorTexture = sectorTexture;
+        this.sectorPixmap = sectorPixmap;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public int getReinforcementsProvided() {
+        return reinforcementsProvided;
+    }
+
+    public int getUnitsInSector() {
+        return unitsInSector;
+    }
+
+    public int[] getAdjacentSectorIds() {
+        return adjacentSectorIds;
+    }
+
+    public Texture getSectorTexture() {
+        return sectorTexture;
+    }
+
+    public void setSectorTexture(Texture sectorTexture) {
+        this.sectorTexture = sectorTexture;
+    }
+
+    public Pixmap getSectorPixmap() {
+        return sectorPixmap;
     }
 
     /**

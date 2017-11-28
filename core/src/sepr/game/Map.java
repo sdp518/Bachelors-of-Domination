@@ -1,6 +1,7 @@
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,147 +14,70 @@ import java.util.HashMap;
  */
 public class Map {
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
-    private HashMap<Integer, Pixmap> mapPix;
-    private HashMap<Integer, Texture> mapText;
-    private HashMap<String, Color> mapColor;
-    private HashMap<Integer, String> mapImage;
-
-    public Texture hesEast1, hesEast2, hesEast3, hesEast4;
-    public Texture halifax1, halifax2, halifax3, halifax4;
-    public Texture derwent1, derwent2, derwent3, derwent4;
-    public Texture alcuin1, alcuin2, alcuin3;
-    public Texture vanbrugh1, vanbrugh2, vanbrugh3, vanbrugh4;
-    public Texture wentworth1, wentworth2;
-    public Texture james1, james2, james3, james4;
-    public Texture neutral1, neutral2, neutral3, neutral4, neutral5, neutral6;
-    public Texture lake1, lake2;
-
-    public Pixmap hesEastPix1, hesEastPix2, hesEastPix3, hesEastPix4;
-    public Pixmap halifaxPix1, halifaxPix2, halifaxPix3, halifaxPix4;
-    public Pixmap derwentPix1, derwentPix2, derwentPix3, derwentPix4;
-    public Pixmap alcuinPix1, alcuinPix2, alcuinPix3;
-    public Pixmap vanbrughPix1, vanbrughPix2, vanbrughPix3, vanbrughPix4;
-    public Pixmap wentworthPix1, wentworthPix2;
-    public Pixmap jamesPix1, jamesPix2, jamesPix3, jamesPix4;
-    public Pixmap neutralPix1, neutralPix2, neutralPix3, neutralPix4, neutralPix5, neutralPix6;
+    private HashMap<String, Color> colors; // mapping of color name to color ***NOT QUITE TRUE***
 
     Color changeGreen = new Color(0.5f, 0, 1f, 0f);
     Color changeBlue = new Color(0.8f, 0.5f, 0f, 0f);
     Color changeWhite =  new Color(0,0,0,0);
 
-
     public Map() {
         this.sectors = new HashMap<Integer, Sector>();
 
-        this.hesEastPix1 = new Pixmap(Gdx.files.internal("hesEast1.png"));
-        this.hesEastPix2 = new Pixmap(Gdx.files.internal("hesEast2.png"));
-        this.hesEastPix3 = new Pixmap(Gdx.files.internal("hesEast3.png"));
-        this.hesEastPix4 = new Pixmap(Gdx.files.internal("hesEast4.png"));
+        // hes east
+        this.sectors.put(0, new Sector(0, -1, "Hes East 1", 0, 2, new int[]{}, new Texture("hesEast1.png"), new Pixmap(Gdx.files.internal("hesEast1.png"))));
+        this.sectors.put(1, new Sector(1, -1, "Hes East 2", 0, 2, new int[]{}, new Texture("hesEast2.png"), new Pixmap(Gdx.files.internal("hesEast2.png"))));
+        this.sectors.put(2, new Sector(2, -1, "Hes East 3", 0, 2, new int[]{}, new Texture("hesEast3.png"), new Pixmap(Gdx.files.internal("hesEast3.png"))));
+        this.sectors.put(3, new Sector(3, -1, "Hes East 4", 0, 2, new int[]{}, new Texture("hesEast4.png"), new Pixmap(Gdx.files.internal("hesEast4.png"))));
 
-        this.hesEast1 = new Texture(hesEastPix1);
-        this.hesEast2 = new Texture(hesEastPix2);
-        this.hesEast3 = new Texture(hesEastPix3);
-        this.hesEast4 = new Texture(hesEastPix4);
+        // halifax
+        this.sectors.put(4, new Sector(4, -1, "Halifax 1", 0, 2, new int[]{}, new Texture("halifax1.png"), new Pixmap(Gdx.files.internal("halifax1.png"))));
+        this.sectors.put(5, new Sector(5, -1, "Halifax 2", 0, 2, new int[]{}, new Texture("halifax2.png"), new Pixmap(Gdx.files.internal("halifax2.png"))));
+        this.sectors.put(6, new Sector(6, -1, "Halifax 3", 0, 2, new int[]{}, new Texture("halifax3.png"), new Pixmap(Gdx.files.internal("halifax3.png"))));
+        this.sectors.put(7, new Sector(7, -1, "Halifax 4", 0, 2, new int[]{}, new Texture("halifax4.png"), new Pixmap(Gdx.files.internal("halifax4.png"))));
 
-        this.halifaxPix1 = new Pixmap(Gdx.files.internal("halifax1.png"));
-        this.halifaxPix2 = new Pixmap(Gdx.files.internal("halifax2.png"));
-        this.halifaxPix3 = new Pixmap(Gdx.files.internal("halifax3.png"));
-        this.halifaxPix4 = new Pixmap(Gdx.files.internal("halifax4.png"));
-        this.halifax1 = new Texture(halifaxPix1);
-        this.halifax2 = new Texture(halifaxPix2);
-        this.halifax3 = new Texture(halifaxPix3);
-        this.halifax4 = new Texture(halifaxPix4);
+        // derwent
+        this.sectors.put(8, new Sector(8, -1, "Derwent 1", 0, 2, new int[]{}, new Texture("derwent1.png"), new Pixmap(Gdx.files.internal("derwent1.png"))));
+        this.sectors.put(9, new Sector(9, -1, "Derwent 2", 0, 2, new int[]{}, new Texture("derwent2.png"), new Pixmap(Gdx.files.internal("derwent2.png"))));
+        this.sectors.put(10, new Sector(10, -1, "Derwent 3", 0, 2, new int[]{}, new Texture("derwent3.png"), new Pixmap(Gdx.files.internal("derwent3.png"))));
+        this.sectors.put(11, new Sector(11, -1, "Derwent 4", 0, 2, new int[]{}, new Texture("derwent4.png"), new Pixmap(Gdx.files.internal("derwent4.png"))));
 
-        this.derwentPix1 = new Pixmap(Gdx.files.internal("derwent1.png"));
-        this.derwentPix2 = new Pixmap(Gdx.files.internal("derwent2.png"));
-        this.derwentPix3 = new Pixmap(Gdx.files.internal("derwent3.png"));
-        this.derwentPix4 = new Pixmap(Gdx.files.internal("derwent4.png"));
-        this.derwent1 = new Texture(derwentPix1);
-        this.derwent2 = new Texture(derwentPix2);
-        this.derwent3 = new Texture(derwentPix3);
-        this.derwent4 = new Texture(derwentPix4);
+        // alcuin
+        this.sectors.put(12, new Sector(12, -1, "Alcuin 1", 0, 2, new int[]{}, new Texture("alcuin1.png"), new Pixmap(Gdx.files.internal("alcuin1.png"))));
+        this.sectors.put(13, new Sector(13, -1, "Alcuin 2", 0, 2, new int[]{}, new Texture("alcuin2.png"), new Pixmap(Gdx.files.internal("alcuin2.png"))));
+        this.sectors.put(14, new Sector(14, -1, "Alcuin 3", 0, 2, new int[]{}, new Texture("alcuin3.png"), new Pixmap(Gdx.files.internal("alcuin3.png"))));
 
-        this.alcuinPix1 = new Pixmap(Gdx.files.internal("alcuin1.png"));
-        this.alcuinPix2 = new Pixmap(Gdx.files.internal("alcuin2.png"));
-        this.alcuinPix3 = new Pixmap(Gdx.files.internal("alcuin3.png"));
-        this.alcuin1 = new Texture(alcuinPix1);
-        this.alcuin2 = new Texture(alcuinPix2);
-        this.alcuin3 = new Texture(alcuinPix3);
+        // vanburgh
+        this.sectors.put(15, new Sector(15, -1, "Vanburgh 1", 0, 2, new int[]{}, new Texture("vanbrugh1.png"), new Pixmap(Gdx.files.internal("vanbrugh1.png"))));
+        this.sectors.put(16, new Sector(16, -1, "Vanburgh 2", 0, 2, new int[]{}, new Texture("vanbrugh2.png"), new Pixmap(Gdx.files.internal("vanbrugh2.png"))));
+        this.sectors.put(17, new Sector(17, -1, "Vanburgh 3", 0, 2, new int[]{}, new Texture("vanbrugh3.png"), new Pixmap(Gdx.files.internal("vanbrugh3.png"))));
+        this.sectors.put(18, new Sector(18, -1, "Vanburgh 4", 0, 2, new int[]{}, new Texture("vanbrugh4.png"), new Pixmap(Gdx.files.internal("vanbrugh4.png"))));
 
-        this.vanbrughPix1 = new Pixmap(Gdx.files.internal("vanbrugh1.png"));
-        this.vanbrughPix2 = new Pixmap(Gdx.files.internal("vanbrugh2.png"));
-        this.vanbrughPix3 = new Pixmap(Gdx.files.internal("vanbrugh3.png"));
-        this.vanbrughPix4 = new Pixmap(Gdx.files.internal("vanbrugh4.png"));
-        this.vanbrugh1 = new Texture(vanbrughPix1);
-        this.vanbrugh2 = new Texture(vanbrughPix2);
-        this.vanbrugh3 = new Texture(vanbrughPix3);
-        this.vanbrugh4 = new Texture(vanbrughPix4);
+        // wentworth
+        this.sectors.put(19, new Sector(19, -1, "Wentworth 1", 0, 2, new int[]{}, new Texture("wentworth1.png"), new Pixmap(Gdx.files.internal("wentworth1.png"))));
+        this.sectors.put(20, new Sector(20, -1, "Wentworth 2", 0, 2, new int[]{}, new Texture("wentworth2.png"), new Pixmap(Gdx.files.internal("wentworth2.png"))));
 
-        this.wentworthPix1 = new Pixmap(Gdx.files.internal("wentworth1.png"));
-        this.wentworthPix2 = new Pixmap(Gdx.files.internal("wentworth2.png"));
-        this.wentworth1 = new Texture(wentworthPix1);
-        this.wentworth2 = new Texture(wentworthPix2);
+        // james
+        this.sectors.put(21, new Sector(21, -1, "James 1", 0, 2, new int[]{}, new Texture("james1.png"), new Pixmap(Gdx.files.internal("james1.png"))));
+        this.sectors.put(22, new Sector(22, -1, "James 2", 0, 2, new int[]{}, new Texture("james2.png"), new Pixmap(Gdx.files.internal("james2.png"))));
+        this.sectors.put(23, new Sector(23, -1, "James 3", 0, 2, new int[]{}, new Texture("james3.png"), new Pixmap(Gdx.files.internal("james3.png"))));
+        this.sectors.put(24, new Sector(24, -1, "James 4", 0, 2, new int[]{}, new Texture("james4.png"), new Pixmap(Gdx.files.internal("james4.png"))));
 
-        this.jamesPix1 = new Pixmap(Gdx.files.internal("james1.png"));
-        this.jamesPix2 = new Pixmap(Gdx.files.internal("james2.png"));
-        this.jamesPix3 = new Pixmap(Gdx.files.internal("james3.png"));
-        this.jamesPix4 = new Pixmap(Gdx.files.internal("james4.png"));
-        this.james1 = new Texture(jamesPix1);
-        this.james2 = new Texture(jamesPix2);
-        this.james3 = new Texture(jamesPix3);
-        this.james4 = new Texture(jamesPix4);
+        //neutral
+        this.sectors.put(25, new Sector(25, -1, "Neutral 1", 0, 2, new int[]{}, new Texture("neutral1.png"), new Pixmap(Gdx.files.internal("neutral1.png"))));
+        this.sectors.put(26, new Sector(26, -1, "Neutral 2", 0, 2, new int[]{}, new Texture("neutral2.png"), new Pixmap(Gdx.files.internal("neutral2.png"))));
+        this.sectors.put(27, new Sector(27, -1, "Neutral 3", 0, 2, new int[]{}, new Texture("neutral3.png"), new Pixmap(Gdx.files.internal("neutral3.png"))));
+        this.sectors.put(28, new Sector(28, -1, "Neutral 4", 0, 2, new int[]{}, new Texture("neutral4.png"), new Pixmap(Gdx.files.internal("neutral4.png"))));
+        this.sectors.put(29, new Sector(29, -1, "Neutral 5", 0, 2, new int[]{}, new Texture("neutral5.png"), new Pixmap(Gdx.files.internal("neutral5.png"))));
+        this.sectors.put(30, new Sector(30, -1, "Neutral 6", 0, 2, new int[]{}, new Texture("neutral6.png"), new Pixmap(Gdx.files.internal("neutral6.png"))));
 
-        this.neutralPix1 = new Pixmap(Gdx.files.internal("neutral1.png"));
-        this.neutralPix2 = new Pixmap(Gdx.files.internal("neutral2.png"));
-        this.neutralPix3 = new Pixmap(Gdx.files.internal("neutral3.png"));
-        this.neutralPix4 = new Pixmap(Gdx.files.internal("neutral4.png"));
-        this.neutralPix5 = new Pixmap(Gdx.files.internal("neutral5.png"));
-        this.neutralPix6 = new Pixmap(Gdx.files.internal("neutral6.png"));
-        this.neutral1 = new Texture(neutralPix1);
-        this.neutral2 = new Texture(neutralPix2);
-        this.neutral3 = new Texture(neutralPix3);
-        this.neutral4 = new Texture(neutralPix4);
-        this.neutral5 = new Texture(neutralPix5);
-        this.neutral6 = new Texture(neutralPix6);
+        // lakes - *SPECIAL CASE*
+        this.sectors.put(31, new Sector(31, -1, "Lake 1", 0, 2, new int[]{}, new Texture("lake1.png"), new Pixmap(Gdx.files.internal("lake1.png"))));
+        this.sectors.put(32, new Sector(32, -1, "Lake 2", 0, 2, new int[]{}, new Texture("lake2.png"), new Pixmap(Gdx.files.internal("lake2.png"))));
 
-        this.lake1 = new Texture("lake1.png");
-        this.lake2 = new Texture("lake2.png");
-
-        mapPix = new HashMap<Integer, Pixmap>(){{
-            put(0, hesEastPix1); put(1, hesEastPix2); put(2, hesEastPix3); put(3, hesEastPix4);
-            put(4, halifaxPix1); put(5, halifaxPix2); put(6, halifaxPix3); put(7, halifaxPix4);
-            put(8, derwentPix1); put(9, derwentPix2); put(10, derwentPix3); put(11, derwentPix4);
-            put(12, alcuinPix1); put(13, alcuinPix2); put(14, alcuinPix3);
-            put(15, vanbrughPix1); put(16, vanbrughPix2); put(17, vanbrughPix3); put(18, vanbrughPix4);
-            put(19, wentworthPix1); put(20, wentworthPix2);
-            put(21, jamesPix1); put(22, jamesPix2); put(23, jamesPix3); put(24, jamesPix4);
-            put(25, neutralPix1); put(26, neutralPix2); put(27, neutralPix3); put(28, neutralPix4);put(29, neutralPix5); put(30, neutralPix6);
-        }};
-        mapText = new HashMap<Integer, Texture>(){{
-            put(0, hesEast1); put(1, hesEast2); put(2, hesEast3); put(3, hesEast4);
-            put(4, halifax1); put(5, halifax2); put(6, halifax3); put(7, halifax4);
-            put(8, derwent1); put(9, derwent2); put(10, derwent3); put(11, derwent4);
-            put(12, alcuin1); put(13, alcuin2); put(14, alcuin3);
-            put(15, vanbrugh1); put(16, vanbrugh2); put(17, vanbrugh3); put(18, vanbrugh4);
-            put(19, wentworth1); put(20, wentworth2);
-            put(21, james1); put(22, james2); put(23, james3); put(24, james4);
-            put(25, neutral1); put(26, neutral2); put(27, neutral3); put(28, neutral4);put(29, neutral5); put(30, neutral6);
-        }};
-        mapImage = new HashMap<Integer, String>(){{
-            put(0, "hesEast1.png"); put(1, "hesEast2.png"); put(2, "hesEast3.png"); put(3, "hesEast4.png");
-            put(4, "halifax1.png"); put(5, "halifax2.png"); put(6, "halifax3.png"); put(7, "halifax4.png");
-            put(8, "derwent1.png"); put(9, "derwent2.png"); put(10, "derwent3.png"); put(11, "derwent4.png");
-            put(12, "alcuin1.png"); put(13, "alcuin2.png"); put(14, "alcuin3.png");
-            put(15, "vanbrugh1.png"); put(16, "vanbrugh2.png"); put(17, "vanbrugh3.png"); put(18, "vanbrugh4.png");
-            put(19, "wentworth1.png"); put(20, "wentworth2.png");
-            put(21, "james1.png"); put(22, "james2.png"); put(23, "james3.png"); put(24, "james4.png");
-            put(25, "neutral1.png"); put(26, "neutral2.png"); put(27, "neutral3.png"); put(28, "neutral4.png");put(29, "neutral5.png"); put(30, "neutral6.png");
-        }};
-        mapColor = new HashMap<String, Color>(){{
-            put("blue", changeBlue);
-            put("green", changeGreen);
-            put("white", changeWhite);
-        }};
+        this.colors = new HashMap<String, Color>();
+        this.colors.put("green", changeGreen);
+        this.colors.put("blue", changeBlue);
+        this.colors.put("white", changeWhite);
     }
 
     /**
@@ -186,64 +110,44 @@ public class Map {
         return 0;
     }
 
-    public void render(SpriteBatch batch) {
-        batch.draw(hesEast1, 0, 0);
-        batch.draw(hesEast2, 0, 0);
-        batch.draw(hesEast3, 0, 0);
-        batch.draw(hesEast4, 0, 0);
-
-        batch.draw(halifax1, 0, 0);
-        batch.draw(halifax2, 0, 0);
-        batch.draw(halifax3, 0, 0);
-        batch.draw(halifax4, 0, 0);
-
-        batch.draw(derwent1, 0, 0);
-        batch.draw(derwent2, 0, 0);
-        batch.draw(derwent3, 0, 0);
-        batch.draw(derwent4, 0, 0);
-
-        batch.draw(alcuin1, 0, 0);
-        batch.draw(alcuin2, 0, 0);
-        batch.draw(alcuin3, 0, 0);
-
-        batch.draw(vanbrugh1, 0, 0);
-        batch.draw(vanbrugh2, 0, 0);
-        batch.draw(vanbrugh3, 0, 0);
-        batch.draw(vanbrugh4, 0, 0);
-
-        batch.draw(wentworth1, 0, 0);
-        batch.draw(wentworth2, 0, 0);
-
-        batch.draw(james1, 0, 0);
-        batch.draw(james2, 0, 0);
-        batch.draw(james3, 0, 0);
-        batch.draw(james4, 0, 0);
-
-        batch.draw(neutral1, 0, 0);
-        batch.draw(neutral2, 0, 0);
-        batch.draw(neutral3, 0, 0);
-        batch.draw(neutral4, 0, 0);
-        batch.draw(neutral5, 0, 0);
-        batch.draw(neutral6, 0, 0);
-
-        batch.draw(lake1, 0, 0);
-        batch.draw(lake2, 0, 0);
+    public void touchDown(int screenX, int screenY, int pointer, int button) {
+        for (Sector sector : sectors.values()) {
+            int pixelValue = sector.getSectorPixmap().getPixel(screenX, screenY);
+            if (pixelValue != -256) {
+                System.out.println("Hit: " + sector.getDisplayName());
+                changeSectorColor(sector.getId(), "green");
+            }
+        }
     }
 
-    public void changeSectorColor(int sectorRef, String newColor){
-        Color tempColor = new Color(0,0,0,0);
-        Pixmap temp = new Pixmap(Gdx.files.internal(mapImage.get(sectorRef)));
-        for (int x = 0; x < mapPix.get(sectorRef).getWidth(); x++){
-            for (int y = 0; y < mapPix.get(sectorRef).getHeight(); y++){
+    public void render(SpriteBatch batch) {
+        for (Sector sector : sectors.values()) {
+            batch.draw(sector.getSectorTexture(), 0, 0);
+        }
+    }
+
+    /**
+     * The method takes a sectorId and recolors it to the specified color
+     * @param sectorId id of sector to recolor
+     * @param newColor what color the sector be changed to
+     */
+    public void changeSectorColor(int sectorId, String newColor){
+        Sector sector = sectors.get(sectorId);
+        Pixmap temp = sector.getSectorPixmap();
+        Pixmap newPix = new Pixmap(temp.getWidth(), temp.getHeight(), Pixmap.Format.RGBA8888); // pixmap for drawing updated sector texture to
+        for (int x = 0; x < sector.getSectorPixmap().getWidth(); x++){
+            for (int y = 0; y < sector.getSectorPixmap().getHeight(); y++){
                 if(temp.getPixel(x, y) != -256){
-                    Color.rgba8888ToColor(tempColor, temp.getPixel(x, y));
-                    tempColor.sub(mapColor.get(newColor));
-                    temp.drawPixel(x, y, Color.rgba8888(tempColor));
+                    Color tempColor = new Color(0,0,0,0);
+                    Color.rgba8888ToColor(tempColor, temp.getPixel(x, y)); // get the pixels current color
+                    tempColor.sub(colors.get(newColor)); // calculate the new color of the pixel
+                    newPix.drawPixel(x, y, Color.rgba8888(tempColor));  // draw the modified pixel value to the new pixmap
                 }
             }
         }
-        mapText.get(sectorRef).draw(temp, 0, 0);
-        temp.dispose();
+        Texture t = new Texture(sector.getSectorPixmap().getWidth(), sector.getSectorPixmap().getHeight(), Pixmap.Format.RGBA8888); // create new texture to represent the sector
+        t.draw(newPix, 0, 0); // draw the generated pixmap to the new texture
+        sector.setSectorTexture(t);
     }
 
 }
