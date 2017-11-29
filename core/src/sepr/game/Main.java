@@ -21,7 +21,7 @@ public class Main extends Game implements ApplicationListener {
 		this.gameScreen = new GameScreen(this, new HashMap<Integer, Player>(), false, 100);
 		this.optionsScreen = new OptionsScreen(this);
 
-		this.setGameScreen();
+		this.setMenuScreen();
 	}
 
 	public void setMenuScreen() {
@@ -42,5 +42,12 @@ public class Main extends Game implements ApplicationListener {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		super.render();
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		menuScreen.dispose();
+		gameScreen.dispose();
 	}
 }
