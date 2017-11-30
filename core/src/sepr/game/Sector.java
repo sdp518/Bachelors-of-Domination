@@ -15,8 +15,9 @@ public class Sector {
     private int[] adjacentSectorIds; // <-- May want to reconsider structure
     private Texture sectorTexture;
     private Pixmap sectorPixmap;
+    private String fileName;
 
-    public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap) {
+    public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap, String fileName) {
         this.id = id;
         this.ownerId = ownerId;
         this.displayName = displayName;
@@ -25,6 +26,7 @@ public class Sector {
         this.adjacentSectorIds = adjacentSectorIds;
         this.sectorTexture = sectorTexture;
         this.sectorPixmap = sectorPixmap;
+        this.fileName = fileName;
     }
 
     public int getId() {
@@ -59,12 +61,18 @@ public class Sector {
         return sectorTexture;
     }
 
-    public void setSectorTexture(Texture sectorTexture) {
-        this.sectorTexture = sectorTexture;
+    public void setNewSectorTexture(Pixmap newPixmap) {
+        this.sectorTexture.dispose();
+        Texture temp = new Texture(newPixmap);
+        this.sectorTexture = temp;
     }
 
     public Pixmap getSectorPixmap() {
         return sectorPixmap;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
     /**

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -61,10 +62,10 @@ public class GameScreen implements Screen, InputProcessor{
         this.players = players;
 
         this.keysDown = new HashMap<Integer, Boolean>();
-        this.keysDown.put(Input.Keys.W, false);
-        this.keysDown.put(Input.Keys.A, false);
-        this.keysDown.put(Input.Keys.S, false);
-        this.keysDown.put(Input.Keys.D, false);
+        this.keysDown.put(Input.Keys.UP, false);
+        this.keysDown.put(Input.Keys.LEFT, false);
+        this.keysDown.put(Input.Keys.DOWN, false);
+        this.keysDown.put(Input.Keys.RIGHT, false);
 
         this.turnTimerEnabled = turnTimerEnabled;
         this.turnTimerPaused = false;
@@ -140,16 +141,16 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     private void controlCamera() {
-        if (this.keysDown.get(Input.Keys.W)) {
+        if (this.keysDown.get(Input.Keys.UP)) {
             this.gameplayCamera.translate(0, 4, 0);
         }
-        if (this.keysDown.get(Input.Keys.S)) {
+        if (this.keysDown.get(Input.Keys.DOWN)) {
             this.gameplayCamera.translate(0, -4, 0);
         }
-        if (this.keysDown.get(Input.Keys.A)) {
+        if (this.keysDown.get(Input.Keys.LEFT)) {
             this.gameplayCamera.translate(-4, 0, 0);
         }
-        if (this.keysDown.get(Input.Keys.D)) {
+        if (this.keysDown.get(Input.Keys.RIGHT)) {
             this.gameplayCamera.translate(4, 0, 0);
         }
 
@@ -168,6 +169,18 @@ public class GameScreen implements Screen, InputProcessor{
         /* Gameplay */
         // update gameplay
         this.controlCamera();
+        /*if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            gameplayCamera.translate(-4,0,0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            gameplayCamera.translate(4,0,0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            gameplayCamera.translate(0,4,0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            gameplayCamera.translate(0,-4,0);
+        }*/
 
         //render gameplay
         gameplayCamera.update();
@@ -225,34 +238,34 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.W) {
-            keysDown.put(Input.Keys.W, true);
+        if (keycode == Input.Keys.UP) {
+            keysDown.put(Input.Keys.UP, true);
         }
-        if (keycode == Input.Keys.S) {
-            keysDown.put(Input.Keys.S, true);
+        if (keycode == Input.Keys.DOWN) {
+            keysDown.put(Input.Keys.DOWN, true);
         }
-        if (keycode == Input.Keys.A) {
-            keysDown.put(Input.Keys.A, true);
+        if (keycode == Input.Keys.LEFT) {
+            keysDown.put(Input.Keys.LEFT, true);
         }
-        if (keycode == Input.Keys.D) {
-            keysDown.put(Input.Keys.D, true);
+        if (keycode == Input.Keys.RIGHT) {
+            keysDown.put(Input.Keys.RIGHT, true);
         }
         return true;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.W) {
-            keysDown.put(Input.Keys.W, false);
+        if (keycode == Input.Keys.UP) {
+            keysDown.put(Input.Keys.UP, false);
         }
-        if (keycode == Input.Keys.S) {
-            keysDown.put(Input.Keys.S, false);
+        if (keycode == Input.Keys.DOWN) {
+            keysDown.put(Input.Keys.DOWN, false);
         }
-        if (keycode == Input.Keys.A) {
-            keysDown.put(Input.Keys.A, false);
+        if (keycode == Input.Keys.LEFT) {
+            keysDown.put(Input.Keys.LEFT, false);
         }
-        if (keycode == Input.Keys.D) {
-            keysDown.put(Input.Keys.D, false);
+        if (keycode == Input.Keys.RIGHT) {
+            keysDown.put(Input.Keys.RIGHT, false);
         }
         return true;
     }
@@ -269,7 +282,9 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        map.detectSectorClick(screenX, screenY); // does not currently handle changes to cam zoom or pos
+        int tempX = (int) gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x;
+        int tempY = (int) (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y - 1080) * -1;
+        map.detectSectorClick(tempX, tempY); // does not currently handle changes to cam zoom or pos
         return true;
     }
 
