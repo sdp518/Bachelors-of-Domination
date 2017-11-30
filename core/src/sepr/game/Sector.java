@@ -18,8 +18,9 @@ public class Sector {
     private int sectorCentreX;
     private int sectorCentreY;
     private boolean decor; // is this sector for visual purposes only, i.e. lakes are decor
+    private String fileName;
 
-    public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap, int sectorCentreX, int sectorCentreY, boolean decor) {
+    public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap, String fileName) {
         this.id = id;
         this.ownerId = ownerId;
         this.displayName = displayName;
@@ -31,6 +32,7 @@ public class Sector {
         this.sectorCentreX = sectorCentreX;
         this.sectorCentreY = sectorCentreY;
         this.decor = decor;
+        this.fileName = fileName;
     }
 
     public int getId() {
@@ -65,20 +67,25 @@ public class Sector {
         return sectorTexture;
     }
 
-    public void setSectorTexture(Texture sectorTexture) {
-        this.sectorTexture = sectorTexture;
+    public void setNewSectorTexture(Pixmap newPixmap) {
+        this.sectorTexture.dispose();
+        Texture temp = new Texture(newPixmap);
+        this.sectorTexture = temp;
     }
 
     public Pixmap getSectorPixmap() {
         return sectorPixmap;
     }
-
+  
     public int getSectorCentreX() {
         return sectorCentreX;
     }
 
     public int getSectorCentreY() {
         return sectorCentreY;
+      
+    public String getFileName() {
+        return fileName;
     }
 
     /**
