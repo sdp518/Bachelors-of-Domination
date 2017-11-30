@@ -73,11 +73,11 @@ public class Map{
         this.sectors.put(31, new Sector(31, -1, "Lake 1", 0, 2, new int[]{}, new Texture("lake1.png"), new Pixmap(Gdx.files.internal("lake1.png")), "lake1.png"));
         this.sectors.put(32, new Sector(32, -1, "Lake 2", 0, 2, new int[]{}, new Texture("lake2.png"), new Pixmap(Gdx.files.internal("lake2.png")), "lake2.png"));
 
+
         this.colors = new HashMap<String, Color>();
         this.colors.put("green", changeGreen);
         this.colors.put("blue", changeBlue);
         this.colors.put("white", changeWhite);
-
     }
 
     /**
@@ -154,5 +154,4 @@ public class Map{
         newPix.dispose();
         //sector.setSectorTexture(t);
     }
-
 }

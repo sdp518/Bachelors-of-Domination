@@ -15,6 +15,9 @@ public class Sector {
     private int[] adjacentSectorIds; // <-- May want to reconsider structure
     private Texture sectorTexture;
     private Pixmap sectorPixmap;
+    private int sectorCentreX;
+    private int sectorCentreY;
+    private boolean decor; // is this sector for visual purposes only, i.e. lakes are decor
     private String fileName;
 
     public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap, String fileName) {
@@ -26,6 +29,9 @@ public class Sector {
         this.adjacentSectorIds = adjacentSectorIds;
         this.sectorTexture = sectorTexture;
         this.sectorPixmap = sectorPixmap;
+        this.sectorCentreX = sectorCentreX;
+        this.sectorCentreY = sectorCentreY;
+        this.decor = decor;
         this.fileName = fileName;
     }
 
@@ -70,7 +76,14 @@ public class Sector {
     public Pixmap getSectorPixmap() {
         return sectorPixmap;
     }
+  
+    public int getSectorCentreX() {
+        return sectorCentreX;
+    }
 
+    public int getSectorCentreY() {
+        return sectorCentreY;
+      
     public String getFileName() {
         return fileName;
     }
