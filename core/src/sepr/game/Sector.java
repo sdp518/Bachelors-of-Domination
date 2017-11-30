@@ -20,7 +20,7 @@ public class Sector {
     private boolean decor; // is this sector for visual purposes only, i.e. lakes are decor
     private String fileName;
 
-    public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap, String fileName) {
+    public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap, String fileName, int sectorCentreX, int sectorCentreY, boolean decor) {
         this.id = id;
         this.ownerId = ownerId;
         this.displayName = displayName;
@@ -83,7 +83,12 @@ public class Sector {
 
     public int getSectorCentreY() {
         return sectorCentreY;
-      
+    }
+
+    public boolean isDecor() {
+        return decor;
+    }
+
     public String getFileName() {
         return fileName;
     }
