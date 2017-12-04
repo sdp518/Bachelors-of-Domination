@@ -72,6 +72,11 @@ public class WidgetFactory {
         return new Label(labelText, style);
     }
 
+    /**
+     *
+     * @param items the list of items that may be selected
+     * @return a selector widget styled and using the items provided
+     */
     public static SelectBox<String> genStyledSelectBox(String[] items) {
         SelectBox.SelectBoxStyle style = new SelectBox.SelectBoxStyle();
         style.font = new BitmapFont();
@@ -83,6 +88,10 @@ public class WidgetFactory {
         return selectBox;
     }
 
+    /**
+     *
+     * @return a toggleable on off switch widget
+     */
     public static CheckBox genOnOffSwitch() {
         CheckBox.CheckBoxStyle style = new CheckBox.CheckBoxStyle();
         style.font = new BitmapFont();
@@ -92,6 +101,10 @@ public class WidgetFactory {
         return new CheckBox(null, style);
     }
 
+    /**
+     * Generates a slider widget that is styled for use in the options screen
+     * @return a slider
+     */
     public static Slider genStyledSlider() {
         Slider.SliderStyle style = new Slider.SliderStyle();
         style.background = new TextureRegionDrawable(new TextureRegion(sliderBarTexture));
