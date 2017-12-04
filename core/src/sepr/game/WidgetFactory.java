@@ -1,10 +1,10 @@
 package sepr.game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
@@ -14,13 +14,29 @@ public class WidgetFactory {
     private static Texture basicButtonTexture;
     private static Texture topBarTexture;
     private static Texture bottomBarTexture;
-    private static Texture mapTexture;
+    private static Texture mapGraphicTexture;
+    private static Texture labelTexture;
+    private static Texture optionsGraphicTexture;
+
+    private static Texture sliderBarTexture;
+    private static Texture sliderKnobTexture;
+
+    private static Texture onSwitchTexture;
+    private static Texture offSwitchTexture;
 
     public WidgetFactory() {
         basicButtonTexture = new Texture("ui/buttons.png");
         topBarTexture = new Texture("ui/topBar.png");
         bottomBarTexture = new Texture("ui/bottomBar.png");
-        mapTexture = new Texture("ui/mapGraphic.png");
+        mapGraphicTexture = new Texture("ui/mapGraphic.png");
+        labelTexture = new Texture("ui/labelTexture.png");
+        optionsGraphicTexture = new Texture("ui/optionsGraphic.png");
+
+        sliderBarTexture = new Texture("ui/sliderBar.png");
+        sliderKnobTexture = new Texture("ui/sliderKnob.png");
+
+        onSwitchTexture = new Texture("ui/onSwitch.png");
+        offSwitchTexture = new Texture("ui/offSwitch.png");
     }
 
     public static TextButton genBasicButton(String buttonText) {
@@ -41,6 +57,48 @@ public class WidgetFactory {
     }
 
     public static Image genMapGraphic() {
-        return new Image(mapTexture);
+        return new Image(mapGraphicTexture);
+    }
+
+    public static Image genOptionsGraphic() {
+        return new Image(optionsGraphicTexture);
+    }
+
+    public static Label genStyledLabel(String labelText) {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = new BitmapFont();
+        style.background = new TextureRegionDrawable(new TextureRegion(labelTexture));
+
+        return new Label(labelText, style);
+    }
+
+    public static SelectBox<String> genStyledSelectBox(String[] items) {
+        SelectBox.SelectBoxStyle style = new SelectBox.SelectBoxStyle();
+        style.font = new BitmapFont();
+        style.listStyle = new List.ListStyle(new BitmapFont(), Color.BLACK, Color.BROWN, new TextureRegionDrawable(new TextureRegion(sliderBarTexture)));
+        style.scrollStyle = new ScrollPane.ScrollPaneStyle(new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)));
+
+        SelectBox<String> selectBox = new SelectBox<String>(style);
+        selectBox.setItems(items);
+        return selectBox;
+    }
+
+    public static CheckBox genOnOffSwitch() {
+        CheckBox.CheckBoxStyle style = new CheckBox.CheckBoxStyle();
+        style.font = new BitmapFont();
+        style.checkboxOn = new TextureRegionDrawable(new TextureRegion(onSwitchTexture));
+        style.checkboxOff = new TextureRegionDrawable(new TextureRegion(offSwitchTexture));
+
+        return new CheckBox(null, style);
+    }
+
+    public static Slider genStyledSlider() {
+        Slider.SliderStyle style = new Slider.SliderStyle();
+        style.background = new TextureRegionDrawable(new TextureRegion(sliderBarTexture));
+        style.knob = new TextureRegionDrawable(new TextureRegion(sliderKnobTexture));
+        style.knobDown = new TextureRegionDrawable(new TextureRegion(sliderKnobTexture));
+        style.knobOver = new TextureRegionDrawable(new TextureRegion(sliderKnobTexture));
+
+        return new Slider(0f, 1f, 0.01f, false, style);
     }
 }

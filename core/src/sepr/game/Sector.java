@@ -83,6 +83,7 @@ public class Sector {
 
     public int getSectorCentreY() {
         return sectorCentreY;
+    }
       
     public String getFileName() {
         return fileName;
