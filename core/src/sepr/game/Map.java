@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
@@ -106,8 +107,18 @@ public class Map{
      * @param playerId player who calculation is for
      * @return returns the amount of reinforcements the player should be allocated
      */
-    private int calculateReinforcementAmount(int playerId) {
+    public int calculateReinforcementAmount(int playerId) {
         return 0;
+    }
+
+    public int getNumOfSectors() {
+        return sectors.values().size();
+    }
+
+    public Set<Integer> getSectorIds() { return sectors.keySet() ; }
+
+    public void setSectorOwner(int sectorId, int ownerId) {
+        sectors.get(sectorId).setOwnerId(ownerId);
     }
 
     public void detectSectorClick(int screenX, int screenY) {

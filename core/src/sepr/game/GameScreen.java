@@ -14,7 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
@@ -105,10 +110,26 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * Allocate sectors to each player in a balanced mannor
+     * Allocate sectors to each player in a balanced manner
+     * if(Sector.calculatereinforcementsAmount()*
      */
     private void allocateSectors() {
-
+        int currentPlayer = -1;
+        int totalReinforcements = 0;
+        for (Integer x : map.getSectorIds()) {
+            //totalReinforcements += reinforcementsProvided; (need the csv file of all the reinforcementsProvided)
+        }
+        for (Integer i : map.getSectorIds()) {
+            currentPlayer += 1;
+            if (currentPlayer > players.size()) {
+                    currentPlayer = 0;
+                }
+            // 1 is just a placeholder value. It should be replaced with players.size() but as player.size() is zero
+            // at the moment i've put a 1 there to allow the program to run without a divide by zero error
+            if (map.calculateReinforcementAmount(currentPlayer) <= totalReinforcements/1) {
+                map.setSectorOwner(i, currentPlayer);
+            }
+        }
     }
 
     /**
