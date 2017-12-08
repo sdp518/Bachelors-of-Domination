@@ -116,18 +116,21 @@ public class GameScreen implements Screen, InputProcessor{
     private void allocateSectors() {
         int currentPlayer = -1;
         int totalReinforcements = 0;
-        for (Integer x : map.getSectorIds()) {
-            //totalReinforcements += reinforcementsProvided; (need the csv file of all the reinforcementsProvided)
+        if (players.size() == 0){
+            System.out.println("Players cannot be zero for this method to run");
         }
-        for (Integer i : map.getSectorIds()) {
-            currentPlayer += 1;
-            if (currentPlayer > players.size()) {
+        else {
+            for (Integer x : map.getSectorIds()) {
+                //totalReinforcements += reinforcementsProvided; (need the csv file of all the reinforcementsProvided)
+            }
+            for (Integer i : map.getSectorIds()) {
+                currentPlayer += 1;
+                if (currentPlayer > players.size()) {
                     currentPlayer = 0;
                 }
-            // 1 is just a placeholder value. It should be replaced with players.size() but as player.size() is zero
-            // at the moment i've put a 1 there to allow the program to run without a divide by zero error
-            if (map.calculateReinforcementAmount(currentPlayer) <= totalReinforcements/1) {
-                map.setSectorOwner(i, currentPlayer);
+                if (map.calculateReinforcementAmount(currentPlayer) <= totalReinforcements / players.size()) {
+                    map.setSectorOwner(i, currentPlayer);
+                }
             }
         }
     }
