@@ -70,7 +70,7 @@ public class MenuScreen implements Screen {
         loadGameBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Go to options");
+                System.out.println("Load game");
             }
         });
 
@@ -113,6 +113,7 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        main.applyPreferences();
     }
 
     @Override
