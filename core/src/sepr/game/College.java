@@ -37,20 +37,37 @@ public class College {
         this.reinforcementAmount = reinforcementAmount;
     }
 
+    /**
+     * @param reinforcementAmount the amount of reinforcements provided by the college each turn
+     */
     public void setReinforcementAmount(int reinforcementAmount) { this.reinforcementAmount = reinforcementAmount; }
 
+    /**
+     * @param sectorId the sector you want to add to the college
+     */
     public void addSectorId(int sectorId){
         this.sectorIds.add(sectorId);
     }
 
+    /**
+     * @return The amount of reinforcements provided by the college each turn
+     */
     public int getReinforcementAmount() {
         return reinforcementAmount;
     }
 
+    /**
+     * @return all the ids within the sector
+     */
     public ArrayList<Integer> getSectorIds(){
         return sectorIds;
     }
 
+    /**
+     * @param playerId id of the player to check
+     * @param sectorsMap the hashmap containing all the sectors
+     * @return true if all the sectors in the college are owned by the playerId else false
+     */
     public boolean playerOwnsCollege(int playerId, HashMap<Integer, Sector> sectorsMap){
         for (int sId : sectorIds){
             if (sectorsMap.get(sId).getOwnerId() != playerId)

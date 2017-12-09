@@ -116,11 +116,13 @@ public class Map{
     private int calculateReinforcementAmount(int playerId) {
         int count = 0;
         for (Sector s : sectors.values()){
-            if (!s.isDecor() && s.getOwnerId() == playerId && s.getPrevOwnerId() != playerId){
+            // Checks whether the tile is able to be captured and just captured that turn
+            if (!s.isDecor() && s.justCapturedBy(playerId)){
                 count += s.getReinforcementsProvided();
                 s.updateOwnerId();
             }
         }
+        // Checks all the colleges to see if the player owns any
         for (College c : colleges.values())
             if (c.playerOwnsCollege(playerId, sectors))
                 count += c.getReinforcementAmount();

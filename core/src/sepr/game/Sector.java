@@ -108,4 +108,7 @@ public class Sector {
     public void addUnits(int amount) {
         this.unitsInSector += amount;
     }
+
+    public boolean justCapturedBy(int playerId){ return playerId == ownerId && playerId != prevOwnerId;  }
+
 }

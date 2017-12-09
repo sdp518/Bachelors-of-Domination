@@ -305,4 +305,6 @@ public class GameScreen implements Screen, InputProcessor{
     public boolean scrolled(int amount) {
         return false;
     }
+
+    public OrthographicCamera getGameplayCamera() { return gameplayCamera; }
 }

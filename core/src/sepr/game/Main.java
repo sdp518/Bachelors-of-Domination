@@ -38,6 +38,8 @@ public class Main extends Game implements ApplicationListener {
 		this.setScreen(optionsScreen);
 	}
 
+	public GameScreen getGameScreen() { return getGameScreen(); }
+
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
