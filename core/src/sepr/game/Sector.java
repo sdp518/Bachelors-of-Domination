@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class Sector {
     private int id;
     private int ownerId;
+    private int prevOwnerId;
     private String displayName;
     private int unitsInSector;
     private int reinforcementsProvided;
@@ -23,6 +24,7 @@ public class Sector {
     public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap, String fileName, int sectorCentreX, int sectorCentreY, boolean decor) {
         this.id = id;
         this.ownerId = ownerId;
+        this.prevOwnerId = ownerId;
         this.displayName = displayName;
         this.unitsInSector = unitsInSector;
         this.reinforcementsProvided = reinforcementsProvided;
@@ -38,6 +40,8 @@ public class Sector {
     public int getId() {
         return id;
     }
+
+    public int getPrevOwnerId() { return prevOwnerId; }
 
     public int getOwnerId() {
         return ownerId;
@@ -92,6 +96,8 @@ public class Sector {
     public String getFileName() {
         return fileName;
     }
+
+    public void updateOwnerId() { prevOwnerId = ownerId; }
 
     /**
      * Changes the number of units in this sector
