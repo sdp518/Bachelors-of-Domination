@@ -172,6 +172,5 @@ public class Map{
         //Texture t = new Texture(sector.getSectorPixmap().getWidth(), sector.getSectorPixmap().getHeight(), Pixmap.Format.RGBA8888); // create new texture to represent the sector
         sectors.get(sectorId).setNewSectorTexture(newPix); // draw the generated pixmap to the new texture
         newPix.dispose();
-        //sector.setSectorTexture(t);
     }
 }
