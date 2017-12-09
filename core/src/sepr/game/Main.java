@@ -54,8 +54,8 @@ public class Main extends Game implements ApplicationListener {
 		AudioHandler.setMusicPercentage(prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF));
 		AudioHandler.setFxPercentage(prefs.getFloat(OptionsScreen.FX_VOL_PREF));
 
-		int screenWidth = prefs.getInteger(OptionsScreen.RESOLUTION_WIDTH_PREF);
-		int screenHeight = prefs.getInteger(OptionsScreen.RESOLUTION_HEIGHT_PREF);
+		int screenWidth = prefs.getInteger(OptionsScreen.RESOLUTION_WIDTH_PREF, 1920);
+		int screenHeight = prefs.getInteger(OptionsScreen.RESOLUTION_HEIGHT_PREF, 1080);
 		Gdx.graphics.setWindowedMode(screenWidth, screenHeight);
 
 		if (prefs.getBoolean(OptionsScreen.FULLSCREEN_PREF)) {
