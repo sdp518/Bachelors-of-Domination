@@ -14,7 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
@@ -105,10 +110,34 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * Allocate sectors to each player in a balanced mannor
+     * Created by Owain's Asus on 10/12/2017.
+     * Allocate sectors to each player in a balanced manner.
+     * Just need the finished csv file so we can calculate Total reinforcements but apart from
+     * that the method is finished. The method also has an if statement to catch a divide by zero
+     * error in players.size(). This won't be needed as later on when more of the game implementation is
+     * introduced this method will only be called when all players have been declared after the intermediate
+     * setup menu.
      */
     private void allocateSectors() {
-
+        int currentPlayer = -1;
+        int totalReinforcements = 0;
+        if (players.size() == 0){
+            System.out.println("Players cannot be zero for this method to run");
+        }
+        else {
+            for (Integer x : map.getSectorIds()) {
+                //totalReinforcements += reinforcementsProvided; (need the csv file of all the reinforcementsProvided)
+            }
+            for (Integer i : map.getSectorIds()) {
+                currentPlayer += 1;
+                if (currentPlayer > players.size()) {
+                    currentPlayer = 0;
+                }
+                if (map.calculateReinforcementAmount(currentPlayer) <= totalReinforcements / players.size()) {
+                    map.setSectorOwner(i, currentPlayer);
+                }
+            }
+        }
     }
 
     /**

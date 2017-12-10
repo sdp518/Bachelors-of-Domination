@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
@@ -125,6 +126,16 @@ public class Map{
             if (c.playerOwnsCollege(playerId, sectors))
                 count += c.getReinforcementAmount();
         return count;
+    }
+
+    public int getNumOfSectors() {
+        return sectors.values().size();
+    }
+
+    public Set<Integer> getSectorIds() { return sectors.keySet() ; }
+
+    public void setSectorOwner(int sectorId, int ownerId) {
+        sectors.get(sectorId).setOwnerId(ownerId);
     }
 
     public void detectSectorClick(int screenX, int screenY) {
