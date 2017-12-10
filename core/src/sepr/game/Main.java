@@ -3,6 +3,7 @@ package sepr.game;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
@@ -36,6 +37,31 @@ public class Main extends Game implements ApplicationListener {
 
 	public void setOptionsScreen() {
 		this.setScreen(optionsScreen);
+	}
+
+	/**
+	 * Applies the players options preferences
+	 * Sets the
+	 *      Music Volume
+	 *      FX Volume
+	 *      Screen Resolution
+	 *      Fullscreen
+	 *      Colourblind Mode
+	 * A default setting should be applied for any missing preferences
+	 */
+	public void applyPreferences() {
+		Preferences prefs = Gdx.app.getPreferences(OptionsScreen.PREFERENCES_NAME);
+		AudioHandler.setMusicPercentage(prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF));
+		AudioHandler.setFxPercentage(prefs.getFloat(OptionsScreen.FX_VOL_PREF));
+
+		int screenWidth = prefs.getInteger(OptionsScreen.RESOLUTION_WIDTH_PREF, 1920);
+		int screenHeight = prefs.getInteger(OptionsScreen.RESOLUTION_HEIGHT_PREF, 1080);
+		Gdx.graphics.setWindowedMode(screenWidth, screenHeight);
+
+		if (prefs.getBoolean(OptionsScreen.FULLSCREEN_PREF)) {
+			// change game to fullscreen
+			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+		}
 	}
 
 	@Override

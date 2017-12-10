@@ -14,6 +14,7 @@ import java.util.Set;
  */
 public class Map{
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
+    private HashMap<Integer, College> colleges; // mapping of a college ID to the college object
     private HashMap<String, Color> colors; // mapping of color name to color ***NOT QUITE TRUE***
 
     Color changeGreen = new Color(0.5f, 0, 1f, 0f);
@@ -22,6 +23,12 @@ public class Map{
 
     public Map() {
         this.sectors = new HashMap<Integer, Sector>();
+
+        /*
+
+        Maybe within this section we could create a for loop which get's the various colleges and creates the objects? - Jack
+
+         */
 
         // hes east
         this.sectors.put(0, new Sector(0, -1, "Hes East 1", 0, 2, new int[]{}, new Texture("hesEast1.png"), new Pixmap(Gdx.files.internal("hesEast1.png")), "hesEast1.png", 0, 0, false));
@@ -107,8 +114,18 @@ public class Map{
      * @param playerId player who calculation is for
      * @return returns the amount of reinforcements the player should be allocated
      */
-    public int calculateReinforcementAmount(int playerId) {
-        return 0;
+    private int calculateReinforcementAmount(int playerId) {
+        int count = 0;
+        for (Sector s : sectors.values()){
+            if (!s.isDecor() && s.getOwnerId() == playerId && s.getPrevOwnerId() != playerId){
+                count += s.getReinforcementsProvided();
+                s.updateOwnerId();
+            }
+        }
+        for (College c : colleges.values())
+            if (c.playerOwnsCollege(playerId, sectors))
+                count += c.getReinforcementAmount();
+        return count;
     }
 
     public int getNumOfSectors() {
@@ -166,6 +183,5 @@ public class Map{
         //Texture t = new Texture(sector.getSectorPixmap().getWidth(), sector.getSectorPixmap().getHeight(), Pixmap.Format.RGBA8888); // create new texture to represent the sector
         sectors.get(sectorId).setNewSectorTexture(newPix); // draw the generated pixmap to the new texture
         newPix.dispose();
-        //sector.setSectorTexture(t);
     }
 }
