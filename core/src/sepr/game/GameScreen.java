@@ -110,8 +110,13 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * Allocate sectors to each player in a balanced manner
-     * if(Sector.calculatereinforcementsAmount()*
+     * Created by Owain's Asus on 10/12/2017.
+     * Allocate sectors to each player in a balanced manner.
+     * Just need the finished csv file so we can calculate Total reinforcements but apart from
+     * that the method is finished. The method also has an if statement to catch a divide by zero
+     * error in players.size(). This won't be needed as later on when more of the game implementation is
+     * introduced this method will only be called when all players have been declared after the intermediate
+     * setup menu.
      */
     private void allocateSectors() {
         int currentPlayer = -1;
