@@ -128,60 +128,62 @@ public class Map{
         return count;
     }
 
+    /**
+     *
+     * @param sectorId id of the desired sector
+     * @return Sector object with the corresponding id in hashmap sectors
+     */
+    public Sector getSector(int sectorId) {
+        return sectors.get(sectorId);
+    }
+
     public int getNumOfSectors() {
         return sectors.values().size();
     }
 
     public Set<Integer> getSectorIds() { return sectors.keySet() ; }
 
-    public void setSectorOwner(int sectorId, int ownerId) {
-        sectors.get(sectorId).setOwnerId(ownerId);
+    public void setSectorOwner(int sectorId, Player player) {
+        sectors.get(sectorId).setOwner(player);
     }
 
-    public void detectSectorClick(int screenX, int screenY) {
+    /**
+     *
+     * @param worldX world x coord of mouse click
+     * @param worldY world y coord of mouse click
+     * @return id of sector that was clicked on or -1 if no sector was clicked or the clicked sector is decor only
+     */
+    public int detectSectorClick(int worldX, int worldY) {
         for (Sector sector : sectors.values()) {
-            if (screenX < 0 || screenY < 0 || screenX > sector.getSectorTexture().getWidth() || screenY > sector.getSectorTexture().getHeight()) {
+            if (worldX < 0 || worldY < 0 || worldX > sector.getSectorTexture().getWidth() || worldY > sector.getSectorTexture().getHeight()) {
                 continue;
             }
-            int pixelValue = sector.getSectorPixmap().getPixel(screenX, screenY);
+            int pixelValue = sector.getSectorPixmap().getPixel(worldX, worldY);
             if (pixelValue != -256) {
-                System.out.println("Hit: " + sector.getDisplayName());
-                changeSectorColor(sector.getId(), "green");
-                break; // only one sector should be changed at a time so
+                if (sector.isDecor()) {
+                    continue; // sector clicked is decor so continue checking to see if a non-decor sector was clicked
+                } else {
+                    System.out.println("Hit: " + sector.getDisplayName());
+                    return sector.getId();
+                }
             }
         }
+        return -1;
+    }
+
+    /**
+     *
+     * @param batch
+     */
+    private void renderSectorUnitData(SpriteBatch batch) {
+
     }
 
     public void draw(SpriteBatch batch) {
         for (Sector sector : sectors.values()) {
             batch.draw(sector.getSectorTexture(), 0, 0);
         }
+        renderSectorUnitData(batch);
     }
 
-    /**
-     * The method takes a sectorId and recolors it to the specified color
-     * @param sectorId id of sector to recolor
-     * @param newColor what color the sector be changed to
-     */
-    public void changeSectorColor(int sectorId, String newColor){
-        //Sector sector = sectors.get(sectorId);
-        //Pixmap temp = sector.getSectorPixmap();
-        if (sectors.get(sectorId).isDecor()) {
-            return;
-        }
-        Pixmap newPix = new Pixmap(Gdx.files.internal(sectors.get(sectorId).getFileName())); // pixmap for drawing updated sector texture to
-        for (int x = 0; x < sectors.get(sectorId).getSectorPixmap().getWidth(); x++){
-            for (int y = 0; y < sectors.get(sectorId).getSectorPixmap().getHeight(); y++){
-                if(newPix.getPixel(x, y) != -256){
-                    Color tempColor = new Color(0,0,0,0);
-                    Color.rgba8888ToColor(tempColor, newPix.getPixel(x, y)); // get the pixels current color
-                    tempColor.sub(colors.get(newColor)); // calculate the new color of the pixel
-                    newPix.drawPixel(x, y, Color.rgba8888(tempColor));  // draw the modified pixel value to the new pixmap
-                }
-            }
-        }
-        //Texture t = new Texture(sector.getSectorPixmap().getWidth(), sector.getSectorPixmap().getHeight(), Pixmap.Format.RGBA8888); // create new texture to represent the sector
-        sectors.get(sectorId).setNewSectorTexture(newPix); // draw the generated pixmap to the new texture
-        newPix.dispose();
-    }
 }

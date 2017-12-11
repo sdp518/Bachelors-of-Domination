@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
@@ -20,8 +21,58 @@ public class Main extends Game implements ApplicationListener {
 	public void create () {
 		new WidgetFactory(); // setup widget factory for generating UI components
 
+		HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+		players.put(0, new Player(0, "x", Color.BLUE) {
+			@Override
+			protected void processAttackPhase() {
+
+			}
+
+			@Override
+			protected void processMovePhase() {
+
+			}
+
+			@Override
+			protected int processAllocationPhase(int amount) {
+				return 0;
+			}
+		});
+		players.put(1, new Player(1, "y", Color.RED) {
+			@Override
+			protected void processAttackPhase() {
+
+			}
+
+			@Override
+			protected void processMovePhase() {
+
+			}
+
+			@Override
+			protected int processAllocationPhase(int amount) {
+				return 0;
+			}
+		});
+		players.put(2, new Player(2, "z", Color.GREEN) {
+			@Override
+			protected void processAttackPhase() {
+
+			}
+
+			@Override
+			protected void processMovePhase() {
+
+			}
+
+			@Override
+			protected int processAllocationPhase(int amount) {
+				return 0;
+			}
+		});
+
 		this.menuScreen = new MenuScreen(this);
-		this.gameScreen = new GameScreen(this, new HashMap<Integer, Player>(), false, 100);
+		this.gameScreen = new GameScreen(this, players, false, 100);
 		this.optionsScreen = new OptionsScreen(this);
 
 		this.setMenuScreen();
