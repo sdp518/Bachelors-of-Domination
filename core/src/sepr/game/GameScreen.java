@@ -45,6 +45,7 @@ public class GameScreen implements Screen, InputProcessor{
     private int turnTimeElapsed;
     private Integer[] turnOrder; // array of player ids in order of players' turns;
     private int currentPlayer; // index of current player
+    private int currentPhase; // 0-2: 0 = Reinforce, 1 = Attack 2 = Move
 
     /**
      * Performs the game's initial setup
@@ -105,9 +106,6 @@ public class GameScreen implements Screen, InputProcessor{
         table.add(startGameBtn);
     }
 
-    private void playGame() {
-
-    }
 
     /**
      * Created by Owain's Asus on 10/12/2017.
@@ -141,11 +139,30 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * The main game loop, used to keep track of the current player and to call the game phase methods
+     */
+    private void playGame() {
+        this.players.put(0, "badger");
+        this.players.put(1, "test");
+        while (this.map.checkForWinner() == -1) { // Run while no winner
+            for (int i = 0; i < this.players.size(); i++) { // Loops 0 -> number of players - 1
+                this.currentPlayer = i;
+                executePlayerTurn(i); // Run the turns for the current player
+            }
+        }
+        this.gameOver(this.currentPlayer);
+    }
+
+    /**
+     * Executes the turn for the given player ID
      *
-     * @param playerId player's whos turn it is to be carried out
+     * @param playerId player's who's turn it is to be carried out
      */
     private void executePlayerTurn(int playerId) {
-
+        for (int phase = 0; phase <= 2; phase++) { // Loops through the game phases
+            this.currentPhase = phase;
+            // Call game phase methods
+        }
     }
 
     /**
