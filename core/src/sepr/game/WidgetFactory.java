@@ -24,6 +24,11 @@ public class WidgetFactory {
     private static Texture onSwitchTexture;
     private static Texture offSwitchTexture;
 
+    private static Texture playerLabelTexture;
+    private static Texture playerLeftButtonTexture;
+    private static Texture playerRightButtonTexture;
+
+
     public WidgetFactory() {
         basicButtonTexture = new Texture("ui/buttons.png");
         topBarTexture = new Texture("ui/topBar.png");
@@ -37,6 +42,13 @@ public class WidgetFactory {
 
         onSwitchTexture = new Texture("ui/onSwitch.png");
         offSwitchTexture = new Texture("ui/offSwitch.png");
+
+        playerLabelTexture = new Texture("ui/gio-assets/Player-Label.png");
+        playerLeftButtonTexture = new Texture("ui/gio-assets/Player-Left-Button.png");
+        playerRightButtonTexture = new Texture("ui/gio-assets/Player-Right-Button.png");
+
+
+
     }
 
     public static TextButton genBasicButton(String buttonText) {
@@ -70,6 +82,30 @@ public class WidgetFactory {
         style.background = new TextureRegionDrawable(new TextureRegion(labelTexture));
 
         return new Label(labelText, style);
+    }
+
+    public static Label genPlayerLabel(String labelText) {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = new BitmapFont();
+        style.background = new TextureRegionDrawable(new TextureRegion(playerLabelTexture));
+
+        return new Label(labelText, style);
+    }
+
+    public static Button genPlayerLeftButton() {
+        Button.ButtonStyle style = new Button.ButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(playerLeftButtonTexture));
+        style.down = new TextureRegionDrawable(new TextureRegion(playerLeftButtonTexture));
+
+        return new Button(style);
+    }
+
+    public static Button genPlayerRightButton() {
+        Button.ButtonStyle style = new Button.ButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(playerRightButtonTexture));
+        style.down = new TextureRegionDrawable(new TextureRegion(playerRightButtonTexture));
+
+        return new Button(style);
     }
 
     /**

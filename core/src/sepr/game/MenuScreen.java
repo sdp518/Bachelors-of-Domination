@@ -63,7 +63,7 @@ public class MenuScreen implements Screen {
         startGameBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                main.setGameScreen();
+                main.setGameSetupScreen();
             }
         });
 
