@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import javax.xml.soap.Text;
+
 /**
  * Created by Dom's Surface Mark 2 on 28/11/2017.
  */
@@ -25,8 +27,16 @@ public class WidgetFactory {
     private static Texture offSwitchTexture;
 
     private static Texture playerLabelTexture;
-    private static Texture playerLeftButtonTexture;
-    private static Texture playerRightButtonTexture;
+    private static Texture playerLeftBtnTexture;
+    private static Texture playerRightBtnTexture;
+    private static Texture menuBtnLabelTexture;
+    private static Texture collegeLeftBtnTexture;
+    private static Texture collegeRightBtnTexture;
+    private static Texture startGameBtnTexture;
+    private static Texture nameBoxLabelTexture;
+
+    private static Texture derwLogoTexture;
+
 
 
     public WidgetFactory() {
@@ -43,10 +53,16 @@ public class WidgetFactory {
         onSwitchTexture = new Texture("ui/onSwitch.png");
         offSwitchTexture = new Texture("ui/offSwitch.png");
 
-        playerLabelTexture = new Texture("ui/gio-assets/Player-Label.png");
-        playerLeftButtonTexture = new Texture("ui/gio-assets/Player-Left-Button.png");
-        playerRightButtonTexture = new Texture("ui/gio-assets/Player-Right-Button.png");
+        playerLabelTexture = new Texture("ui/HD-assets/Player-Label.png");
+        playerLeftBtnTexture = new Texture("ui/HD-assets/Player-Left-Button.png");
+        playerRightBtnTexture = new Texture("ui/HD-assets/Player-Right-Button.png");
+        menuBtnLabelTexture = new Texture("ui/HD-assets/Menu-Button.png");
+        collegeLeftBtnTexture = new Texture("ui/HD-assets/College-Left-Button.png");
+        collegeRightBtnTexture = new Texture("ui/HD-assets/College-Right-Button.png");
+        startGameBtnTexture = new Texture("ui/HD-assets/Start-Game-Button.png");
+        nameBoxLabelTexture = new Texture("ui/HD-assets/Game-Setup-Name-Box.png");
 
+        derwLogoTexture = new Texture("ui/HD-assets/derwent-logo.png");
 
 
     }
@@ -76,6 +92,8 @@ public class WidgetFactory {
         return new Image(optionsGraphicTexture);
     }
 
+    public static Image genDerwLogo() {return new Image(derwLogoTexture);}
+
     public static Label genStyledLabel(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = new BitmapFont();
@@ -92,20 +110,61 @@ public class WidgetFactory {
         return new Label(labelText, style);
     }
 
+    public static Label genMenuBtnLabel(String labelText) {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = new BitmapFont();
+        style.background = new TextureRegionDrawable(new TextureRegion(menuBtnLabelTexture));
+
+        return new Label(labelText, style);
+    }
+
+    public static Label genNameBoxLabel(String labelText) {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = new BitmapFont();
+        style.background = new TextureRegionDrawable(new TextureRegion(nameBoxLabelTexture));
+
+        return new Label(labelText, style);
+    }
+
     public static Button genPlayerLeftButton() {
         Button.ButtonStyle style = new Button.ButtonStyle();
-        style.up = new TextureRegionDrawable(new TextureRegion(playerLeftButtonTexture));
-        style.down = new TextureRegionDrawable(new TextureRegion(playerLeftButtonTexture));
+        style.up = new TextureRegionDrawable(new TextureRegion(playerLeftBtnTexture));
+        style.down = new TextureRegionDrawable(new TextureRegion(playerLeftBtnTexture));
 
         return new Button(style);
     }
 
     public static Button genPlayerRightButton() {
         Button.ButtonStyle style = new Button.ButtonStyle();
-        style.up = new TextureRegionDrawable(new TextureRegion(playerRightButtonTexture));
-        style.down = new TextureRegionDrawable(new TextureRegion(playerRightButtonTexture));
+        style.up = new TextureRegionDrawable(new TextureRegion(playerRightBtnTexture));
+        style.down = new TextureRegionDrawable(new TextureRegion(playerRightBtnTexture));
 
         return new Button(style);
+    }
+
+    public static Button genCollegeLeftButton() {
+        Button.ButtonStyle style = new Button.ButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(collegeLeftBtnTexture));
+        style.down = new TextureRegionDrawable(new TextureRegion(collegeLeftBtnTexture));
+
+        return new Button(style);
+    }
+
+    public static Button genCollegeRightButton() {
+        Button.ButtonStyle style = new Button.ButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(collegeRightBtnTexture));
+        style.down = new TextureRegionDrawable(new TextureRegion(collegeRightBtnTexture));
+
+        return new Button(style);
+    }
+
+    public static TextButton genStartGameButton(String buttonText) {
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture));
+        style.down = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture));
+        style.font = new BitmapFont();
+
+        return new TextButton(buttonText,style);
     }
 
     /**
@@ -133,6 +192,7 @@ public class WidgetFactory {
         style.font = new BitmapFont();
         style.checkboxOn = new TextureRegionDrawable(new TextureRegion(onSwitchTexture));
         style.checkboxOff = new TextureRegionDrawable(new TextureRegion(offSwitchTexture));
+
 
         return new CheckBox(null, style);
     }

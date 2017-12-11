@@ -6,11 +6,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameSetupScreen implements Screen{
@@ -20,6 +18,7 @@ public class GameSetupScreen implements Screen{
     private Table table;
 
     private CheckBox turnTimerSwitch;
+
 
 
     public GameSetupScreen (Main main) {
@@ -34,60 +33,137 @@ public class GameSetupScreen implements Screen{
         this.table.setDebug(false); // enable table drawing for ui debug
         this.setupUi();
 
-    } private Table setUpGameSetupTable() {
+    }
+    private Table setUpGameSetupTable() {
 
-            Button playerLeftButton = WidgetFactory.genPlayerLeftButton();
-            Button playerRightButton = WidgetFactory.genPlayerRightButton();
-            Label playerLabel = WidgetFactory.genPlayerLabel("HUMAN PLAYER");
+        Button player1LeftButton = WidgetFactory.genPlayerLeftButton();
+        Button player1RightButton = WidgetFactory.genPlayerRightButton();
+        Label player1Label = WidgetFactory.genPlayerLabel("HUMAN PLAYER");
+        player1Label.setAlignment(Align.center);
 
-            Table playerTable = new Table();
-            playerTable.setDebug(true);
+        Button player2LeftButton = WidgetFactory.genPlayerLeftButton();
+        Button player2RightButton = WidgetFactory.genPlayerRightButton();
+        Label player2Label = WidgetFactory.genPlayerLabel("HUMAN PLAYER");
+        player2Label.setAlignment(Align.center);
 
-            //Player 1
-            playerTable.left();
-            playerTable.add(playerLeftButton).pad(30);
-            playerTable.add(playerLabel);
-            playerTable.right();
-            playerTable.add(playerRightButton).pad(30);
+        Button player3LeftButton = WidgetFactory.genPlayerLeftButton();
+        Button player3RightButton = WidgetFactory.genPlayerRightButton();
+        Label player3Label = WidgetFactory.genPlayerLabel("NONE");
+        player3Label.setAlignment(Align.center);
 
-            //Player 2
-            playerTable.row();
-            playerTable.left();
-            playerTable.add(playerLeftButton).pad(30);
-            playerTable.add(playerLabel);
-            playerTable.right();
-            playerTable.add(playerRightButton).pad(30);
+        Button player4LeftButton = WidgetFactory.genPlayerLeftButton();
+        Button player4RightButton = WidgetFactory.genPlayerRightButton();
+        Label player4Label = WidgetFactory.genPlayerLabel("NONE");
+        player4Label.setAlignment(Align.center);
 
-            //Player 3
-            playerTable.left();
-            playerTable.add(playerLeftButton).pad(30);
-            playerTable.add(playerLabel);
-            playerTable.right();
-            playerTable.add(playerRightButton).pad(30);
+        Button player5LeftButton = WidgetFactory.genPlayerLeftButton();
+        Button player5RightButton = WidgetFactory.genPlayerRightButton();
+        Label player5Label = WidgetFactory.genPlayerLabel("NEUTRAL A.I.");
+        player5Label.setAlignment(Align.center);
 
-            //Player 4
-            playerTable.row();
-            playerTable.left();
-            playerTable.add(playerLeftButton).pad(30);
-            playerTable.add(playerLabel);
-            playerTable.right();
-            playerTable.add(playerRightButton).pad(30);
+        Table playerTable = new Table();
+        playerTable.setDebug(true);
 
-            //Player 5
-            playerTable.row();
-            playerTable.left();
-            playerTable.add(playerLeftButton).pad(30);
-            playerTable.add(playerLabel);
-            playerTable.right();
-            playerTable.add(playerRightButton).pad(30);
+        //Player 1
+        playerTable.left();
+        playerTable.add(player1LeftButton).height(60).width(50).pad(5);
+        playerTable.add(player1Label).height(60).width(320).expandX();
+        playerTable.right();
+        playerTable.add(player1RightButton).height(60).width(50).pad(5);
+
+        //Player 2
+        playerTable.row();
+        playerTable.left();
+        playerTable.add(player2LeftButton).height(60).width(50).pad(5);
+        playerTable.add(player2Label).height(60).width(320);
+        playerTable.right();
+        playerTable.add(player2RightButton).height(60).width(50).pad(5);
+
+        //Player 3
+        playerTable.row();
+        playerTable.left();
+        playerTable.add(player3LeftButton).height(60).width(50).pad(5);
+        playerTable.add(player3Label).height(60).width(320);
+        playerTable.right();
+        playerTable.add(player3RightButton).height(60).width(50).pad(5);
+
+        //Player 4
+        playerTable.row();
+        playerTable.left();
+        playerTable.add(player4LeftButton).height(60).width(50).pad(5);
+        playerTable.add(player4Label).height(60).width(320);
+        playerTable.right();
+        playerTable.add(player4RightButton).height(60).width(50).pad(5);
+
+        //Player 5
+        playerTable.row();
+        playerTable.left();
+        playerTable.add(player5LeftButton).height(60).width(50).pad(5);
+        playerTable.add(player5Label).height(60).width(320);
+        playerTable.right();
+        playerTable.add(player5RightButton).height(60).width(50).pad(5);
+
+        return playerTable;
+        }
+
+        private Table setUpTurnTimerTable(){
+            Label turnTimerLabel = WidgetFactory.genMenuBtnLabel("TURN TIMER");
+            turnTimerLabel.setAlignment(0, 0);
+
+            CheckBox turnTimerSwitch = WidgetFactory.genOnOffSwitch();
 
 
-            return playerTable;
+            Table turnTimerTable = new Table();
+            turnTimerTable.setDebug(true);
 
+            turnTimerTable.left();
+            turnTimerTable.add(turnTimerLabel).height(60).width(420);
+            turnTimerTable.right();
+            turnTimerTable.add(turnTimerSwitch);
+            return turnTimerTable;
+        }
+
+        private Table setUpCollegeLogoTable(){
+            Button collegeLeftButton = WidgetFactory.genCollegeLeftButton();
+            Button collegeRightButton = WidgetFactory.genCollegeRightButton();
+            Image derwLogo = WidgetFactory.genDerwLogo();
+
+            Table collegeLogoTable = new Table();
+            collegeLogoTable.setDebug(true);
+
+            collegeLogoTable.left();
+            collegeLogoTable.add(collegeLeftButton).height(50).width(25);
+            collegeLogoTable.add(derwLogo).height(100).width(120);
+            collegeLogoTable.right();
+            collegeLogoTable.add(collegeRightButton).height(50).width(25);
+
+            return collegeLogoTable;
         }
 
 
+        private Table setUpCollegeTable(){
+            Label nameBoxLabel = WidgetFactory.genNameBoxLabel("Player 1" +"\n"+
+                    "Derwent");
+            nameBoxLabel.setAlignment(0, 0);
+
+
+            Table collegeTable = new Table();
+            collegeTable.setDebug(true);
+
+            collegeTable.left();
+            collegeTable.add(nameBoxLabel).height(100).width(320);
+            collegeTable.right();
+            collegeTable.add(setUpCollegeLogoTable());
+
+            return collegeTable;
+        }
+
+
+
     private void setupUi() {
+        TextButton startGameButton = WidgetFactory.genStartGameButton("START GAME");
+
+
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/background.png"))));
 
         table.center();
@@ -96,6 +172,14 @@ public class GameSetupScreen implements Screen{
         table.row();
         table.left();
         table.add(setUpGameSetupTable()).expand();
+        table.right();
+        table.add(setUpCollegeTable()).expand();
+        table.row();
+        table.left();
+        table.add(setUpTurnTimerTable()).expand();
+        table.add(startGameButton).height(60).width(420);
+
+
 
         table.row();
         table.center();
