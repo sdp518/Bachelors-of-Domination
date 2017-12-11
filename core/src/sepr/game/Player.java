@@ -14,22 +14,32 @@ import java.util.HashMap;
  */
 public abstract class Player {
     private int id;
-    private static Map map;
     private String collegeName;
-    private int troopsToAllocate;
+    private int troopsToAllocate; // how many troops the player has to allocate at the start of their next reinforcement phase
     private Color sectorColour; // what colour to shade sectors owned by the player
 
     /**
      *
      * @param id player's unique identifier
-     * @param map map for the player to carry out actions upon
      * @param collegeName display name for this player
      */
-    public Player(int id, Map map, String collegeName) {
+    public Player(int id, String collegeName, Color sectorColour) {
         this.id = id;
-        this.map = map;
         this.collegeName = collegeName;
         this.troopsToAllocate = 0;
+        this.sectorColour = sectorColour;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Color getSectorColour() {
+        return sectorColour;
+    }
+
+    public void setTroopsToAllocate(int troopsToAllocate) {
+        this.troopsToAllocate = troopsToAllocate;
     }
 
     /**
