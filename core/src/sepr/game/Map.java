@@ -92,7 +92,7 @@ public class Map{
      * Checks to see if there is one player who controls every sector
      * @return -1 if there is no winner or the ID of the player that controlls all the sectors
      */
-    private int checkForWinner() {
+    public int checkForWinner() {
         return -1;
     }
 
@@ -114,7 +114,7 @@ public class Map{
      * @param playerId player who calculation is for
      * @return returns the amount of reinforcements the player should be allocated
      */
-    private int calculateReinforcementAmount(int playerId) {
+    public int calculateReinforcementAmount(int playerId) {
         int count = 0;
         for (Sector s : sectors.values()){
             if (!s.isDecor() && s.getOwnerId() == playerId && s.getPrevOwnerId() != playerId){
