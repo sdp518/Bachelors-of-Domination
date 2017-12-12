@@ -46,6 +46,9 @@ public class GameScreen implements Screen, InputProcessor{
     private List<Integer> turnOrder; // array of player ids in order of players' turns;
     private int currentPlayer; // index of current player in turnOrder list
     private TurnPhase currentPhase = TurnPhase.REINFORCEMENT; // first phase of game is reinforcement
+    private boolean midAttack; // Stores if the attack phase is initiated
+    private Sector attackingSector; // Stores the sector being used to attack in the attack phase (could store as ID and lookup object each time to save memory)
+    private Sector defendingSector; // Stores the sector being attacked in the attack phase (could store as ID and lookup object each time to save memory)
 
     /**
      * Performs the game's initial setup
@@ -80,6 +83,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimeElapsed = 0;
         this.turnOrder = new ArrayList<Integer>(players.keySet());
         this.currentPlayer = 0;
+        this.midAttack = false;
 
         setupUi();
 
@@ -264,7 +268,22 @@ public class GameScreen implements Screen, InputProcessor{
      * @param worldY
      */
     private void attackPhaseTouchUp(float worldX, float worldY) {
-
+        int sectorid = map.detectSectorClick((int)worldX, (int)worldY);
+        if (sectorid != -1) { // If selected a sector
+            Sector selected = map.getSector(sectorid); // Current sector
+            if (this.midAttack) { // If its the second selection in the attack phase
+                if (this.attackingSector.isAdjacentTo(selected) && selected.getOwnerId() != this.currentPlayer) { // If not own sector and its adjacent
+                    this.defendingSector = selected;
+                    // Call to initiate attack + advance phase
+                    this.midAttack = false;
+                } else { // Cancel attack as not attackable
+                    this.midAttack = false;
+                }
+            } else if (selected.getOwnerId() == this.currentPlayer && selected.getUnitsInSector() > 1) { // First selection, is owned by the player and has enough troops
+                this.midAttack = true;
+                this.attackingSector = selected;
+            }
+        }
     }
 
     /**
@@ -363,7 +382,7 @@ public class GameScreen implements Screen, InputProcessor{
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         float worldX = gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x;
-        float worldY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y - Gdx.graphics.getWidth()) * -1;
+        float worldY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y - Gdx.graphics.getHeight()) * -1;
 
         switch (currentPhase) {
             case REINFORCEMENT:
