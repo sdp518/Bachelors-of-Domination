@@ -1,6 +1,7 @@
 package sepr.game;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 
 /**
@@ -8,7 +9,7 @@ import java.util.HashMap;
  */
 public class College {
 
-    private ArrayList<Integer> sectorIds;
+    private List<Integer> sectorIds;
     private int reinforcementAmount;
     private String displayName;
     private int id;
@@ -30,7 +31,7 @@ public class College {
         this.reinforcementAmount = reinforcementAmount;
     }
 
-    public College(int id, String displayName, int reinforcementAmount, ArrayList<Integer> sectorIds){
+    public College(int id, String displayName, int reinforcementAmount, List<Integer> sectorIds){
         this.id = id;
         this.displayName = displayName;
         this.sectorIds = sectorIds;
@@ -59,7 +60,7 @@ public class College {
     /**
      * @return all the ids within the sector
      */
-    public ArrayList<Integer> getSectorIds(){
+    public List<Integer> getSectorIds(){
         return sectorIds;
     }
 
@@ -75,5 +76,7 @@ public class College {
         }
         return true;
     }
+
+    public String getDisplayName() { return displayName; }
 
 }

@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -22,6 +25,7 @@ public class Map{
 
     public Map() {
         this.sectors = new HashMap<Integer, Sector>();
+        this.colleges = new HashMap<Integer, College>();
 
         /*
 
@@ -79,6 +83,16 @@ public class Map{
         // lakes - *SPECIAL CASE*
         this.sectors.put(31, new Sector(31, -1, "Lake 1", 0, 2, new int[]{}, new Texture("lake1.png"), new Pixmap(Gdx.files.internal("lake1.png")), "lake1.png", 0, 0, true));
         this.sectors.put(32, new Sector(32, -1, "Lake 2", 0, 2, new int[]{}, new Texture("lake2.png"), new Pixmap(Gdx.files.internal("lake2.png")), "lake2.png", 0, 0, true));
+
+        // Colleges
+        this.colleges.put(0, new College(0, "Hes East", 0, Arrays.asList(0, 1, 2, 3)));
+        this.colleges.put(1, new College(0, "Halifax", 0, Arrays.asList(4,5,6,7)));
+        this.colleges.put(2, new College(0, "Derwent", 0, Arrays.asList(8,9,10,11)));
+        this.colleges.put(3, new College(0, "Alcuin", 0, Arrays.asList(12,13,14)));
+        this.colleges.put(4, new College(0, "Vanbrugh", 0, Arrays.asList(18,19,20)));
+        this.colleges.put(5, new College(0, "Wentworth", 0, Arrays.asList(22,23)));
+        this.colleges.put(6, new College(0, "James", 0, Arrays.asList(24,25,26,27)));
+        this.colleges.put(7, new College(0, "Neutral", 0, Arrays.asList(15,16,17,28,29,30)));
 
 
         this.colors = new HashMap<String, Color>();
@@ -138,9 +152,14 @@ public class Map{
             if (pixelValue != -256) {
                 System.out.println("Hit: " + sector.getDisplayName());
                 changeSectorColor(sector.getId(), "green");
+                sector.setOwnerId(1);
                 break; // only one sector should be changed at a time so
             }
         }
+        /*for (College c : colleges.values()){
+            if (c.playerOwnsCollege(1, sectors))
+                System.out.println(c.getDisplayName());
+        }*/ // This was a test to make sure colleges work
     }
 
     public void draw(SpriteBatch batch) {
