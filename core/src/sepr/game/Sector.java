@@ -107,6 +107,20 @@ public class Sector {
     public void updateOwnerId() { prevOwnerId = ownerId; }
 
     /**
+     * Function to check if a given sector is adjacent
+     * @param toCheck The sector object to check
+     * @return True/False
+     */
+    public boolean isAdjacentTo(Sector toCheck) {
+        for (int adjacent : this.adjacentSectorIds) {
+            if (adjacent == toCheck.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Changes the number of units in this sector
      * If there are 0 units in sector then ownerId should be -1 (neutral)
      * @throws IllegalArgumentException if units in sector is below 0
