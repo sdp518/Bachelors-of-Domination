@@ -1,5 +1,7 @@
 package sepr.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -32,7 +34,7 @@ public class Sector {
         this.sectorTexture = sectorTexture;
         this.sectorPixmap = sectorPixmap;
         this.sectorCentreX = sectorCentreX;
-        this.sectorCentreY = sectorCentreY;
+        this.sectorCentreY = 1080 - sectorCentreY;
         this.decor = decor;
         this.fileName = fileName;
     }
@@ -41,12 +43,19 @@ public class Sector {
         return id;
     }
 
+    public int getPrevOwnerId() { return prevOwnerId; }
+
     public int getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
+    /**
+     * sets the owner id and colour of this sector
+     * @param player the player object that owns this sector
+     */
+    public void setOwner(Player player) {
+        this.ownerId = player.getId();
+        this.changeSectorColor(player.getSectorColour());
     }
 
     public String getDisplayName() {
@@ -105,6 +114,33 @@ public class Sector {
      */
     public void addUnits(int amount) {
         this.unitsInSector += amount;
+    }
+
+
+    /**
+     * The method takes a sectorId and recolors it to the specified color
+     * @param newColor what color the sector be changed to
+     * @throws RuntimeException if attempt to recolor a decor sector
+     */
+    public void changeSectorColor(Color newColor){
+        if (this.isDecor()) {
+            throw new RuntimeException("Should not recolour decor sector");
+        }
+
+        Pixmap newPix = new Pixmap(Gdx.files.internal(this.getFileName())); // pixmap for drawing updated sector texture to
+        for (int x = 0; x < this.getSectorPixmap().getWidth(); x++){
+            for (int y = 0; y < this.getSectorPixmap().getHeight(); y++){
+                if(newPix.getPixel(x, y) != -256){
+                    Color tempColor = new Color(0,0,0,0);
+                    Color.rgba8888ToColor(tempColor, newPix.getPixel(x, y)); // get the pixels current color
+                    tempColor.sub(new Color(Color.WHITE).sub(newColor)); // calculate the new color of the pixel
+                    newPix.drawPixel(x, y, Color.rgba8888(tempColor));  // draw the modified pixel value to the new pixmap
+                }
+            }
+        }
+        //Texture t = new Texture(sector.getSectorPixmap().getWidth(), sector.getSectorPixmap().getHeight(), Pixmap.Format.RGBA8888); // create new texture to represent the sector
+        this.setNewSectorTexture(newPix); // draw the generated pixmap to the new texture
+        newPix.dispose();
     }
 
     // Shortened way of checking if the player captured the tile that turn
