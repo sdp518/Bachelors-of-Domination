@@ -47,8 +47,8 @@ public class GameScreen implements Screen, InputProcessor{
     private int currentPlayer; // index of current player in turnOrder list
     private TurnPhase currentPhase = TurnPhase.REINFORCEMENT; // first phase of game is reinforcement
     private boolean midAttack; // Stores if the attack phase is initiated
-    private Sector attackingSector; // Stores the sector being used to attack in the attack phase
-    private Sector defendingSector; // Stores the sector being attacked in the attack phase
+    private Sector attackingSector; // Stores the sector being used to attack in the attack phase (could store as ID and lookup object each time to save memory)
+    private Sector defendingSector; // Stores the sector being attacked in the attack phase (could store as ID and lookup object each time to save memory)
 
     /**
      * Performs the game's initial setup
