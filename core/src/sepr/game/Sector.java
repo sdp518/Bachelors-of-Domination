@@ -41,8 +41,6 @@ public class Sector {
         return id;
     }
 
-    public int getPrevOwnerId() { return prevOwnerId; }
-
     public int getOwnerId() {
         return ownerId;
     }
@@ -109,6 +107,7 @@ public class Sector {
         this.unitsInSector += amount;
     }
 
+    // Shortened way of checking if the player captured the tile that turn
     public boolean justCapturedBy(int playerId){ return playerId == ownerId && playerId != prevOwnerId;  }
 
 }
