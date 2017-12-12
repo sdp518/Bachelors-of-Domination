@@ -5,8 +5,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -18,10 +20,14 @@ public class GameSetupScreen implements Screen{
     private Table table;
 
     private CheckBox turnTimerSwitch;
-
+    public static final String[] PLAYER_TYPE={"NONE", "HUMAN PLAYER", "NEUTRAL A.I."};
+    public int playerChoice;
 
 
     public GameSetupScreen (Main main) {
+
+        playerChoice= 0;
+
         this.main = main;
 
         this.stage = new Stage();
@@ -34,11 +40,30 @@ public class GameSetupScreen implements Screen{
         this.setupUi();
 
     }
+
+
+    public int getPlayerChoice() {
+        return playerChoice;
+    }
+
+    public void setPlayerChoice(int playerChoice) {
+        this.playerChoice = playerChoice;
+    }
+
     private Table setUpGameSetupTable() {
 
         Button player1LeftButton = WidgetFactory.genPlayerLeftButton();
+        player1LeftButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setPlayerChoice(1);
+
+            }
+        });
+
+
         Button player1RightButton = WidgetFactory.genPlayerRightButton();
-        Label player1Label = WidgetFactory.genPlayerLabel("HUMAN PLAYER");
+        Label player1Label = WidgetFactory.genPlayerLabel(PLAYER_TYPE[getPlayerChoice()]);
         player1Label.setAlignment(Align.center);
 
         Button player2LeftButton = WidgetFactory.genPlayerLeftButton();
@@ -122,7 +147,7 @@ public class GameSetupScreen implements Screen{
             turnTimerTable.add(turnTimerSwitch);
             return turnTimerTable;
         }
-
+        //College 1
         private Table setUpCollegeLogoTable(){
             Button collegeLeftButton = WidgetFactory.genCollegeLeftButton();
             Button collegeRightButton = WidgetFactory.genCollegeRightButton();
@@ -139,6 +164,7 @@ public class GameSetupScreen implements Screen{
 
             return collegeLogoTable;
         }
+
 
 
         private Table setUpCollegeTable(){
@@ -162,12 +188,18 @@ public class GameSetupScreen implements Screen{
 
     private void setupUi() {
         TextButton startGameButton = WidgetFactory.genStartGameButton("START GAME");
+        startGameButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                main.setGameScreen();
+            }
+        });
 
 
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/background.png"))));
 
         table.center();
-        table.add(WidgetFactory.genTopBarGraphic()).colspan(2).fillX();
+        table.add(WidgetFactory.genTopBarGraphic()).colspan(2).fillX().height(100);
 
         table.row();
         table.left();
@@ -183,7 +215,7 @@ public class GameSetupScreen implements Screen{
 
         table.row();
         table.center();
-        table.add(WidgetFactory.genBottomBarGraphic()).colspan(2).fillX();
+        table.add(WidgetFactory.genBottomBarGraphic()).colspan(2).fillX().height(150);
     }
 
 
