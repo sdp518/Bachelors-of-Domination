@@ -46,9 +46,14 @@ public class GameScreen implements Screen, InputProcessor{
     private List<Integer> turnOrder; // array of player ids in order of players' turns;
     private int currentPlayer; // index of current player in turnOrder list
     private TurnPhase currentPhase = TurnPhase.REINFORCEMENT; // first phase of game is reinforcement
-    private boolean midAttack; // Stores if the attack phase is initiated
+
     private Sector attackingSector; // Stores the sector being used to attack in the attack phase (could store as ID and lookup object each time to save memory)
     private Sector defendingSector; // Stores the sector being attacked in the attack phase (could store as ID and lookup object each time to save memory)
+
+    private float mousePositionX; // Stores the relative x coordinate of the cursor when it moves. 0,0 is bottom left
+    private float mousePositionY; // Stores the relative y coordinate of the cursor when it moves. 0,0 is bottom left
+
+    private HashMap<String, Float> arrowPositions; // Hashmap with startX startY endX endY populated with attack phase sector selections
 
     /**
      * Performs the game's initial setup
@@ -83,11 +88,14 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimeElapsed = 0;
         this.turnOrder = new ArrayList<Integer>(players.keySet());
         this.currentPlayer = 0;
-        this.midAttack = false;
+
+        this.attackingSector = null;
+        this.defendingSector = null;
+        this.arrowPositions = new HashMap<String, Float>();
 
         setupUi();
 
-        allocateSectors();
+        //allocateSectors();
     }
 
     /**
@@ -242,6 +250,7 @@ public class GameScreen implements Screen, InputProcessor{
         gamplayBatch.begin();
         gamplayBatch.draw(mapBackground, 0, 0, gameplayViewport.getScreenWidth(), gameplayViewport.getScreenHeight() );
         map.draw(gamplayBatch);
+        attackVisualisation(gamplayBatch);
         gamplayBatch.end();
 
         /* UI */
@@ -268,23 +277,70 @@ public class GameScreen implements Screen, InputProcessor{
      * @param worldY
      */
     private void attackPhaseTouchUp(float worldX, float worldY) {
+        this.map.getSector(0).addUnits(3);
         int sectorid = map.detectSectorClick((int)worldX, (int)worldY);
         if (sectorid != -1) { // If selected a sector
             Sector selected = map.getSector(sectorid); // Current sector
-            if (this.midAttack) { // If its the second selection in the attack phase
+            boolean notAlreadySelected = this.attackingSector == null && this.defendingSector == null; // T/F if the attack sequence is complete
+            if (this.attackingSector != null && this.defendingSector == null) { // If its the second selection in the attack phase
                 if (this.attackingSector.isAdjacentTo(selected) && selected.getOwnerId() != this.currentPlayer) { // If not own sector and its adjacent
+                    this.arrowPositions.put("endX", this.mousePositionX); // Finalise the end position of the arrow
+                    this.arrowPositions.put("endY", this.mousePositionY);
                     this.defendingSector = selected;
                     // Call to initiate attack + advance phase
-                    this.midAttack = false;
+                    //this.attackingSector = null; // Add back once ^ is complete
+                    //this.defendingSector = null;
                 } else { // Cancel attack as not attackable
-                    this.midAttack = false;
+                    this.attackingSector = null;
                 }
-            } else if (selected.getOwnerId() == this.currentPlayer && selected.getUnitsInSector() > 1) { // First selection, is owned by the player and has enough troops
-                this.midAttack = true;
+            } else if (selected.getOwnerId() == this.currentPlayer && selected.getUnitsInSector() > 1 && notAlreadySelected) { // First selection, is owned by the player and has enough troops
                 this.attackingSector = selected;
+                this.arrowPositions.put("startX", this.mousePositionX); // Finalise start position of arrow
+                this.arrowPositions.put("startY", this.mousePositionY);
+            } else {
+                this.attackingSector = null;
+                this.defendingSector = null;
             }
+        } else {
+            this.attackingSector = null;
+            this.defendingSector = null;
         }
     }
+
+    /**
+     * Function used to create the attack visualisations
+     * @param gamplayBatch The main sprite batch
+     * @return gamplayBatch
+     */
+    private  SpriteBatch attackVisualisation(SpriteBatch gamplayBatch) {
+        if (this.attackingSector != null) { // If attacking
+            if (this.defendingSector == null) { // In mid attack
+                generateArrow(gamplayBatch, this.arrowPositions.get("startX"), this.arrowPositions.get("startY"), this.mousePositionX, this.mousePositionY);
+            } else if (this.defendingSector != null) { // Attack confirmed
+                generateArrow(gamplayBatch, this.arrowPositions.get("startX"), this.arrowPositions.get("startY"), this.arrowPositions.get("endX"), this.arrowPositions.get("endY"));
+            }
+        }
+        return gamplayBatch;
+    }
+
+    /**
+     * Creates an arrow between coordinates
+     * @param gamplayBatch The main sprite batch
+     * @param startX Base of the arrow x
+     * @param startY Base of the arrow y
+     * @param endX Tip of the arrow x
+     * @param endY Tip of the arrow y
+     * @return The sprite batch
+     */
+    private SpriteBatch generateArrow(SpriteBatch gamplayBatch, float startX, float startY, float endX, float endY) {
+        TextureRegion arrow = new TextureRegion(new Texture(Gdx.files.internal("arrow.png"))); // Load the arrow sprite
+        int thickness = 30;
+        // Calculates the transformations to apply to the sprite - had to refresh my GCSE maths knowledge lol
+        double angle = Math.toDegrees(Math.atan((endY - startY) / (endX - startX)));
+        double height = (endY - startY) /  Math.sin(Math.toRadians(angle));
+        gamplayBatch.draw(arrow, startX, (startY - thickness/2), 0, thickness/2, (float)height, thickness,1, 1, (float)angle);
+        return gamplayBatch;
+   }
 
     /**
      * handles mouse clicks during the movement phase
@@ -405,6 +461,9 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        // Updates the attributes every time the mouse is moved with the relative coordinates. 0,0 is bottom left
+        this.mousePositionX = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x);
+        this.mousePositionY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y);
         return false;
     }
 
