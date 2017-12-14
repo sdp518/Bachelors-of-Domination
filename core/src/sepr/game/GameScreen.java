@@ -3,22 +3,16 @@ package sepr.game;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
@@ -27,8 +21,7 @@ import java.util.ArrayList;
 public class GameScreen implements Screen, InputProcessor{
     private Main main;
 
-    private Stage stage;
-    private Table table;
+    private HashMap<TurnPhase, HUD> stages;
 
     private Map map;
     private SpriteBatch gamplayBatch;
@@ -60,14 +53,17 @@ public class GameScreen implements Screen, InputProcessor{
     public GameScreen(Main main, HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
         this.main = main;
 
-        this.stage = new Stage();
-        this.stage.setViewport(new ScreenViewport());
-
         this.map = new Map();
         this.gamplayBatch = new SpriteBatch();
         this.gameplayCamera = new OrthographicCamera();
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
         this.mapBackground = new Texture("ui/mapBackground.png");
+
+        this.stages = new HashMap<TurnPhase, HUD>();
+        this.stages.put(TurnPhase.REINFORCEMENT, new HUDReinforcement(this));
+        this.stages.put(TurnPhase.ATTACK, new HUDAttack(this));
+        this.stages.put(TurnPhase.MOVEMENT, new HUDMovement(this));
+
 
         this.players = players;
 
@@ -85,32 +81,8 @@ public class GameScreen implements Screen, InputProcessor{
         this.currentPlayer = 0;
         this.midAttack = false;
 
-        setupUi();
-
         allocateSectors();
     }
-
-    /**
-     *
-     */
-    private void setupUi() {
-        this.table = new Table();
-        this.table.setFillParent(true);
-        this.stage.addActor(table);
-        this.table.setDebug(true);
-
-        Texture buttons = new Texture("ui/buttons.png"); // texture sheet for buttons
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); // create style for buttons to use
-        style.up = new TextureRegionDrawable(new TextureRegion(buttons, 0, 0, 400, 150)); // image for button to use in default state
-        style.down = new TextureRegionDrawable(new TextureRegion(buttons, 0, 150, 400, 150)); // image for button to use when pressed down
-        style.font = new BitmapFont(); // set button font to the default Bitmap Font
-
-        final TextButton startGameBtn = new TextButton("New Game", style);
-        table.bottom();
-        table.left();
-        table.add(startGameBtn);
-    }
-
 
     /**
      * Created by Owain's Asus on 10/12/2017.
@@ -154,7 +126,7 @@ public class GameScreen implements Screen, InputProcessor{
     /**
      *
      */
-    private void adavancePhase() {
+    protected void advancePhase() {
         switch (currentPhase) {
             case REINFORCEMENT:
                 currentPhase = TurnPhase.ATTACK;
@@ -170,6 +142,9 @@ public class GameScreen implements Screen, InputProcessor{
                 nextPlayer();
                 break;
         }
+        this.updateInputProcessor();
+        System.out.println(currentPhase);
+        System.out.println(currentPlayer);
     }
 
     /**
@@ -206,6 +181,13 @@ public class GameScreen implements Screen, InputProcessor{
         // not part of this assessment
     }
 
+    private void updateInputProcessor() {
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(stages.get(currentPhase));
+        inputMultiplexer.addProcessor(this);
+        Gdx.input.setInputProcessor(inputMultiplexer);
+    }
+
     private void controlCamera() {
         if (this.keysDown.get(Input.Keys.UP)) {
             this.gameplayCamera.translate(0, 4, 0);
@@ -222,12 +204,14 @@ public class GameScreen implements Screen, InputProcessor{
 
     }
 
+    private void renderBackground() {
+        Vector3 mapDrawPos = gameplayCamera.unproject(new Vector3(0, Gdx.graphics.getHeight(), 0));
+        gamplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayViewport.getScreenWidth(), gameplayViewport.getScreenHeight() );
+    }
+
     @Override
     public void show() {
-        InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(stage);
-        inputMultiplexer.addProcessor(this);
-        Gdx.input.setInputProcessor(inputMultiplexer);
+        this.updateInputProcessor();
     }
 
     @Override
@@ -240,16 +224,17 @@ public class GameScreen implements Screen, InputProcessor{
         gameplayCamera.update();
         gamplayBatch.setProjectionMatrix(gameplayCamera.combined);
         gamplayBatch.begin();
-        gamplayBatch.draw(mapBackground, 0, 0, gameplayViewport.getScreenWidth(), gameplayViewport.getScreenHeight() );
+
+        renderBackground();
         map.draw(gamplayBatch);
         gamplayBatch.end();
 
         /* UI */
         // update UI
-        this.stage.act(delta);
+        this.stages.get(currentPhase).act(delta);
 
         // render UI
-        this.stage.draw();
+        this.stages.get(currentPhase).draw();
     }
 
 
@@ -268,7 +253,7 @@ public class GameScreen implements Screen, InputProcessor{
      * @param worldY
      */
     private void attackPhaseTouchUp(float worldX, float worldY) {
-        int sectorid = map.detectSectorClick((int)worldX, (int)worldY);
+        int sectorid = map.detectSectorContainsPoint((int)worldX, (int)worldY);
         if (sectorid != -1) { // If selected a sector
             Sector selected = map.getSector(sectorid); // Current sector
             if (this.midAttack) { // If its the second selection in the attack phase
@@ -298,12 +283,14 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void resize(int width, int height) {
-        this.stage.getViewport().update(width, height);
-        this.stage.getCamera().viewportWidth = width;
-        this.stage.getCamera().viewportHeight = height;
-        this.stage.getCamera().position.x = width/2;
-        this.stage.getCamera().position.y = height/2;
-        this.stage.getCamera().update();
+        for (Stage stage : stages.values()) {
+            stage.getViewport().update(width, height);
+            stage.getCamera().viewportWidth = width;
+            stage.getCamera().viewportHeight = height;
+            stage.getCamera().position.x = width/2;
+            stage.getCamera().position.y = height/2;
+            stage.getCamera().update();
+        }
 
         this.gameplayViewport.update(width, height);
         this.gameplayCamera.viewportWidth = width;
@@ -328,10 +315,10 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void dispose() {
-        stage.dispose();
+        for (Stage stage : stages.values()) {
+            stage.dispose();
+        }
     }
-
-
 
     /* Input Processor */
 
@@ -369,6 +356,18 @@ public class GameScreen implements Screen, InputProcessor{
         return true;
     }
 
+    /**
+     *
+     * @param screenX
+     * @param screenY
+     * @return
+     */
+    private Vector2 screenToWorldCoord(int screenX, int screenY) {
+        float worldX = gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x;
+        float worldY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y - Gdx.graphics.getHeight()) * -1;
+        return new Vector2(worldX, worldY);
+    }
+
     @Override
     public boolean keyTyped(char character) {
         return false;
@@ -381,18 +380,17 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        float worldX = gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x;
-        float worldY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y - Gdx.graphics.getHeight()) * -1;
+        Vector2 worldCoords = screenToWorldCoord(screenX, screenY);
 
         switch (currentPhase) {
             case REINFORCEMENT:
-                reinforcePhaseTouchUp(worldX, worldY);
+                reinforcePhaseTouchUp(worldCoords.x, worldCoords.y);
                 break;
             case ATTACK:
-                attackPhaseTouchUp(worldX, worldY);
+                attackPhaseTouchUp(worldCoords.x, worldCoords.y);
                 break;
             case MOVEMENT:
-                movementPhaseTouchUp(worldX, worldY);
+                movementPhaseTouchUp(worldCoords.x, worldCoords.y);
                 break;
         }
         return true;
@@ -405,7 +403,11 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return false;
+        Vector2 worldCoords = screenToWorldCoord(screenX, screenY);
+
+        Sector hoveredSector = map.getSector(map.detectSectorContainsPoint((int)worldCoords.x, (int)worldCoords.y));
+        stages.get(currentPhase).setBottomBarText(hoveredSector);
+        return true;
     }
 
     @Override
