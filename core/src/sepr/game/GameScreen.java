@@ -206,7 +206,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     private void renderBackground() {
         Vector3 mapDrawPos = gameplayCamera.unproject(new Vector3(0, Gdx.graphics.getHeight(), 0));
-        gamplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayViewport.getScreenWidth(), gameplayViewport.getScreenHeight() );
+        gamplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
     }
 
     @Override
@@ -295,6 +295,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.gameplayViewport.update(width, height);
         this.gameplayCamera.viewportWidth = width;
         this.gameplayCamera.viewportHeight = height;
+        this.gameplayCamera.translate(1920/2, 1080/2, 0);
         this.gameplayCamera.update();
     }
 
@@ -412,6 +413,9 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean scrolled(int amount) {
+        if ((gameplayCamera.zoom > 0.5 && amount < 0) || (gameplayCamera.zoom < 1.5 && amount > 0)) {
+            gameplayCamera.zoom += amount * 0.03f;
+        }
         return false;
     }
 }
