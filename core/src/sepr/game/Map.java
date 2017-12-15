@@ -131,10 +131,14 @@ public class Map{
     /**
      *
      * @param sectorId id of the desired sector
-     * @return Sector object with the corresponding id in hashmap sectors
+     * @return Sector object with the corresponding id in hashmap sectors if no sector matches with the supplied id then null is returned
      */
     public Sector getSector(int sectorId) {
-        return sectors.get(sectorId);
+        if (sectors.containsKey(sectorId)) {
+            return sectors.get(sectorId);
+        } else {
+            return null;
+        }
     }
 
     public int getNumOfSectors() {
@@ -151,9 +155,9 @@ public class Map{
      *
      * @param worldX world x coord of mouse click
      * @param worldY world y coord of mouse click
-     * @return id of sector that was clicked on or -1 if no sector was clicked or the clicked sector is decor only
+     * @return id of sector that contains the point specified
      */
-    public int detectSectorClick(int worldX, int worldY) {
+    public int detectSectorContainsPoint(int worldX, int worldY) {
         for (Sector sector : sectors.values()) {
             if (worldX < 0 || worldY < 0 || worldX > sector.getSectorTexture().getWidth() || worldY > sector.getSectorTexture().getHeight()) {
                 continue;
@@ -163,7 +167,6 @@ public class Map{
                 if (sector.isDecor()) {
                     continue; // sector clicked is decor so continue checking to see if a non-decor sector was clicked
                 } else {
-                    System.out.println("Hit: " + sector.getDisplayName());
                     return sector.getId();
                 }
             }
