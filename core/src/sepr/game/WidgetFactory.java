@@ -1,11 +1,13 @@
 package sepr.game;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 
 /**
  * Created by Dom's Surface Mark 2 on 28/11/2017.
@@ -24,6 +26,11 @@ public class WidgetFactory {
     private static Texture onSwitchTexture;
     private static Texture offSwitchTexture;
 
+    private static Texture gameHUDBottomBarTexture;
+    private static Texture gameHUDTurnIndicatorTexture;
+
+    private static BitmapFont HUDFont;
+
     public WidgetFactory() {
         basicButtonTexture = new Texture("ui/buttons.png");
         topBarTexture = new Texture("ui/topBar.png");
@@ -37,6 +44,11 @@ public class WidgetFactory {
 
         onSwitchTexture = new Texture("ui/onSwitch.png");
         offSwitchTexture = new Texture("ui/offSwitch.png");
+
+        gameHUDBottomBarTexture = new Texture("ui/gameHUDBottomBar.png");
+        gameHUDTurnIndicatorTexture = new Texture("ui/gameHUDTurnIndicator.png");
+
+        HUDFont = new BitmapFont(new FileHandle("ui/HUDFnt.fnt"));
     }
 
     public static TextButton genBasicButton(String buttonText) {
@@ -66,10 +78,55 @@ public class WidgetFactory {
 
     public static Label genStyledLabel(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont();
+        style.font = HUDFont;
         style.background = new TextureRegionDrawable(new TextureRegion(labelTexture));
 
+        Label label = new Label(labelText, style);
+
         return new Label(labelText, style);
+    }
+
+    /**
+     * Generates the UI widget to be displayed at the bottom of the HUD
+     * @param labelText what the bar should say
+     * @return
+     */
+    public static Label genGameHUDBottomBar(String labelText) {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = HUDFont;
+        style.background = new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarTexture));
+
+        Label label = new Label(labelText, style);
+        label.setAlignment(Align.center);
+
+        return label;
+    }
+
+
+    public static Label genPhaseIndicator(TurnPhase turnPhase) {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = HUDFont;
+
+        style.background = new TextureRegionDrawable(new TextureRegion(gameHUDTurnIndicatorTexture));
+
+        String text = "";
+        switch (turnPhase) {
+            case REINFORCEMENT:
+                text = "> REINFORCEMENT < -  ATTACK  -  MOVEMENT  ";
+                break;
+            case ATTACK:
+                text = "  REINFORCEMENT  - > ATTACK < -  MOVEMENT  ";
+                break;
+            case MOVEMENT:
+                text = "  REINFORCEMENT  -  ATTACK  - > MOVEMENT <";
+                break;
+        }
+
+        Label label = new Label(text, style);
+
+        label.setAlignment(Align.center);
+
+        return label;
     }
 
     /**
@@ -79,7 +136,7 @@ public class WidgetFactory {
      */
     public static SelectBox<String> genStyledSelectBox(String[] items) {
         SelectBox.SelectBoxStyle style = new SelectBox.SelectBoxStyle();
-        style.font = new BitmapFont();
+        style.font = HUDFont;
         style.listStyle = new List.ListStyle(new BitmapFont(), Color.BLACK, Color.BROWN, new TextureRegionDrawable(new TextureRegion(sliderBarTexture)));
         style.scrollStyle = new ScrollPane.ScrollPaneStyle(new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)));
 
