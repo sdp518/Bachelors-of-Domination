@@ -193,12 +193,10 @@ public class Map{
             }
             int pixelValue = sector.getSectorPixmap().getPixel(worldX, worldY);
             if (pixelValue != -256) {
-                if (sector.isDecor()) {
-                    continue; // sector clicked is decor so continue checking to see if a non-decor sector was clicked
-                } else {
-                    System.out.println("Hit: " + sector.getDisplayName());
-                    return sector.getId();
-                }
+                System.out.println("Hit: " + sector.getDisplayName());
+                changeSectorColor(sector.getId(), "green");
+                sector.setOwnerId(1);
+                break; // only one sector should be changed at a time so
             }
         }
         return -1;
