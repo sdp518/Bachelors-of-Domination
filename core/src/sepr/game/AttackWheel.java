@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.HashMap;
 
 public class AttackWheel {
-
-    /**
+  
+  /**
      * Function to calculate the sector percentages
      * Gives boundaries for min and max sector percentages for normal, critical and failed
      * @return hashMap of each sector and its percentage

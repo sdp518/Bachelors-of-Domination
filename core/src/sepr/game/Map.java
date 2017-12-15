@@ -4,8 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -16,6 +23,12 @@ public class Map{
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
     private HashMap<Integer, College> colleges; // mapping of a college ID to the college object
     private HashMap<String, Color> colors; // mapping of color name to color ***NOT QUITE TRUE***
+
+    private BitmapFont font;
+    private GlyphLayout layout = new GlyphLayout();
+
+    private Texture troopCountOverlay = new Texture("ui/troopCountOverlay.png");
+    private float overlaySize = 40.0f;
 
     Color changeGreen = new Color(0.5f, 0, 1f, 0f);
     Color changeBlue = new Color(0.8f, 0.5f, 0f, 0f);
@@ -28,6 +41,13 @@ public class Map{
      */
     public Map() {
         this.sectors = new HashMap<Integer, Sector>();
+        this.colleges = new HashMap<Integer, College>();
+
+        /*
+
+        Maybe within this section we could create a for loop which get's the various colleges and creates the objects? - Jack
+
+         */
 
         /*
 
@@ -36,8 +56,8 @@ public class Map{
          */
 
         // hes east
-        this.sectors.put(0, new Sector(0, -1, "Hes East 1", 0, 2, new int[]{}, new Texture("hesEast1.png"), new Pixmap(Gdx.files.internal("hesEast1.png")), "hesEast1.png", 0, 0, false));
-        this.sectors.put(1, new Sector(1, -1, "Hes East 2", 0, 2, new int[]{}, new Texture("hesEast2.png"), new Pixmap(Gdx.files.internal("hesEast2.png")), "hesEast2.png", 0, 0, false));
+        this.sectors.put(0, new Sector(0, -1, "Hes East 1", 0, 2, new int[]{}, new Texture("hesEast1.png"), new Pixmap(Gdx.files.internal("hesEast1.png")), "hesEast1.png", 1496, 570, false));
+        this.sectors.put(1, new Sector(1, -1, "Hes East 2", 10, 2, new int[]{}, new Texture("hesEast2.png"), new Pixmap(Gdx.files.internal("hesEast2.png")), "hesEast2.png", 1350, 631, false));
         this.sectors.put(2, new Sector(2, -1, "Hes East 3", 0, 2, new int[]{}, new Texture("hesEast3.png"), new Pixmap(Gdx.files.internal("hesEast3.png")), "hesEast3.png", 0, 0, false));
         this.sectors.put(3, new Sector(3, -1, "Hes East 4", 0, 2, new int[]{}, new Texture("hesEast4.png"), new Pixmap(Gdx.files.internal("hesEast4.png")), "hesEast4.png", 0, 0, false));
 
@@ -86,11 +106,28 @@ public class Map{
         this.sectors.put(31, new Sector(31, -1, "Lake 1", 0, 2, new int[]{}, new Texture("lake1.png"), new Pixmap(Gdx.files.internal("lake1.png")), "lake1.png", 0, 0, true));
         this.sectors.put(32, new Sector(32, -1, "Lake 2", 0, 2, new int[]{}, new Texture("lake2.png"), new Pixmap(Gdx.files.internal("lake2.png")), "lake2.png", 0, 0, true));
 
+        // Colleges
+        this.colleges.put(0, new College(0, "Hes East", 0, Arrays.asList(0, 1, 2, 3)));
+        this.colleges.put(1, new College(0, "Halifax", 0, Arrays.asList(4,5,6,7)));
+        this.colleges.put(2, new College(0, "Derwent", 0, Arrays.asList(8,9,10,11)));
+        this.colleges.put(3, new College(0, "Alcuin", 0, Arrays.asList(12,13,14)));
+        this.colleges.put(4, new College(0, "Vanbrugh", 0, Arrays.asList(18,19,20)));
+        this.colleges.put(5, new College(0, "Wentworth", 0, Arrays.asList(22,23)));
+        this.colleges.put(6, new College(0, "James", 0, Arrays.asList(24,25,26,27)));
+        this.colleges.put(7, new College(0, "Neutral", 0, Arrays.asList(15,16,17,28,29,30)));
+
 
         this.colors = new HashMap<String, Color>();
         this.colors.put("green", changeGreen);
         this.colors.put("blue", changeBlue);
         this.colors.put("white", changeWhite);
+
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        parameter.size = 20;
+        font = generator.generateFont(parameter);
+        generator.dispose();
     }
 
     /**
@@ -122,18 +159,24 @@ public class Map{
     public int calculateReinforcementAmount(int playerId) {
         int count = 0;
         for (Sector s : sectors.values()){
-            if (!s.isDecor() && s.getOwnerId() == playerId && s.getPrevOwnerId() != playerId){
+            // Checks whether the tile is able to be captured and just captured that turn
+            if (!s.isDecor() && s.justCapturedBy(playerId)) {
                 count += s.getReinforcementsProvided();
                 s.updateOwnerId();
             }
         }
+        // Checks all the colleges to see if the player owns any
         for (College c : colleges.values())
             if (c.playerOwnsCollege(playerId, sectors))
                 count += c.getReinforcementAmount();
         return count;
     }
-
-    /**
+ 
+    public void setSectorOwner(int sectorId, Player player) {
+        sectors.get(sectorId).setOwner(player);
+    }
+  
+  /**
      *
      * @param sectorId id of the desired sector
      * @return Sector object with the corresponding id in hashmap sectors if no sector matches with the supplied id then null is returned
@@ -166,7 +209,7 @@ public class Map{
      *
      * @param worldX world x coord of mouse click
      * @param worldY world y coord of mouse click
-     * @return id of sector that contains the point specified
+     * @return id of sector that was clicked on or -1 if no sector was clicked or the clicked sector is decor only
      */
     public int detectSectorContainsPoint(int worldX, int worldY) {
         for (Sector sector : sectors.values()) {
@@ -175,7 +218,7 @@ public class Map{
             }
             int pixelValue = sector.getSectorPixmap().getPixel(worldX, worldY);
             if (pixelValue != -256) {
-                if (sector.isDecor()) {
+              if (sector.isDecor()) {
                     continue; // sector clicked is decor so continue checking to see if a non-decor sector was clicked
                 } else {
                     return sector.getId();
@@ -184,23 +227,15 @@ public class Map{
         }
         return -1;
     }
-
-    /**
-     * @param batch
-     */
-    private void renderSectorUnitData(SpriteBatch batch) {
-
-    }
-
-    /**
-     * Method for drawing sectors
-     * @param batch
-     */
+  
     public void draw(SpriteBatch batch) {
         for (Sector sector : sectors.values()) {
+            String text = sector.getUnitsInSector() + "";
+            layout.setText(font, text);
             batch.draw(sector.getSectorTexture(), 0, 0);
+            batch.draw(troopCountOverlay, sector.getSectorCentreX() - overlaySize / 2, sector.getSectorCentreY() - overlaySize / 2, overlaySize, overlaySize);
+            font.draw(batch, layout, sector.getSectorCentreX() - layout.width / 2, sector.getSectorCentreY() + layout.height / 2);
         }
-        renderSectorUnitData(batch);
+        //renderSectorUnitData(batch);
     }
-
 }

@@ -48,7 +48,7 @@ public class Sector {
         this.sectorTexture = sectorTexture;
         this.sectorPixmap = sectorPixmap;
         this.sectorCentreX = sectorCentreX;
-        this.sectorCentreY = sectorCentreY;
+        this.sectorCentreY = 1080 - sectorCentreY;
         this.decor = decor;
         this.fileName = fileName;
     }
@@ -128,6 +128,8 @@ public class Sector {
         return fileName;
     }
 
+    public void updateOwnerId() { prevOwnerId = ownerId; }
+
     /**
      * Updates the ownerId in a sector
      */
@@ -183,4 +185,6 @@ public class Sector {
         this.setNewSectorTexture(newPix); // draw the generated pixmap to the new texture
         newPix.dispose();
     }
+    // Shortened way of checking if the player captured the tile that turn
+    public boolean justCapturedBy(int playerId){ return playerId == ownerId && playerId != prevOwnerId;  }
 }

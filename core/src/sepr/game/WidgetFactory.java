@@ -25,7 +25,7 @@ public class WidgetFactory {
 
     private static Texture onSwitchTexture;
     private static Texture offSwitchTexture;
-
+  
     private static Texture gameHUDBottomBarTexture;
     private static Texture gameHUDTurnIndicatorTexture;
 
@@ -44,7 +44,7 @@ public class WidgetFactory {
 
         onSwitchTexture = new Texture("ui/onSwitch.png");
         offSwitchTexture = new Texture("ui/offSwitch.png");
-
+  
         gameHUDBottomBarTexture = new Texture("ui/gameHUDBottomBar.png");
         gameHUDTurnIndicatorTexture = new Texture("ui/gameHUDTurnIndicator.png");
 
@@ -82,7 +82,7 @@ public class WidgetFactory {
         style.background = new TextureRegionDrawable(new TextureRegion(labelTexture));
 
         Label label = new Label(labelText, style);
-
+      
         return new Label(labelText, style);
     }
 

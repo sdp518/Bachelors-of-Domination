@@ -10,6 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Iterator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -80,8 +85,13 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimeElapsed = 0;
         this.turnOrder = new ArrayList<Integer>(players.keySet());
         this.currentPlayer = 0;
-        this.midAttack = false;
+      
+        gameplayCamera.translate(new Vector3(mapBackground.getWidth() / 2, mapBackground.getHeight() / 2, 0));
 
+        setupUi();
+      
+        this.midAttack = false;
+      
         allocateSectors();
     }
 
@@ -108,10 +118,6 @@ public class GameScreen implements Screen, InputProcessor{
 
 
     /**
-     * Allocates sectors to each player in a balanced manner
-     * @throws RuntimeException If players.size() is zero
-     * HashMap playerReinforcements mapping the player id to amount of reinforcements they will receive currently
-     * Method allocates the next sector in the loop to the current player with the lowestReinforcementId
      * Created by Owain's Asus on 10/12/2017.
      * Allocate sectors to each player in a balanced manner.
      * Just need the finished csv file so we can calculate Total reinforcements but apart from
@@ -310,6 +316,32 @@ public class GameScreen implements Screen, InputProcessor{
         // not part of this assessment
     }
 
+    /**
+     * handles mouse clicks during the reinforcement phase
+     * @param worldX
+     * @param worldY
+     */
+    private void reinforcePhaseTouchUp(float worldX, float worldY) {
+
+    }
+
+    /**
+     * handles mouse clicks during the attack phase
+     * @param worldX
+     * @param worldY
+     */
+    private void attackPhaseTouchUp(float worldX, float worldY) {
+
+    }
+
+    /**
+     * handles mouse clicks during the movement phase
+     * @param worldX
+     * @param worldY
+     */
+    private void movementPhaseTouchUp(float worldX, float worldY) {
+        // not part of this assessment
+    }
 
     @Override
     public void resize(int width, int height) {
