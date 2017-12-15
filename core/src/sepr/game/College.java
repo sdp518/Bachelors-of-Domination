@@ -30,7 +30,7 @@ public class College {
         this.sectorIds = new ArrayList<Integer>();
         this.reinforcementAmount = reinforcementAmount;
     }
-
+  
     public College(int id, String displayName, int reinforcementAmount, List<Integer> sectorIds){
         this.id = id;
         this.displayName = displayName;
@@ -49,7 +49,7 @@ public class College {
     public void addSectorId(int sectorId){
         this.sectorIds.add(sectorId);
     }
-
+  
     /**
      * @return The amount of reinforcements provided by the college each turn
      */
@@ -78,5 +78,4 @@ public class College {
     }
 
     public String getDisplayName() { return displayName; }
-
 }

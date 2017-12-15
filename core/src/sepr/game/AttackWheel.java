@@ -10,9 +10,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.HashMap;
 
 public class AttackWheel {
-    /**
+  
+  /**
      * Function to calculate the sector percentages
-     *
+     * Gives boundaries for min and max sector percentages for normal, critical and failed
      * @return hashMap of each sector and its percentage
      */
     private static HashMap<String, Double> sectorCalc() {
@@ -59,7 +60,6 @@ public class AttackWheel {
 
     /**
      * Helper function to dynamically create a sector
-     *
      * @param shapeRenderer The shapeRenderer object
      * @param color Color of the sector
      * @param lineWidth Line width of the sector
@@ -68,7 +68,6 @@ public class AttackWheel {
      * @param radius sector radius
      * @param start start degree of sector
      * @param degrees end degree of sector
-     *
      * @return shapeRenderer
      */
     private static ShapeRenderer genSector(
@@ -98,7 +97,6 @@ public class AttackWheel {
 
     /**
      * Generates the attack wheel with sectors in the percent of the circle
-     *
      * @return returns a 500x500 texture of the attack wheel
      */
     public static Texture genAttackWheelTexture() {

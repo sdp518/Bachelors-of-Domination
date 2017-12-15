@@ -34,9 +34,20 @@ public class Map{
     Color changeBlue = new Color(0.8f, 0.5f, 0f, 0f);
     Color changeWhite =  new Color(0,0,0,0);
 
+    /**
+     * Performs the maps initial setup
+     * Initialises the sectors as objects storing them in a HashMap
+     * Initialises the sector colours storing them in a HashMap
+     */
     public Map() {
         this.sectors = new HashMap<Integer, Sector>();
         this.colleges = new HashMap<Integer, College>();
+
+        /*
+
+        Maybe within this section we could create a for loop which get's the various colleges and creates the objects? - Jack
+
+         */
 
         /*
 
@@ -121,7 +132,7 @@ public class Map{
 
     /**
      * Checks to see if there is one player who controls every sector
-     * @return -1 if there is no winner or the ID of the player that controlls all the sectors
+     * @return -1 if there is no winner or the ID of the player that controls all the sectors
      */
     public int checkForWinner() {
         return -1;
@@ -149,7 +160,7 @@ public class Map{
         int count = 0;
         for (Sector s : sectors.values()){
             // Checks whether the tile is able to be captured and just captured that turn
-            if (!s.isDecor() && s.justCapturedBy(playerId)){
+            if (!s.isDecor() && s.justCapturedBy(playerId)) {
                 count += s.getReinforcementsProvided();
                 s.updateOwnerId();
             }
@@ -160,25 +171,39 @@ public class Map{
                 count += c.getReinforcementAmount();
         return count;
     }
-
-    /**
-     *
-     * @param sectorId id of the desired sector
-     * @return Sector object with the corresponding id in hashmap sectors
-     */
-    public Sector getSector(int sectorId) {
-        return sectors.get(sectorId);
-    }
-
-    public int getNumOfSectors() {
-        return sectors.values().size();
-    }
-
-    public Set<Integer> getSectorIds() { return sectors.keySet() ; }
-
+ 
     public void setSectorOwner(int sectorId, Player player) {
         sectors.get(sectorId).setOwner(player);
     }
+  
+  /**
+     *
+     * @param sectorId id of the desired sector
+     * @return Sector object with the corresponding id in hashmap sectors if no sector matches with the supplied id then null is returned
+     */
+    public Sector getSector(int sectorId) {
+        if (sectors.containsKey(sectorId)) {
+            return sectors.get(sectorId);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return Integer value of total number of sectors in sectors HashMap
+     */
+    public int getNumOfSectors() { return sectors.values().size(); }
+
+    /**
+     * @return Set of all SectorIds
+     */
+    public Set<Integer> getSectorIds() { return sectors.keySet() ; }
+
+    /**
+     * @param sectorId Id of sector
+     * @param player sets owner of sector as Player object
+     */
+    public void setSectorOwner(int sectorId, Player player) { sectors.get(sectorId).setOwner(player); }
 
     /**
      *
@@ -186,31 +211,23 @@ public class Map{
      * @param worldY world y coord of mouse click
      * @return id of sector that was clicked on or -1 if no sector was clicked or the clicked sector is decor only
      */
-    public int detectSectorClick(int worldX, int worldY) {
+    public int detectSectorContainsPoint(int worldX, int worldY) {
         for (Sector sector : sectors.values()) {
             if (worldX < 0 || worldY < 0 || worldX > sector.getSectorTexture().getWidth() || worldY > sector.getSectorTexture().getHeight()) {
                 continue;
             }
             int pixelValue = sector.getSectorPixmap().getPixel(worldX, worldY);
             if (pixelValue != -256) {
-                System.out.println("Hit: " + sector.getDisplayName());
-                changeSectorColor(sector.getId(), "green");
-                sector.setOwnerId(1);
-                break; // only one sector should be changed at a time so
+              if (sector.isDecor()) {
+                    continue; // sector clicked is decor so continue checking to see if a non-decor sector was clicked
+                } else {
+                    return sector.getId();
+                }
             }
         }
         return -1;
     }
-
-    /**
-     *
-     * @param batch
-     */
-    private void renderSectorUnitData(SpriteBatch batch) {
-        for (Sector sector : sectors.values()){
-        }
-    }
-
+  
     public void draw(SpriteBatch batch) {
         for (Sector sector : sectors.values()) {
             String text = sector.getUnitsInSector() + "";
@@ -221,5 +238,4 @@ public class Map{
         }
         //renderSectorUnitData(batch);
     }
-
 }
