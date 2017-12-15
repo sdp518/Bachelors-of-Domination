@@ -53,10 +53,11 @@ public class GameScreen implements Screen, InputProcessor{
     /**
      * Performs the game's initial setup
      * @param main used to change screen
-     * @param players hashmap of the players in this game
-     * @param turnTimerEnabled should players turn be limitted
+     * @param players HashMap of the players in this game
+     * @param turnTimerEnabled should players turns be limited
      * @param maxTurnTime time elapsed in current turn, irrelevant if turn timer not enabled
      */
+
     public GameScreen(Main main, HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
         this.main = main;
 
@@ -91,7 +92,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     *
+     * Performs the games UI setup
      */
     private void setupUi() {
         this.table = new Table();
@@ -113,13 +114,10 @@ public class GameScreen implements Screen, InputProcessor{
 
 
     /**
-     * Created by Owain's Asus on 10/12/2017.
-     * Allocate sectors to each player in a balanced manner.
-     * Just need the finished csv file so we can calculate Total reinforcements but apart from
-     * that the method is finished. The method also has an if statement to catch a divide by zero
-     * error in players.size(). This won't be needed as later on when more of the game implementation is
-     * introduced this method will only be called when all players have been declared after the intermediate
-     * setup menu.
+     * Allocates sectors to each player in a balanced manner
+     * @throws RuntimeException If players.size() is zero
+     * HashMap playerReinforcements mapping the player id to amount of reinforcements they will receive currently
+     * Method allocates the next sector in the loop to the current player with the lowestReinforcementId
      */
     private void allocateSectors() {
         if (players.size() == 0) {
@@ -152,7 +150,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     *
+     * This method is used for progression through the phases of a turn evaluating the currentPhase case label
      */
     private void adavancePhase() {
         switch (currentPhase) {
@@ -206,6 +204,9 @@ public class GameScreen implements Screen, InputProcessor{
         // not part of this assessment
     }
 
+    /**
+     * Input keys for controlling the game camera
+     */
     private void controlCamera() {
         if (this.keysDown.get(Input.Keys.UP)) {
             this.gameplayCamera.translate(0, 4, 0);
