@@ -71,7 +71,7 @@ public class WidgetFactory {
         alcuinLogoTexture = new Texture("ui/HD-assets/alcuin-logo.png");
         derwentLogoTexture = new Texture("ui/HD-assets/derwent-logo.png");
         halifaxLogoTexture = new Texture("ui/HD-assets/halifax-logo.png");
-        //hesEastLogoTexture = new Texture("ui/HD-assets/hes-east-logo.png");
+        hesEastLogoTexture = new Texture("ui/HD-assets/hes-east-logo.png");
         jamesLogoTexture = new Texture("ui/HD-assets/james-logo.png");
         uniOfYorkLogoTexture = new Texture("ui/HD-assets/uni-of-york-logo.png");
         vanbrughLogoTexture = new Texture("ui/HD-assets/vanbrugh-logo.png");
@@ -114,6 +114,59 @@ public class WidgetFactory {
     public static Image genVanbrughtLogo() {return new Image(vanbrughLogoTexture);}
     public static Image genWentworthLogo() {return new Image(wentworthLogoTexture);}
 
+    /** OUTDATED
+    public static Label genCollegeLogo(String collegeName){
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = new BitmapFont();
+        if(collegeName.equals("ALCUIN")){
+            style.background = new TextureRegionDrawable((new TextureRegion(alcuinLogoTexture)));
+        }else if(collegeName.equals("DERWENT")){
+            style.background = new TextureRegionDrawable((new TextureRegion(derwentLogoTexture)));
+        }else if(collegeName.equals("HALIFAX")){
+            style.background = new TextureRegionDrawable((new TextureRegion(halifaxLogoTexture)));
+        }else if(collegeName.equals("JAMES")){
+            style.background = new TextureRegionDrawable((new TextureRegion(jamesLogoTexture)));
+        }else if(collegeName.equals("UNIVERSITY OF YORK")){
+            style.background = new TextureRegionDrawable((new TextureRegion(uniOfYorkLogoTexture)));
+        }else if(collegeName.equals("VANBRUGH")){
+            style.background = new TextureRegionDrawable((new TextureRegion(vanbrughLogoTexture)));
+        }else if(collegeName.equals("WENTWORTH")){
+            style.background = new TextureRegionDrawable((new TextureRegion(wentworthLogoTexture)));
+        }else{
+            System.out.println("ERROR");
+            return null;
+        }
+        return new Label("", style);
+    }
+    **/
+
+    public static Label.LabelStyle genCollegeLabelStyle(String collegeName){
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = new BitmapFont();
+
+        if(collegeName.equals("ALCUIN")){
+            style.background = new TextureRegionDrawable((new TextureRegion(alcuinLogoTexture)));
+        }else if(collegeName.equals("DERWENT")){
+            style.background = new TextureRegionDrawable((new TextureRegion(derwentLogoTexture)));
+        }else if(collegeName.equals("HALIFAX")){
+            style.background = new TextureRegionDrawable((new TextureRegion(halifaxLogoTexture)));
+        }else if(collegeName.equals("HESLINGTON EAST")){
+            style.background = new TextureRegionDrawable((new TextureRegion(hesEastLogoTexture)));
+        }else if(collegeName.equals("JAMES")){
+            style.background = new TextureRegionDrawable((new TextureRegion(jamesLogoTexture)));
+        }else if(collegeName.equals("UNIVERSITY OF YORK")){
+            style.background = new TextureRegionDrawable((new TextureRegion(uniOfYorkLogoTexture)));
+        }else if(collegeName.equals("VANBRUGH")){
+            style.background = new TextureRegionDrawable((new TextureRegion(vanbrughLogoTexture)));
+        }else if(collegeName.equals("WENTWORTH")){
+            style.background = new TextureRegionDrawable((new TextureRegion(wentworthLogoTexture)));
+        }else{
+            System.out.println("ERROR");
+            return null;
+        }
+        return new Label.LabelStyle(style);
+    }
+
 
     public static Label genPlayerLabel(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
@@ -134,9 +187,16 @@ public class WidgetFactory {
     public static Label genNameBoxLabel(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = new BitmapFont();
-        style.background = new TextureRegionDrawable(new TextureRegion(nameBoxLabelTexture));
 
         return new Label(labelText, style);
+    }
+
+    public static TextField playerNameTextField(String name){
+        TextField.TextFieldStyle  style = new TextField.TextFieldStyle();
+        style.font = new BitmapFont();
+        style.fontColor = new Color(Color.WHITE);
+
+        return new TextField(name, style);
     }
 
     public static Button genPlayerLeftButton() {

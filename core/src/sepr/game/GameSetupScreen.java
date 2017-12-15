@@ -3,8 +3,10 @@ package sepr.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import javax.swing.text.Style;
 import java.util.Scanner;
 
 
@@ -99,19 +102,19 @@ public class GameSetupScreen implements Screen{
     }
 
     public String selectCollegeLeft(Label collegeLabel){
-        if (collegeLabel.getText().toString().split("\n")[1].equals(collegeName.ALCUIN.getCollegeName())){
+        if (collegeLabel.getText().toString().equals(collegeName.ALCUIN.getCollegeName())){
             return collegeName.WENTWORTH.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.DERWENT.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.DERWENT.getCollegeName())){
             return collegeName.ALCUIN.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.HALIFAX.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.HALIFAX.getCollegeName())){
             return collegeName.DERWENT.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.HES_EAST.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.HES_EAST.getCollegeName())){
             return collegeName.HALIFAX.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.JAMES.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.JAMES.getCollegeName())){
             return collegeName.HES_EAST.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.UNI_OF_YORK.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.UNI_OF_YORK.getCollegeName())){
             return collegeName.JAMES.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.VANBRUGH.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.VANBRUGH.getCollegeName())){
             return collegeName.UNI_OF_YORK.getCollegeName();
         }else {
             return collegeName.VANBRUGH.getCollegeName();
@@ -121,19 +124,19 @@ public class GameSetupScreen implements Screen{
     }
 
     public String selectCollegeRight(Label collegeLabel){
-        if (collegeLabel.getText().toString().split("\n")[1].equals(collegeName.ALCUIN.getCollegeName())){
+        if (collegeLabel.getText().toString().equals(collegeName.ALCUIN.getCollegeName())){
             return collegeName.DERWENT.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.DERWENT.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.DERWENT.getCollegeName())){
             return collegeName.HALIFAX.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.HALIFAX.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.HALIFAX.getCollegeName())){
             return collegeName.HES_EAST.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.HES_EAST.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.HES_EAST.getCollegeName())){
             return collegeName.JAMES.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.JAMES.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.JAMES.getCollegeName())){
             return collegeName.UNI_OF_YORK.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.UNI_OF_YORK.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.UNI_OF_YORK.getCollegeName())){
             return collegeName.VANBRUGH.getCollegeName();
-        }else if(collegeLabel.getText().toString().split("\n")[1].equals(collegeName.VANBRUGH.getCollegeName())){
+        }else if(collegeLabel.getText().toString().equals(collegeName.VANBRUGH.getCollegeName())){
             return collegeName.WENTWORTH.getCollegeName();
         }else {
             return collegeName.ALCUIN.getCollegeName();
@@ -247,44 +250,42 @@ public class GameSetupScreen implements Screen{
         }
         //College 1
         private Table setUpCollegeTable(){
-            final Image collegeLogo = WidgetFactory.genAlcuinLogo();
-            final Label nameBoxLabel = WidgetFactory.genNameBoxLabel("Player 1" + "\n" +
-                    "ALCUIN");
-            nameBoxLabel.setAlignment(0, 0);
-            nameBoxLabel.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    System.out.println("test");
-                }
-            });
 
+            final Label nameBoxLabel = WidgetFactory.genNameBoxLabel("ALCUIN");
+            nameBoxLabel.setAlignment(Align.center);
+            final Label collegeLogo = new Label("", WidgetFactory.genCollegeLabelStyle(nameBoxLabel.getText().toString()));
+            TextField playerName = WidgetFactory.playerNameTextField("Player 1");
 
             Button collegeLeftButton = WidgetFactory.genCollegeLeftButton();
             collegeLeftButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    nameBoxLabel.setText("Player 1" + "\n" + selectCollegeLeft(nameBoxLabel));
-
+                    nameBoxLabel.setText(selectCollegeLeft(nameBoxLabel));
+                    collegeLogo.setStyle(WidgetFactory.genCollegeLabelStyle(nameBoxLabel.getText().toString()));
                 }
             });
             Button collegeRightButton = WidgetFactory.genCollegeRightButton();
             collegeRightButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    nameBoxLabel.setText("Player 1" + "\n" + selectCollegeRight(nameBoxLabel));
+                    nameBoxLabel.setText(selectCollegeRight(nameBoxLabel));
+                    collegeLogo.setStyle(WidgetFactory.genCollegeLabelStyle(nameBoxLabel.getText().toString()));
                 }
             });
 
 
 
             Table collegeTable = new Table();
+            collegeTable.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Game-Setup-Name-Box.png")))).setWidth(420);
             collegeTable.setDebug(true);
 
             collegeTable.left();
-            collegeTable.add(nameBoxLabel).height(100).width(320);
+            collegeTable.add(playerName);
+            collegeTable.row();
+            collegeTable.add(nameBoxLabel).height(20).width(200);
+
             collegeTable.add(collegeLeftButton).height(50).width(25);
-            collegeTable.add(collegeLogo).height(100).width(120);
-            collegeTable.right();
+            collegeTable.add(collegeLogo).height(80).width(100);
             collegeTable.add(collegeRightButton).height(50).width(25);
 
             return collegeTable;
@@ -335,6 +336,7 @@ public class GameSetupScreen implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.stage.act(Gdx.graphics.getDeltaTime());
         this.stage.draw();
+
     }
 
     @Override
