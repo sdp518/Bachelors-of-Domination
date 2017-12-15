@@ -78,8 +78,10 @@ public class WidgetFactory {
 
     public static Label genStyledLabel(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont();
+        style.font = HUDFont;
         style.background = new TextureRegionDrawable(new TextureRegion(labelTexture));
+
+        Label label = new Label(labelText, style);
 
         return new Label(labelText, style);
     }
@@ -110,13 +112,13 @@ public class WidgetFactory {
         String text = "";
         switch (turnPhase) {
             case REINFORCEMENT:
-                text = "> REINFORCEMENT < -  ATTACK  -  MOVEMENT ";
+                text = "> REINFORCEMENT < -  ATTACK  -  MOVEMENT  ";
                 break;
             case ATTACK:
-                text = " REINFORCEMENT  - > ATTACK < -  MOVEMENT ";
+                text = "  REINFORCEMENT  - > ATTACK < -  MOVEMENT  ";
                 break;
             case MOVEMENT:
-                text = " REINFORCEMENT  -  ATTACK  - > MOVEMENT <";
+                text = "  REINFORCEMENT  -  ATTACK  - > MOVEMENT <";
                 break;
         }
 
@@ -134,7 +136,7 @@ public class WidgetFactory {
      */
     public static SelectBox<String> genStyledSelectBox(String[] items) {
         SelectBox.SelectBoxStyle style = new SelectBox.SelectBoxStyle();
-        style.font = new BitmapFont();
+        style.font = HUDFont;
         style.listStyle = new List.ListStyle(new BitmapFont(), Color.BLACK, Color.BROWN, new TextureRegionDrawable(new TextureRegion(sliderBarTexture)));
         style.scrollStyle = new ScrollPane.ScrollPaneStyle(new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)));
 
