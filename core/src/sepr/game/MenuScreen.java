@@ -37,28 +37,28 @@ public class MenuScreen implements Screen {
     }
 
     private Table setupMenuTable() {
-        final TextButton startGameBtn = WidgetFactory.genBasicButton("New Game");
-        final TextButton loadGameBtn = WidgetFactory.genBasicButton("Load Game");
-        final TextButton optionsBtn = WidgetFactory.genBasicButton("Options");
-        final TextButton exitBtn = WidgetFactory.genBasicButton("Exit");
+        final TextButton startGameBtn = WidgetFactory.genBasicButton("START NEW GAME");
+        final TextButton loadGameBtn = WidgetFactory.genBasicButton("LOAD GAME");
+        final TextButton optionsBtn = WidgetFactory.genBasicButton("OPTION");
+        final TextButton exitBtn = WidgetFactory.genBasicButton("QUIT");
 
         /* Create sub-table for all the menu buttons */
         Table btnTable = new Table();
         btnTable.setDebug(true);
         btnTable.left();
-        btnTable.add(startGameBtn).pad(30);
+        btnTable.add(startGameBtn).height(60).width(420).pad(30);
 
         btnTable.row();
         btnTable.left();
-        btnTable.add(loadGameBtn).pad(30);
+        btnTable.add(loadGameBtn).height(60).width(420).pad(30);
 
         btnTable.row();
         btnTable.left();
-        btnTable.add(optionsBtn).pad(30);
+        btnTable.add(optionsBtn).height(60).width(420).pad(30);
 
         btnTable.row();
         btnTable.left();
-        btnTable.add(exitBtn).pad(30);
+        btnTable.add(exitBtn).height(60).width(420).pad(30);
 
         startGameBtn.addListener(new ChangeListener() {
             @Override
@@ -93,21 +93,21 @@ public class MenuScreen implements Screen {
     }
 
     private void setupUi() {
-        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/background.png"))));
+        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Menu-Background.png"))));
 
         table.center();
-        table.add(WidgetFactory.genTopBarGraphic()).colspan(2).fillX();
+        table.add(WidgetFactory.genMainMenuTopBarGraphic()).height(60).colspan(2).fillX();
 
         table.row();
         table.left();
         table.add(setupMenuTable()).expand();
 
         table.right();
-        table.add(WidgetFactory.genMapGraphic()).pad(30);
+        table.add(WidgetFactory.genMapGraphic()).height(657).width(811).pad(30);
 
         table.row();
         table.center();
-        table.add(WidgetFactory.genBottomBarGraphic()).colspan(2).fillX();
+        table.add(WidgetFactory.genBottomBarGraphic()).height(120).colspan(2).fillX();
     }
 
     @Override
