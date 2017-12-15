@@ -46,10 +46,11 @@ public class GameScreen implements Screen, InputProcessor{
     /**
      * Performs the game's initial setup
      * @param main used to change screen
-     * @param players hashmap of the players in this game
-     * @param turnTimerEnabled should players turn be limitted
+     * @param players HashMap of the players in this game
+     * @param turnTimerEnabled should players turns be limited
      * @param maxTurnTime time elapsed in current turn, irrelevant if turn timer not enabled
      */
+
     public GameScreen(Main main, HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
         this.main = main;
 
@@ -85,6 +86,32 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * Performs the games UI setup
+     */
+    private void setupUi() {
+        this.table = new Table();
+        this.table.setFillParent(true);
+        this.stage.addActor(table);
+        this.table.setDebug(true);
+
+        Texture buttons = new Texture("ui/buttons.png"); // texture sheet for buttons
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); // create style for buttons to use
+        style.up = new TextureRegionDrawable(new TextureRegion(buttons, 0, 0, 400, 150)); // image for button to use in default state
+        style.down = new TextureRegionDrawable(new TextureRegion(buttons, 0, 150, 400, 150)); // image for button to use when pressed down
+        style.font = new BitmapFont(); // set button font to the default Bitmap Font
+
+        final TextButton startGameBtn = new TextButton("New Game", style);
+        table.bottom();
+        table.left();
+        table.add(startGameBtn);
+    }
+
+
+    /**
+     * Allocates sectors to each player in a balanced manner
+     * @throws RuntimeException If players.size() is zero
+     * HashMap playerReinforcements mapping the player id to amount of reinforcements they will receive currently
+     * Method allocates the next sector in the loop to the current player with the lowestReinforcementId
      * Created by Owain's Asus on 10/12/2017.
      * Allocate sectors to each player in a balanced manner.
      * Just need the finished csv file so we can calculate Total reinforcements but apart from
@@ -124,7 +151,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     *
+     * This method is used for progression through the phases of a turn evaluating the currentPhase case label
      */
     protected void advancePhase() {
         switch (currentPhase) {
@@ -181,13 +208,16 @@ public class GameScreen implements Screen, InputProcessor{
         // not part of this assessment
     }
 
+    /**
+     * Input keys for controlling the game camera
+     */
     private void updateInputProcessor() {
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stages.get(currentPhase));
         inputMultiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
-
+  
     private void controlCamera() {
         if (this.keysDown.get(Input.Keys.UP)) {
             this.gameplayCamera.translate(0, 4, 0);

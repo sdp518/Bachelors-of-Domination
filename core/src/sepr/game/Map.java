@@ -21,6 +21,11 @@ public class Map{
     Color changeBlue = new Color(0.8f, 0.5f, 0f, 0f);
     Color changeWhite =  new Color(0,0,0,0);
 
+    /**
+     * Performs the maps initial setup
+     * Initialises the sectors as objects storing them in a HashMap
+     * Initialises the sector colours storing them in a HashMap
+     */
     public Map() {
         this.sectors = new HashMap<Integer, Sector>();
 
@@ -90,7 +95,7 @@ public class Map{
 
     /**
      * Checks to see if there is one player who controls every sector
-     * @return -1 if there is no winner or the ID of the player that controlls all the sectors
+     * @return -1 if there is no winner or the ID of the player that controls all the sectors
      */
     public int checkForWinner() {
         return -1;
@@ -141,15 +146,21 @@ public class Map{
         }
     }
 
-    public int getNumOfSectors() {
-        return sectors.values().size();
-    }
+    /**
+     * @return Integer value of total number of sectors in sectors HashMap
+     */
+    public int getNumOfSectors() { return sectors.values().size(); }
 
+    /**
+     * @return Set of all SectorIds
+     */
     public Set<Integer> getSectorIds() { return sectors.keySet() ; }
 
-    public void setSectorOwner(int sectorId, Player player) {
-        sectors.get(sectorId).setOwner(player);
-    }
+    /**
+     * @param sectorId Id of sector
+     * @param player sets owner of sector as Player object
+     */
+    public void setSectorOwner(int sectorId, Player player) { sectors.get(sectorId).setOwner(player); }
 
     /**
      *
@@ -175,13 +186,16 @@ public class Map{
     }
 
     /**
-     *
      * @param batch
      */
     private void renderSectorUnitData(SpriteBatch batch) {
 
     }
 
+    /**
+     * Method for drawing sectors
+     * @param batch
+     */
     public void draw(SpriteBatch batch) {
         for (Sector sector : sectors.values()) {
             batch.draw(sector.getSectorTexture(), 0, 0);
