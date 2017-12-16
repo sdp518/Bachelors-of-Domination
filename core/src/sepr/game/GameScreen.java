@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -53,7 +54,8 @@ public class GameScreen implements Screen, InputProcessor{
     private float mousePositionX; // Stores the relative x coordinate of the cursor when it moves. 0,0 is bottom left
     private float mousePositionY; // Stores the relative y coordinate of the cursor when it moves. 0,0 is bottom left
 
-    private HashMap<String, Float> arrowPositions; // Hashmap with startX startY endX endY populated with attack phase sector selections
+    private Vector2 arrowPositionsBase; // Vector x,y for the base of the arrow
+    private Vector2 arrowPositionsPoint; // Vector x,y for the point of the arrow
 
     /**
      * Performs the game's initial setup
@@ -91,7 +93,9 @@ public class GameScreen implements Screen, InputProcessor{
 
         this.attackingSector = null;
         this.defendingSector = null;
-        this.arrowPositions = new HashMap<String, Float>();
+
+        this.arrowPositionsPoint = new Vector2();
+        this.arrowPositionsBase = new Vector2();
 
         setupUi();
 
@@ -277,15 +281,13 @@ public class GameScreen implements Screen, InputProcessor{
      * @param worldY
      */
     private void attackPhaseTouchUp(float worldX, float worldY) {
-        this.map.getSector(0).addUnits(3);
         int sectorid = map.detectSectorClick((int)worldX, (int)worldY);
         if (sectorid != -1) { // If selected a sector
             Sector selected = map.getSector(sectorid); // Current sector
             boolean notAlreadySelected = this.attackingSector == null && this.defendingSector == null; // T/F if the attack sequence is complete
             if (this.attackingSector != null && this.defendingSector == null) { // If its the second selection in the attack phase
                 if (this.attackingSector.isAdjacentTo(selected) && selected.getOwnerId() != this.currentPlayer) { // If not own sector and its adjacent
-                    this.arrowPositions.put("endX", this.mousePositionX); // Finalise the end position of the arrow
-                    this.arrowPositions.put("endY", this.mousePositionY);
+                    this.arrowPositionsPoint.set(this.mousePositionX, this.mousePositionY); // Finalise the end position of the arrow
                     this.defendingSector = selected;
                     // Call to initiate attack + advance phase
                     //this.attackingSector = null; // Add back once ^ is complete
@@ -295,8 +297,7 @@ public class GameScreen implements Screen, InputProcessor{
                 }
             } else if (selected.getOwnerId() == this.currentPlayer && selected.getUnitsInSector() > 1 && notAlreadySelected) { // First selection, is owned by the player and has enough troops
                 this.attackingSector = selected;
-                this.arrowPositions.put("startX", this.mousePositionX); // Finalise start position of arrow
-                this.arrowPositions.put("startY", this.mousePositionY);
+                this.arrowPositionsBase.set(this.mousePositionX, this.mousePositionY); // Finalise start position of arrow
             } else {
                 this.attackingSector = null;
                 this.defendingSector = null;
@@ -315,9 +316,9 @@ public class GameScreen implements Screen, InputProcessor{
     private  SpriteBatch attackVisualisation(SpriteBatch gamplayBatch) {
         if (this.attackingSector != null) { // If attacking
             if (this.defendingSector == null) { // In mid attack
-                generateArrow(gamplayBatch, this.arrowPositions.get("startX"), this.arrowPositions.get("startY"), this.mousePositionX, this.mousePositionY);
+                generateArrow(gamplayBatch, this.arrowPositionsBase.x, this.arrowPositionsBase.y, this.mousePositionX, this.mousePositionY);
             } else if (this.defendingSector != null) { // Attack confirmed
-                generateArrow(gamplayBatch, this.arrowPositions.get("startX"), this.arrowPositions.get("startY"), this.arrowPositions.get("endX"), this.arrowPositions.get("endY"));
+                generateArrow(gamplayBatch, this.arrowPositionsBase.x, this.arrowPositionsBase.y, this.arrowPositionsPoint.x, this.arrowPositionsPoint.y);
             }
         }
         return gamplayBatch;

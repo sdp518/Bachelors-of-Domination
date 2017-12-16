@@ -31,8 +31,8 @@ public class Map{
          */
 
         // hes east
-        this.sectors.put(0, new Sector(0, -1, "Hes East 1", 0, 2, new int[]{}, new Texture("hesEast1.png"), new Pixmap(Gdx.files.internal("hesEast1.png")), "hesEast1.png", 0, 0, false));
-        this.sectors.put(1, new Sector(1, -1, "Hes East 2", 0, 2, new int[]{}, new Texture("hesEast2.png"), new Pixmap(Gdx.files.internal("hesEast2.png")), "hesEast2.png", 0, 0, false));
+        this.sectors.put(0, new Sector(0, 1, "Hes East 1", 0, 2, new int[]{}, new Texture("hesEast1.png"), new Pixmap(Gdx.files.internal("hesEast1.png")), "hesEast1.png", 0, 0, false));
+        this.sectors.put(1, new Sector(1, 2, "Hes East 2", 0, 2, new int[]{}, new Texture("hesEast2.png"), new Pixmap(Gdx.files.internal("hesEast2.png")), "hesEast2.png", 0, 0, false));
         this.sectors.put(2, new Sector(2, -1, "Hes East 3", 0, 2, new int[]{}, new Texture("hesEast3.png"), new Pixmap(Gdx.files.internal("hesEast3.png")), "hesEast3.png", 0, 0, false));
         this.sectors.put(3, new Sector(3, -1, "Hes East 4", 0, 2, new int[]{}, new Texture("hesEast4.png"), new Pixmap(Gdx.files.internal("hesEast4.png")), "hesEast4.png", 0, 0, false));
 
