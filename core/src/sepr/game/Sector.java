@@ -29,6 +29,7 @@ public class Sector {
      * @param displayName sector display name
      * @param unitsInSector number of units in sector
      * @param reinforcementsProvided number of reinforcements the sector provides
+     * @param college the college this sector belongs to
      * @param adjacentSectorIds ids of adjacent sectors
      * @param sectorTexture sector texture from assets
      * @param sectorPixmap pixmap of sector texture
@@ -37,7 +38,7 @@ public class Sector {
      * @param sectorCentreY ycoord of sector centre
      * @param decor false if a sector is accessible to a player and true if sector is decorative
      */
-    public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap, String fileName, int sectorCentreX, int sectorCentreY, boolean decor) {
+    public Sector(int id, int ownerId, String fileName, Texture sectorTexture, Pixmap sectorPixmap, String displayName, int unitsInSector, int reinforcementsProvided, String college, boolean neutral, int[] adjacentSectorIds, int sectorCentreX, int sectorCentreY, boolean decor) {
         this.id = id;
         this.ownerId = ownerId;
         this.prevOwnerId = ownerId;
@@ -127,8 +128,6 @@ public class Sector {
     public String getFileName() {
         return fileName;
     }
-
-    public void updateOwnerId() { prevOwnerId = ownerId; }
 
     /**
      * Updates the ownerId in a sector

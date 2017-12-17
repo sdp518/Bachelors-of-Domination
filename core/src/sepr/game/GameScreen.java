@@ -3,10 +3,15 @@ package sepr.game;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -99,21 +104,11 @@ public class GameScreen implements Screen, InputProcessor{
      * Performs the games UI setup
      */
     private void setupUi() {
-        this.table = new Table();
-        this.table.setFillParent(true);
-        this.stage.addActor(table);
-        this.table.setDebug(true);
-
         Texture buttons = new Texture("ui/buttons.png"); // texture sheet for buttons
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); // create style for buttons to use
         style.up = new TextureRegionDrawable(new TextureRegion(buttons, 0, 0, 400, 150)); // image for button to use in default state
         style.down = new TextureRegionDrawable(new TextureRegion(buttons, 0, 150, 400, 150)); // image for button to use when pressed down
         style.font = new BitmapFont(); // set button font to the default Bitmap Font
-
-        final TextButton startGameBtn = new TextButton("New Game", style);
-        table.bottom();
-        table.left();
-        table.add(startGameBtn);
     }
 
 
@@ -273,16 +268,6 @@ public class GameScreen implements Screen, InputProcessor{
         this.stages.get(currentPhase).draw();
     }
 
-
-    /**
-     * handles mouse clicks during the reinforcement phase
-     * @param worldX
-     * @param worldY
-     */
-    private void reinforcePhaseTouchUp(float worldX, float worldY) {
-
-    }
-
     /**
      * handles mouse clicks during the attack phase
      * @param worldX
@@ -308,29 +293,11 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * handles mouse clicks during the movement phase
-     * @param worldX
-     * @param worldY
-     */
-    private void movementPhaseTouchUp(float worldX, float worldY) {
-        // not part of this assessment
-    }
-
-    /**
      * handles mouse clicks during the reinforcement phase
      * @param worldX
      * @param worldY
      */
     private void reinforcePhaseTouchUp(float worldX, float worldY) {
-
-    }
-
-    /**
-     * handles mouse clicks during the attack phase
-     * @param worldX
-     * @param worldY
-     */
-    private void attackPhaseTouchUp(float worldX, float worldY) {
 
     }
 
