@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -28,8 +31,7 @@ import java.util.ArrayList;
 public class GameScreen implements Screen, InputProcessor{
     private Main main;
 
-    private Stage stage;
-    private Table table;
+    private HashMap<TurnPhase, HUD> stages;
 
     private Map map;
     private SpriteBatch gamplayBatch;
@@ -60,21 +62,25 @@ public class GameScreen implements Screen, InputProcessor{
     /**
      * Performs the game's initial setup
      * @param main used to change screen
-     * @param players hashmap of the players in this game
-     * @param turnTimerEnabled should players turn be limitted
+     * @param players HashMap of the players in this game
+     * @param turnTimerEnabled should players turns be limited
      * @param maxTurnTime time elapsed in current turn, irrelevant if turn timer not enabled
      */
+
     public GameScreen(Main main, HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
         this.main = main;
-
-        this.stage = new Stage();
-        this.stage.setViewport(new ScreenViewport());
 
         this.map = new Map();
         this.gamplayBatch = new SpriteBatch();
         this.gameplayCamera = new OrthographicCamera();
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
         this.mapBackground = new Texture("ui/mapBackground.png");
+
+        this.stages = new HashMap<TurnPhase, HUD>();
+        this.stages.put(TurnPhase.REINFORCEMENT, new HUDReinforcement(this));
+        this.stages.put(TurnPhase.ATTACK, new HUDAttack(this));
+        this.stages.put(TurnPhase.MOVEMENT, new HUDMovement(this));
+
 
         this.players = players;
 
@@ -90,37 +96,29 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimeElapsed = 0;
         this.turnOrder = new ArrayList<Integer>(players.keySet());
         this.currentPlayer = 0;
-
+      
         this.attackingSector = null;
         this.defendingSector = null;
 
         this.arrowPositionsPoint = new Vector2();
         this.arrowPositionsBase = new Vector2();
+      
+        gameplayCamera.translate(new Vector3(mapBackground.getWidth() / 2, mapBackground.getHeight() / 2, 0));
 
         setupUi();
-
-        //allocateSectors();
+            
+        allocateSectors();
     }
 
     /**
-     *
+     * Performs the games UI setup
      */
     private void setupUi() {
-        this.table = new Table();
-        this.table.setFillParent(true);
-        this.stage.addActor(table);
-        this.table.setDebug(true);
-
         Texture buttons = new Texture("ui/buttons.png"); // texture sheet for buttons
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); // create style for buttons to use
         style.up = new TextureRegionDrawable(new TextureRegion(buttons, 0, 0, 400, 150)); // image for button to use in default state
         style.down = new TextureRegionDrawable(new TextureRegion(buttons, 0, 150, 400, 150)); // image for button to use when pressed down
         style.font = new BitmapFont(); // set button font to the default Bitmap Font
-
-        final TextButton startGameBtn = new TextButton("New Game", style);
-        table.bottom();
-        table.left();
-        table.add(startGameBtn);
     }
 
 
@@ -164,9 +162,9 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     *
+     * This method is used for progression through the phases of a turn evaluating the currentPhase case label
      */
-    private void adavancePhase() {
+    protected void advancePhase() {
         switch (currentPhase) {
             case REINFORCEMENT:
                 currentPhase = TurnPhase.ATTACK;
@@ -182,6 +180,9 @@ public class GameScreen implements Screen, InputProcessor{
                 nextPlayer();
                 break;
         }
+        this.updateInputProcessor();
+        System.out.println(currentPhase);
+        System.out.println(currentPlayer);
     }
 
     /**
@@ -218,6 +219,16 @@ public class GameScreen implements Screen, InputProcessor{
         // not part of this assessment
     }
 
+    /**
+     * Input keys for controlling the game camera
+     */
+    private void updateInputProcessor() {
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(stages.get(currentPhase));
+        inputMultiplexer.addProcessor(this);
+        Gdx.input.setInputProcessor(inputMultiplexer);
+    }
+  
     private void controlCamera() {
         if (this.keysDown.get(Input.Keys.UP)) {
             this.gameplayCamera.translate(0, 4, 0);
@@ -234,12 +245,14 @@ public class GameScreen implements Screen, InputProcessor{
 
     }
 
+    private void renderBackground() {
+        Vector3 mapDrawPos = gameplayCamera.unproject(new Vector3(0, Gdx.graphics.getHeight(), 0));
+        gamplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
+    }
+
     @Override
     public void show() {
-        InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(stage);
-        inputMultiplexer.addProcessor(this);
-        Gdx.input.setInputProcessor(inputMultiplexer);
+        this.updateInputProcessor();
     }
 
     @Override
@@ -252,27 +265,18 @@ public class GameScreen implements Screen, InputProcessor{
         gameplayCamera.update();
         gamplayBatch.setProjectionMatrix(gameplayCamera.combined);
         gamplayBatch.begin();
-        gamplayBatch.draw(mapBackground, 0, 0, gameplayViewport.getScreenWidth(), gameplayViewport.getScreenHeight() );
+
+        renderBackground();
         map.draw(gamplayBatch);
         attackVisualisation(gamplayBatch);
         gamplayBatch.end();
 
         /* UI */
         // update UI
-        this.stage.act(delta);
+        this.stages.get(currentPhase).act(delta);
 
         // render UI
-        this.stage.draw();
-    }
-
-
-    /**
-     * handles mouse clicks during the reinforcement phase
-     * @param worldX
-     * @param worldY
-     */
-    private void reinforcePhaseTouchUp(float worldX, float worldY) {
-
+        this.stages.get(currentPhase).draw();
     }
 
     /**
@@ -281,7 +285,7 @@ public class GameScreen implements Screen, InputProcessor{
      * @param worldY
      */
     private void attackPhaseTouchUp(float worldX, float worldY) {
-        int sectorid = map.detectSectorClick((int)worldX, (int)worldY);
+        int sectorid = map.detectSectorContainsPoint((int)worldX, (int)worldY);
         if (sectorid != -1) { // If selected a sector
             Sector selected = map.getSector(sectorid); // Current sector
             boolean notAlreadySelected = this.attackingSector == null && this.defendingSector == null; // T/F if the attack sequence is complete
@@ -342,6 +346,14 @@ public class GameScreen implements Screen, InputProcessor{
         gamplayBatch.draw(arrow, startX, (startY - thickness/2), 0, thickness/2, (float)height, thickness,1, 1, (float)angle);
         return gamplayBatch;
    }
+  
+     * handles mouse clicks during the reinforcement phase
+     * @param worldX
+     * @param worldY
+     */
+    private void reinforcePhaseTouchUp(float worldX, float worldY) {
+
+    }
 
     /**
      * handles mouse clicks during the movement phase
@@ -352,19 +364,21 @@ public class GameScreen implements Screen, InputProcessor{
         // not part of this assessment
     }
 
-
     @Override
     public void resize(int width, int height) {
-        this.stage.getViewport().update(width, height);
-        this.stage.getCamera().viewportWidth = width;
-        this.stage.getCamera().viewportHeight = height;
-        this.stage.getCamera().position.x = width/2;
-        this.stage.getCamera().position.y = height/2;
-        this.stage.getCamera().update();
+        for (Stage stage : stages.values()) {
+            stage.getViewport().update(width, height);
+            stage.getCamera().viewportWidth = width;
+            stage.getCamera().viewportHeight = height;
+            stage.getCamera().position.x = width/2;
+            stage.getCamera().position.y = height/2;
+            stage.getCamera().update();
+        }
 
         this.gameplayViewport.update(width, height);
         this.gameplayCamera.viewportWidth = width;
         this.gameplayCamera.viewportHeight = height;
+        this.gameplayCamera.translate(1920/2, 1080/2, 0);
         this.gameplayCamera.update();
     }
 
@@ -385,10 +399,10 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void dispose() {
-        stage.dispose();
+        for (Stage stage : stages.values()) {
+            stage.dispose();
+        }
     }
-
-
 
     /* Input Processor */
 
@@ -426,6 +440,18 @@ public class GameScreen implements Screen, InputProcessor{
         return true;
     }
 
+    /**
+     *
+     * @param screenX
+     * @param screenY
+     * @return
+     */
+    private Vector2 screenToWorldCoord(int screenX, int screenY) {
+        float worldX = gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x;
+        float worldY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y - Gdx.graphics.getHeight()) * -1;
+        return new Vector2(worldX, worldY);
+    }
+
     @Override
     public boolean keyTyped(char character) {
         return false;
@@ -438,18 +464,17 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        float worldX = gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x;
-        float worldY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y - Gdx.graphics.getHeight()) * -1;
+        Vector2 worldCoords = screenToWorldCoord(screenX, screenY);
 
         switch (currentPhase) {
             case REINFORCEMENT:
-                reinforcePhaseTouchUp(worldX, worldY);
+                reinforcePhaseTouchUp(worldCoords.x, worldCoords.y);
                 break;
             case ATTACK:
-                attackPhaseTouchUp(worldX, worldY);
+                attackPhaseTouchUp(worldCoords.x, worldCoords.y);
                 break;
             case MOVEMENT:
-                movementPhaseTouchUp(worldX, worldY);
+                movementPhaseTouchUp(worldCoords.x, worldCoords.y);
                 break;
         }
         return true;
@@ -462,14 +487,18 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        // Updates the attributes every time the mouse is moved with the relative coordinates. 0,0 is bottom left
-        this.mousePositionX = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x);
-        this.mousePositionY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y);
-        return false;
+        Vector2 worldCoords = screenToWorldCoord(screenX, screenY);
+
+        Sector hoveredSector = map.getSector(map.detectSectorContainsPoint((int)worldCoords.x, (int)worldCoords.y));
+        stages.get(currentPhase).setBottomBarText(hoveredSector);
+        return true;
     }
 
     @Override
     public boolean scrolled(int amount) {
+        if ((gameplayCamera.zoom > 0.5 && amount < 0) || (gameplayCamera.zoom < 1.5 && amount > 0)) {
+            gameplayCamera.zoom += amount * 0.03f;
+        }
         return false;
     }
 }

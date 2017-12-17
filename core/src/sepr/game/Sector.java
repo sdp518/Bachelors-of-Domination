@@ -23,7 +23,22 @@ public class Sector {
     private boolean decor; // is this sector for visual purposes only, i.e. lakes are decor
     private String fileName;
 
-    public Sector(int id, int ownerId, String displayName, int unitsInSector, int reinforcementsProvided, int[] adjacentSectorIds, Texture sectorTexture, Pixmap sectorPixmap, String fileName, int sectorCentreX, int sectorCentreY, boolean decor) {
+    /**
+     * @param id sector id
+     * @param ownerId id of player who owns sector
+     * @param displayName sector display name
+     * @param unitsInSector number of units in sector
+     * @param reinforcementsProvided number of reinforcements the sector provides
+     * @param college the college this sector belongs to
+     * @param adjacentSectorIds ids of adjacent sectors
+     * @param sectorTexture sector texture from assets
+     * @param sectorPixmap pixmap of sector texture
+     * @param fileName sector filename
+     * @param sectorCentreX xcoord of sector centre
+     * @param sectorCentreY ycoord of sector centre
+     * @param decor false if a sector is accessible to a player and true if sector is decorative
+     */
+    public Sector(int id, int ownerId, String fileName, Texture sectorTexture, Pixmap sectorPixmap, String displayName, int unitsInSector, int reinforcementsProvided, String college, boolean neutral, int[] adjacentSectorIds, int sectorCentreX, int sectorCentreY, boolean decor) {
         this.id = id;
         this.ownerId = ownerId;
         this.prevOwnerId = ownerId;
@@ -34,7 +49,7 @@ public class Sector {
         this.sectorTexture = sectorTexture;
         this.sectorPixmap = sectorPixmap;
         this.sectorCentreX = sectorCentreX;
-        this.sectorCentreY = sectorCentreY;
+        this.sectorCentreY = 1080 - sectorCentreY;
         this.decor = decor;
         this.fileName = fileName;
     }
@@ -70,6 +85,9 @@ public class Sector {
         return unitsInSector;
     }
 
+    /**
+     * @return array of adjacent sector ids
+     */
     public int[] getAdjacentSectorIds() {
         return adjacentSectorIds;
     }
@@ -78,6 +96,10 @@ public class Sector {
         return sectorTexture;
     }
 
+    /**
+     * Sets the new texture for a sector
+     * @param newPixmap the memory representation of the textures pixels
+     */
     public void setNewSectorTexture(Pixmap newPixmap) {
         this.sectorTexture.dispose();
         Texture temp = new Texture(newPixmap);
@@ -96,6 +118,9 @@ public class Sector {
         return sectorCentreY;
     }
 
+    /**
+     * @return boolean value to check whether sector is decorative
+     */
     public boolean isDecor() {
         return decor;
     }
@@ -104,6 +129,9 @@ public class Sector {
         return fileName;
     }
 
+    /**
+     * Updates the ownerId in a sector
+     */
     public void updateOwnerId() { prevOwnerId = ownerId; }
 
     /**
@@ -156,4 +184,6 @@ public class Sector {
         this.setNewSectorTexture(newPix); // draw the generated pixmap to the new texture
         newPix.dispose();
     }
+    // Shortened way of checking if the player captured the tile that turn
+    public boolean justCapturedBy(int playerId){ return playerId == ownerId && playerId != prevOwnerId;  }
 }
