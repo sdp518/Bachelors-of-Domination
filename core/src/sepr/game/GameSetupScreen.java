@@ -252,7 +252,7 @@ public class GameSetupScreen implements Screen{
         private Table setUpCollegeTable(){
 
             final Label nameBoxLabel = WidgetFactory.genNameBoxLabel("ALCUIN");
-            nameBoxLabel.setAlignment(Align.center);
+            nameBoxLabel.setAlignment(Align.left);
             final Label collegeLogo = new Label("", WidgetFactory.genCollegeLabelStyle(nameBoxLabel.getText().toString()));
             TextField playerName = WidgetFactory.playerNameTextField("Player 1");
 
@@ -273,21 +273,24 @@ public class GameSetupScreen implements Screen{
                 }
             });
 
+            Table collegeSelector = new Table();
+            collegeSelector.setDebug(true);
+            collegeSelector.add(collegeLeftButton).height(50).width(25);
+            collegeSelector.add(collegeLogo).height(80).width(100);
+            collegeSelector.add(collegeRightButton).height(50).width(25);
+
+            Table infoDisplay = new Table();
+            infoDisplay.setDebug(true);
+            infoDisplay.add(playerName).padBottom(10).width(220).left();
+            infoDisplay.row();
+            infoDisplay.add(nameBoxLabel).height(20).width(220);
 
 
             Table collegeTable = new Table();
-            collegeTable.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Game-Setup-Name-Box.png")))).setWidth(420);
+            collegeTable.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Game-Setup-Name-Box.png"))));
             collegeTable.setDebug(true);
-
-            collegeTable.left();
-            collegeTable.add(playerName);
-            collegeTable.row();
-            collegeTable.add(nameBoxLabel).height(20).width(200);
-
-            collegeTable.add(collegeLeftButton).height(50).width(25);
-            collegeTable.add(collegeLogo).height(80).width(100);
-            collegeTable.add(collegeRightButton).height(50).width(25);
-
+            collegeTable.add(infoDisplay).expand().left().padLeft(20);
+            collegeTable.add(collegeSelector).padRight(60);
             return collegeTable;
         }
 
@@ -305,7 +308,7 @@ public class GameSetupScreen implements Screen{
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Menu-Background.png"))));
 
         table.center();
-        table.add(WidgetFactory.genMainMenuTopBarGraphic()).height(60).colspan(2).fillX().height(100);
+        table.add(WidgetFactory.genTopBar("GAME SETUP")).colspan(2);
 
         table.row();
         table.left();
@@ -321,7 +324,7 @@ public class GameSetupScreen implements Screen{
 
         table.row();
         table.center();
-        table.add(WidgetFactory.genBottomBarGraphic()).colspan(2).fillX().height(150);
+        table.add(WidgetFactory.genBottomBar()).colspan(2);
     }
 
 

@@ -156,7 +156,7 @@ public class OptionsScreen implements Screen {
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Menu-Background.png"))));
 
         table.center();
-        table.add(WidgetFactory.genMainMenuTopBarGraphic()).height(60).colspan(2).fillX();
+        table.add(WidgetFactory.genTopBar("OPTIONS")).colspan(2);
 
         table.row();
         table.add(setupOptionsTable()).expand();
@@ -164,7 +164,7 @@ public class OptionsScreen implements Screen {
         table.add(WidgetFactory.genOptionsGraphic()).height(700).width(540).pad(30);
 
         table.row();
-        table.add(WidgetFactory.genBottomBarGraphic()).colspan(2).height(120).fillX();
+        table.add(WidgetFactory.genBottomBar()).colspan(2);
     }
 
     /**

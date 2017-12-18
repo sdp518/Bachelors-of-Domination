@@ -96,7 +96,7 @@ public class MenuScreen implements Screen {
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Menu-Background.png"))));
 
         table.center();
-        table.add(WidgetFactory.genMainMenuTopBarGraphic()).height(60).colspan(2).fillX();
+        table.add(WidgetFactory.genTopBar("MAIN MENU")).colspan(2);
 
         table.row();
         table.left();
@@ -107,7 +107,7 @@ public class MenuScreen implements Screen {
 
         table.row();
         table.center();
-        table.add(WidgetFactory.genBottomBarGraphic()).height(120).colspan(2).fillX();
+        table.add(WidgetFactory.genBottomBar()).colspan(2);
     }
 
     @Override
