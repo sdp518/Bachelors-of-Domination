@@ -34,7 +34,7 @@ public class GameScreen implements Screen, InputProcessor{
     private HashMap<TurnPhase, HUD> stages;
 
     private Map map;
-    private SpriteBatch gamplayBatch;
+    private SpriteBatch gameplayBatch;
     private OrthographicCamera gameplayCamera;
     private Viewport gameplayViewport;
     private Texture mapBackground;
@@ -71,7 +71,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.main = main;
 
         this.map = new Map();
-        this.gamplayBatch = new SpriteBatch();
+        this.gameplayBatch = new SpriteBatch();
         this.gameplayCamera = new OrthographicCamera();
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
         this.mapBackground = new Texture("ui/mapBackground.png");
@@ -102,8 +102,7 @@ public class GameScreen implements Screen, InputProcessor{
 
         this.arrowPositionsPoint = new Vector2();
         this.arrowPositionsBase = new Vector2();
-      
-        gameplayCamera.translate(new Vector3(mapBackground.getWidth() / 2, mapBackground.getHeight() / 2, 0));
+        gameplayCamera.translate(new Vector3(0, 0, 0));
 
         setupUi();
             
@@ -247,7 +246,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     private void renderBackground() {
         Vector3 mapDrawPos = gameplayCamera.unproject(new Vector3(0, Gdx.graphics.getHeight(), 0));
-        gamplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
+        gameplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
     }
 
     @Override
@@ -263,13 +262,13 @@ public class GameScreen implements Screen, InputProcessor{
 
         //render gameplay
         gameplayCamera.update();
-        gamplayBatch.setProjectionMatrix(gameplayCamera.combined);
-        gamplayBatch.begin();
+        gameplayBatch.setProjectionMatrix(gameplayCamera.combined);
+        gameplayBatch.begin();
 
         renderBackground();
-        map.draw(gamplayBatch);
-        attackVisualisation(gamplayBatch);
-        gamplayBatch.end();
+        map.draw(gameplayBatch);
+        gameplayBatch = attackVisualisation(gameplayBatch);
+        gameplayBatch.end();
 
         /* UI */
         // update UI
@@ -314,39 +313,41 @@ public class GameScreen implements Screen, InputProcessor{
 
     /**
      * Function used to create the attack visualisations
-     * @param gamplayBatch The main sprite batch
-     * @return gamplayBatch
+     * @param gameplayBatch The main sprite batch
+     * @return gameplayBatch
      */
-    private  SpriteBatch attackVisualisation(SpriteBatch gamplayBatch) {
+    private  SpriteBatch attackVisualisation(SpriteBatch gameplayBatch) {
         if (this.attackingSector != null) { // If attacking
             if (this.defendingSector == null) { // In mid attack
-                generateArrow(gamplayBatch, this.arrowPositionsBase.x, this.arrowPositionsBase.y, this.mousePositionX, this.mousePositionY);
+                generateArrow(gameplayBatch, this.arrowPositionsBase.x, this.arrowPositionsBase.y, this.mousePositionX, this.mousePositionY);
             } else if (this.defendingSector != null) { // Attack confirmed
-                generateArrow(gamplayBatch, this.arrowPositionsBase.x, this.arrowPositionsBase.y, this.arrowPositionsPoint.x, this.arrowPositionsPoint.y);
+                generateArrow(gameplayBatch, this.arrowPositionsBase.x, this.arrowPositionsBase.y, this.arrowPositionsPoint.x, this.arrowPositionsPoint.y);
             }
         }
-        return gamplayBatch;
+
+        return gameplayBatch;
     }
 
     /**
      * Creates an arrow between coordinates
-     * @param gamplayBatch The main sprite batch
+     * @param gameplayBatch The main sprite batch
      * @param startX Base of the arrow x
      * @param startY Base of the arrow y
      * @param endX Tip of the arrow x
      * @param endY Tip of the arrow y
      * @return The sprite batch
      */
-    private SpriteBatch generateArrow(SpriteBatch gamplayBatch, float startX, float startY, float endX, float endY) {
+    private SpriteBatch generateArrow(SpriteBatch gameplayBatch, float startX, float startY, float endX, float endY) {
         TextureRegion arrow = new TextureRegion(new Texture(Gdx.files.internal("arrow.png"))); // Load the arrow sprite
         int thickness = 30;
         // Calculates the transformations to apply to the sprite - had to refresh my GCSE maths knowledge lol
         double angle = Math.toDegrees(Math.atan((endY - startY) / (endX - startX)));
         double height = (endY - startY) /  Math.sin(Math.toRadians(angle));
-        gamplayBatch.draw(arrow, startX, (startY - thickness/2), 0, thickness/2, (float)height, thickness,1, 1, (float)angle);
-        return gamplayBatch;
+        gameplayBatch.draw(arrow, startX, (startY - thickness/2), 0, thickness/2, (float)height, thickness,1, 1, (float)angle);
+        return gameplayBatch;
    }
-  
+
+   /**
      * handles mouse clicks during the reinforcement phase
      * @param worldX
      * @param worldY
@@ -487,6 +488,9 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        this.mousePositionX = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x);
+        this.mousePositionY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y);
+
         Vector2 worldCoords = screenToWorldCoord(screenX, screenY);
 
         Sector hoveredSector = map.getSector(map.detectSectorContainsPoint((int)worldCoords.x, (int)worldCoords.y));

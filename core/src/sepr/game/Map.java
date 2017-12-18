@@ -54,7 +54,7 @@ public class Map{
         String line = "";
         Integer ID = 0;
         try {
-            BufferedReader br = new BufferedReader(new FileReader("sectorProperties.csv"));
+            BufferedReader br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
                 Sector temp = sectorDataToSector(line.split(","));
                 this.sectors.put(temp.getId(), temp);
@@ -222,10 +222,12 @@ public class Map{
     public void draw(SpriteBatch batch) {
         for (Sector sector : sectors.values()) {
             String text = sector.getUnitsInSector() + "";
-            layout.setText(font, text);
             batch.draw(sector.getSectorTexture(), 0, 0);
-            batch.draw(troopCountOverlay, sector.getSectorCentreX() - overlaySize / 2, sector.getSectorCentreY() - overlaySize / 2, overlaySize, overlaySize);
-            font.draw(batch, layout, sector.getSectorCentreX() - layout.width / 2, sector.getSectorCentreY() + layout.height / 2);
+            if (!sector.isDecor()) {
+                layout.setText(font, text);
+                batch.draw(troopCountOverlay, sector.getSectorCentreX() - overlaySize / 2 , sector.getSectorCentreY() - overlaySize / 2, overlaySize, overlaySize);
+                font.draw(batch, layout, sector.getSectorCentreX() - layout.width / 2, sector.getSectorCentreY() + layout.height / 2);
+            }
         }
         //renderSectorUnitData(batch);
     }
