@@ -92,6 +92,9 @@ public class WidgetFactory {
         vanbrughLogoTexture = new Texture("ui/HD-assets/vanbrugh-logo.png");
         wentworthLogoTexture = new Texture("ui/HD-assets/wentworth-logo.png");
 
+        gameHUDBottomBarTexture = new Texture("ui/gameHUDBottomBar.png");
+        gameHUDTurnIndicatorTexture = new Texture("ui/gameHUDTurnIndicator.png");
+
 
     }
 
@@ -275,7 +278,7 @@ public class WidgetFactory {
      */
     public static Label genGameHUDBottomBar(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = HUDFont;
+        style.font = new BitmapFont();
         style.background = new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarTexture));
 
         Label label = new Label(labelText, style);
@@ -287,7 +290,7 @@ public class WidgetFactory {
 
     public static Label genPhaseIndicator(TurnPhase turnPhase) {
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = HUDFont;
+        style.font = new BitmapFont();
 
         style.background = new TextureRegionDrawable(new TextureRegion(gameHUDTurnIndicatorTexture));
 
