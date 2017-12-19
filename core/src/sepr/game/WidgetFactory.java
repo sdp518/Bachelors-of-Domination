@@ -31,6 +31,9 @@ public class WidgetFactory {
 
     private static Texture onSwitchTexture;
     private static Texture offSwitchTexture;
+  
+    private static Texture gameHUDBottomBarTexture;
+    private static Texture gameHUDTurnIndicatorTexture;
 
     private static Texture playerLabelTexture;
     private static Texture playerLeftBtnTexture;
@@ -264,6 +267,49 @@ public class WidgetFactory {
         return new TextButton(buttonText,style);
     }
 
+
+    /**
+     * Generates the UI widget to be displayed at the bottom of the HUD
+     * @param labelText what the bar should say
+     * @return
+     */
+    public static Label genGameHUDBottomBar(String labelText) {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = HUDFont;
+        style.background = new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarTexture));
+
+        Label label = new Label(labelText, style);
+        label.setAlignment(Align.center);
+
+        return label;
+    }
+
+
+    public static Label genPhaseIndicator(TurnPhase turnPhase) {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = HUDFont;
+
+        style.background = new TextureRegionDrawable(new TextureRegion(gameHUDTurnIndicatorTexture));
+
+        String text = "";
+        switch (turnPhase) {
+            case REINFORCEMENT:
+                text = "> REINFORCEMENT < -  ATTACK  -  MOVEMENT  ";
+                break;
+            case ATTACK:
+                text = "  REINFORCEMENT  - > ATTACK < -  MOVEMENT  ";
+                break;
+            case MOVEMENT:
+                text = "  REINFORCEMENT  -  ATTACK  - > MOVEMENT <";
+                break;
+        }
+
+        Label label = new Label(text, style);
+
+        label.setAlignment(Align.center);
+
+        return label;
+    }
 
     /**
      *
