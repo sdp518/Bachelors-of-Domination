@@ -97,35 +97,36 @@ public class OptionsScreen implements Screen {
 
 
         Table table = new Table();
+        table.setDebug(true);
         table.left();
         table.add(musicVolumeLabel).height(60).width(420).pad(20);
         table.right();
-        table.add(musicSlider);
+        table.add(musicSlider).padLeft(150);
 
         table.row();
         table.left();
         table.add(fxVolumeLabel).height(60).width(420).pad(20);
         table.right();
-        table.add(fxSlider);
+        table.add(fxSlider).padLeft(150);
 
         table.row();
         table.left();
         table.add(resolutionSelectorLabel).height(60).width(420).pad(20);
         table.right();
-        table.add(resolutionSelector);
+        table.add(resolutionSelector).padLeft(150);
 
         table.row();
         table.left();
         table.add(fullscreenSwitchLabel).height(60).width(420).pad(20);
         table.right();
-        table.add(fullscreenSwitch);
+        table.add(fullscreenSwitch).padLeft(150);
 
         table.row();
         table.left();
         table.add(colourblindModeSwitchLabel).height(60).width(420).pad(20);
         table.right();
-        table.add(colourblindModeSwitch);
-
+        table.add(colourblindModeSwitch).padLeft(150);
+/**
         TextButton cancelButton = WidgetFactory.genBasicButton("Cancel");
         cancelButton.addListener(new ChangeListener() {
             @Override
@@ -133,8 +134,8 @@ public class OptionsScreen implements Screen {
                 main.setMenuScreen();
             }
         });
-
-        TextButton acceptButton = WidgetFactory.genBasicButton("Accept");
+**/
+        TextButton acceptButton = WidgetFactory.genBasicButton("CONFIRM CHANGES");
         acceptButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -145,8 +146,8 @@ public class OptionsScreen implements Screen {
 
         table.row();
         table.left();
-        table.add(cancelButton).height(60).width(420).pad(20);
-        table.right();
+        //table.add(cancelButton).height(60).width(420).pad(20);
+        //table.right();
         table.add(acceptButton).height(60).width(420).pad(20);
 
         return table;
@@ -164,7 +165,7 @@ public class OptionsScreen implements Screen {
         table.add(WidgetFactory.genOptionsGraphic()).height(700).width(540).pad(30);
 
         table.row();
-        table.add(WidgetFactory.genBottomBar()).colspan(2);
+        table.add(WidgetFactory.genBottomBar("MAIN MENU")).colspan(2);
     }
 
     /**

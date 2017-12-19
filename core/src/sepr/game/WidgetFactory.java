@@ -1,11 +1,14 @@
 package sepr.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
@@ -15,6 +18,7 @@ import javax.xml.soap.Text;
  * Created by Dom's Surface Mark 2 on 28/11/2017.
  */
 public class WidgetFactory {
+
     private static Texture basicButtonTexture;
     private static Texture mainMenuTopBarTexture;
     private static Texture bottomBarTexture;
@@ -64,8 +68,8 @@ public class WidgetFactory {
         sliderBarTexture = new Texture("ui/sliderBar.png");
         sliderKnobTexture = new Texture("ui/sliderKnob.png");
 
-        onSwitchTexture = new Texture("ui/onSwitch.png");
-        offSwitchTexture = new Texture("ui/offSwitch.png");
+        onSwitchTexture = new Texture("ui/HD-assets/On-Switch.png");
+        offSwitchTexture = new Texture("ui/HD-assets/Off-Switch.png");
 
         playerLabelTexture = new Texture("ui/HD-assets/Player-Label.png");
         playerLeftBtnTexture = new Texture("ui/HD-assets/Player-Left-Button-Full.png");
@@ -114,9 +118,24 @@ public class WidgetFactory {
 
         return topBar;
     }
-    public static Table genBottomBar(){
+    public static Table genBottomBar(String buttonText){
 
-        Image leftPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Left-Part-Bottom-Bar.png"))));
+        Image leftPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Left-Part-End-Bottom-Bar.png"))));
+        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        buttonStyle.font = new BitmapFont(alteDinSmall);
+        buttonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Esc-Button-Bottom-Bar.png")));
+        buttonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Esc-Button-Bottom-Bar.png")));
+        final TextButton escButton = new TextButton(buttonText, buttonStyle);
+        escButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                    Gdx.app.exit();}
+
+        });
+
+        Image centerPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Center-Part-Bottom-Bar.png"))));
+
+
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = new BitmapFont(alteDinSmall);
         style.background = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Right-Part-Bottom-Bar.png")));
@@ -127,7 +146,9 @@ public class WidgetFactory {
         Table topBar = new Table();
         topBar.setDebug(true);
         topBar.right();
-        topBar.add(leftPart).height(60).fillX().bottom();
+        topBar.add(leftPart).height(60).width(45).bottom();
+        topBar.add(escButton).height((float) 51.5).width(190).bottom();
+        topBar.add(centerPart).height(60).fillX().bottom();
         topBar.add(textLabel).height(120).width(280);
 
         return topBar;
@@ -141,40 +162,7 @@ public class WidgetFactory {
         return new Image(optionsGraphicTexture);
     }
 
-    public static Image genAlcuinLogo() {return new Image(alcuinLogoTexture);}
-    public static Image genDerwentLogo() {return new Image(derwentLogoTexture);}
-    public static Image genHalifaxLogo() {return new Image(halifaxLogoTexture); }
-    //public static Image genHesEastLogo() {return new Image(hesEastLogoTexture);}
-    public static Image genJamesLogo() {return new Image(jamesLogoTexture);}
-    public static Image genUniOfYorkLogo() {return new Image(uniOfYorkLogoTexture);}
-    public static Image genVanbrughtLogo() {return new Image(vanbrughLogoTexture);}
-    public static Image genWentworthLogo() {return new Image(wentworthLogoTexture);}
-
-    /** OUTDATED
-    public static Label genCollegeLogo(String collegeName){
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont();
-        if(collegeName.equals("ALCUIN")){
-            style.background = new TextureRegionDrawable((new TextureRegion(alcuinLogoTexture)));
-        }else if(collegeName.equals("DERWENT")){
-            style.background = new TextureRegionDrawable((new TextureRegion(derwentLogoTexture)));
-        }else if(collegeName.equals("HALIFAX")){
-            style.background = new TextureRegionDrawable((new TextureRegion(halifaxLogoTexture)));
-        }else if(collegeName.equals("JAMES")){
-            style.background = new TextureRegionDrawable((new TextureRegion(jamesLogoTexture)));
-        }else if(collegeName.equals("UNIVERSITY OF YORK")){
-            style.background = new TextureRegionDrawable((new TextureRegion(uniOfYorkLogoTexture)));
-        }else if(collegeName.equals("VANBRUGH")){
-            style.background = new TextureRegionDrawable((new TextureRegion(vanbrughLogoTexture)));
-        }else if(collegeName.equals("WENTWORTH")){
-            style.background = new TextureRegionDrawable((new TextureRegion(wentworthLogoTexture)));
-        }else{
-            System.out.println("ERROR");
-            return null;
-        }
-        return new Label("", style);
-    }
-    **/
+   
 
     public static Label.LabelStyle genCollegeLabelStyle(String collegeName){
         Label.LabelStyle style = new Label.LabelStyle();
@@ -302,7 +290,6 @@ public class WidgetFactory {
         style.font = new BitmapFont();
         style.checkboxOn = new TextureRegionDrawable(new TextureRegion(onSwitchTexture));
         style.checkboxOff = new TextureRegionDrawable(new TextureRegion(offSwitchTexture));
-
 
         return new CheckBox(null, style);
     }
