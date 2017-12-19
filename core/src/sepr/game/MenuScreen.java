@@ -1,6 +1,7 @@
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -56,9 +57,6 @@ public class MenuScreen implements Screen {
         btnTable.left();
         btnTable.add(optionsBtn).height(60).width(420).pad(30);
 
-        btnTable.row();
-        btnTable.left();
-        btnTable.add(exitBtn).height(60).width(420).pad(30);
 
         startGameBtn.addListener(new ChangeListener() {
             @Override
@@ -107,7 +105,7 @@ public class MenuScreen implements Screen {
 
         table.row();
         table.center();
-        table.add(WidgetFactory.genBottomBar()).colspan(2);
+        table.add(WidgetFactory.genBottomBar("QUIT")).colspan(2);
     }
 
     @Override

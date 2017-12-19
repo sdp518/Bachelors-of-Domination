@@ -3,7 +3,6 @@ package sepr.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,8 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import javax.swing.text.Style;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 
 public class GameSetupScreen implements Screen{
@@ -27,6 +25,7 @@ public class GameSetupScreen implements Screen{
     private Table table;
 
     private CheckBox turnTimerSwitch;
+    final int NUMBER_OF_PLAYERS = 5;
 
 
     public enum playerType{
@@ -78,7 +77,6 @@ public class GameSetupScreen implements Screen{
         this.stage.addActor(table);
         this.table.setDebug(false); // enable table drawing for ui debug
         this.setupUi();
-
     }
 
     public void selectPlayerLeft(Label playerLabel){
@@ -145,89 +143,61 @@ public class GameSetupScreen implements Screen{
 
     }
 
+    private Label[] playerLabels(int numberOfPlayers){
+        Label[] labelList = new Label[numberOfPlayers];
+
+        for (int i=0; i<numberOfPlayers; i++){
+            final Label playerLabel = WidgetFactory.genPlayerLabel(playerType.NONE.getPlayerType());
+            playerLabel.setAlignment(Align.center);
+           
+            labelList[i] = playerLabel;
+            
+        }
+        return labelList;
+    }
+    
+    private Button[][] playerButtons(int numberOfPlayers, final Label[] playerLabels){
+        Button[][] buttonList = new Button[numberOfPlayers][2];
+        for(int i =0; i<numberOfPlayers; i++){
+            Button playerLeftButton = WidgetFactory.genPlayerLeftButton();
+            final int finalI = i;
+            playerLeftButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    selectPlayerLeft(playerLabels[finalI]);
+                }
+            });
+            Button playerRightButton = WidgetFactory.genPlayerRightButton();
+            playerRightButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    selectPlayerRight(playerLabels[finalI]);
+                }
+            });
+            
+            buttonList[i][0] = playerLeftButton;
+            buttonList[i][1] = playerRightButton;
+        }
+        return buttonList;
+    }
+    
+
     private Table setUpGameSetupTable() {
 
-
-        final Label player1Label = WidgetFactory.genPlayerLabel(playerType.NONE.getPlayerType());
-        player1Label.setAlignment(Align.center);
-        Button player1LeftButton = WidgetFactory.genPlayerLeftButton();
-        player1LeftButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                selectPlayerLeft(player1Label);
-            }
-        });
-        Button player1RightButton = WidgetFactory.genPlayerRightButton();
-        player1RightButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                selectPlayerRight(player1Label);
-            }
-        });
-
-
-
-        Button player2LeftButton = WidgetFactory.genPlayerLeftButton();
-        Button player2RightButton = WidgetFactory.genPlayerRightButton();
-        Label player2Label = WidgetFactory.genPlayerLabel("HUMAN PLAYER");
-        player2Label.setAlignment(Align.center);
-
-        Button player3LeftButton = WidgetFactory.genPlayerLeftButton();
-        Button player3RightButton = WidgetFactory.genPlayerRightButton();
-        Label player3Label = WidgetFactory.genPlayerLabel("NONE");
-        player3Label.setAlignment(Align.center);
-
-        Button player4LeftButton = WidgetFactory.genPlayerLeftButton();
-        Button player4RightButton = WidgetFactory.genPlayerRightButton();
-        Label player4Label = WidgetFactory.genPlayerLabel("NONE");
-        player4Label.setAlignment(Align.center);
-
-        Button player5LeftButton = WidgetFactory.genPlayerLeftButton();
-        Button player5RightButton = WidgetFactory.genPlayerRightButton();
-        Label player5Label = WidgetFactory.genPlayerLabel("NEUTRAL A.I.");
-        player5Label.setAlignment(Align.center);
+        Label[] pLabels = playerLabels(NUMBER_OF_PLAYERS);
+        Button[][] pButtons = playerButtons(NUMBER_OF_PLAYERS, pLabels);
 
         Table playerTable = new Table();
         playerTable.setDebug(true);
 
-        //Player 1
-        playerTable.left();
-        playerTable.add(player1LeftButton).height(60).width(50).pad(5);
-        playerTable.add(player1Label).height(60).width(320).expandX();
-        playerTable.right();
-        playerTable.add(player1RightButton).height(60).width(50).pad(5);
-
-        //Player 2
-        playerTable.row();
-        playerTable.left();
-        playerTable.add(player2LeftButton).height(60).width(50).pad(5);
-        playerTable.add(player2Label).height(60).width(320);
-        playerTable.right();
-        playerTable.add(player2RightButton).height(60).width(50).pad(5);
-
-        //Player 3
-        playerTable.row();
-        playerTable.left();
-        playerTable.add(player3LeftButton).height(60).width(50).pad(5);
-        playerTable.add(player3Label).height(60).width(320);
-        playerTable.right();
-        playerTable.add(player3RightButton).height(60).width(50).pad(5);
-
-        //Player 4
-        playerTable.row();
-        playerTable.left();
-        playerTable.add(player4LeftButton).height(60).width(50).pad(5);
-        playerTable.add(player4Label).height(60).width(320);
-        playerTable.right();
-        playerTable.add(player4RightButton).height(60).width(50).pad(5);
-
-        //Player 5
-        playerTable.row();
-        playerTable.left();
-        playerTable.add(player5LeftButton).height(60).width(50).pad(5);
-        playerTable.add(player5Label).height(60).width(320);
-        playerTable.right();
-        playerTable.add(player5RightButton).height(60).width(50).pad(5);
+        for(int n = 0; n<NUMBER_OF_PLAYERS; n++){
+            playerTable.left();
+            playerTable.add(pButtons[n][0]).height(60).width(50).pad(5);
+            playerTable.add(pLabels[n]).height(60).width(320).expandX().padTop(20).padBottom(20);
+            playerTable.right();
+            playerTable.add(pButtons[n][1]).height(60).width(50).pad(5);
+            playerTable.row();
+        }
 
         return playerTable;
         }
@@ -238,60 +208,115 @@ public class GameSetupScreen implements Screen{
 
             CheckBox turnTimerSwitch = WidgetFactory.genOnOffSwitch();
 
-
             Table turnTimerTable = new Table();
             turnTimerTable.setDebug(true);
 
             turnTimerTable.left();
             turnTimerTable.add(turnTimerLabel).height(60).width(420);
             turnTimerTable.right();
-            turnTimerTable.add(turnTimerSwitch);
+            turnTimerTable.add(turnTimerSwitch).padLeft(50);
             return turnTimerTable;
         }
-        //College 1
+
+        private Button[][] collegeButtons(int numberOfPlayers, final Label[] collegeLogos, final Label[] collegeNameLabels){
+            Button[][] buttonList = new Button[numberOfPlayers][2];
+            for(int i =0; i<numberOfPlayers; i++){
+                Button collegeLeftButton = WidgetFactory.genCollegeLeftButton();
+                final int finalI = i;
+                collegeLeftButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        collegeNameLabels[finalI].setText(selectCollegeLeft(collegeNameLabels[finalI]));
+                        collegeLogos[finalI].setStyle(WidgetFactory.genCollegeLabelStyle(collegeNameLabels[finalI].getText().toString()));
+                    }
+                });
+                Button collegeRightButton = WidgetFactory.genCollegeRightButton();
+                collegeRightButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        collegeNameLabels[finalI].setText(selectCollegeRight(collegeNameLabels[finalI]));
+                        collegeLogos[finalI].setStyle(WidgetFactory.genCollegeLabelStyle(collegeNameLabels[finalI].getText().toString()));
+                    }
+                });
+
+                buttonList[i][0] = collegeLeftButton;
+                buttonList[i][1] = collegeRightButton;
+            }
+            return buttonList;
+        }
+
+        private TextField[] playerTextFields(int numberOfPlayers){
+            TextField[] playerTextFieldList = new TextField[numberOfPlayers];
+            for(int i =0; i<numberOfPlayers; i++){
+                TextField playerName = WidgetFactory.playerNameTextField("Player " + i);
+                playerTextFieldList[i] = playerName;
+            }
+            return playerTextFieldList;
+        }
+
+        private Table[] collegeTables(int numberOfPlayers, Table[] infoDisplay, Table[] collegeSelector){
+            Table[] colllegeTableList = new Table[numberOfPlayers];
+            for (int i = 0; i<numberOfPlayers; i++){
+                Table collegeTable = new Table();
+                collegeTable.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Game-Setup-Name-Box.png"))));
+                collegeTable.setDebug(true);
+                collegeTable.add(infoDisplay[i]).expand().left().padLeft(20);
+                collegeTable.add(collegeSelector[i]).padRight(60);
+
+                colllegeTableList[i] = collegeTable;
+            }
+            return colllegeTableList;
+        }
+
+
         private Table setUpCollegeTable(){
+            //Initialise college name labels for all players
+            Label[] collegeNameLabels = new Label[NUMBER_OF_PLAYERS];
+            for(int n=0; n<NUMBER_OF_PLAYERS; n++) {
+                Label collegeNameLabel = WidgetFactory.genNameBoxLabel("ALCUIN");
+                collegeNameLabel.setAlignment(Align.left);
+                collegeNameLabels[n] = collegeNameLabel;
+            }
 
-            final Label nameBoxLabel = WidgetFactory.genNameBoxLabel("ALCUIN");
-            nameBoxLabel.setAlignment(Align.left);
-            final Label collegeLogo = new Label("", WidgetFactory.genCollegeLabelStyle(nameBoxLabel.getText().toString()));
-            TextField playerName = WidgetFactory.playerNameTextField("Player 1");
+            //Initialise college logos for all players
+            Label[] collegeLogos = new Label[NUMBER_OF_PLAYERS];
+            for(int n=0; n<NUMBER_OF_PLAYERS; n++) {
+                Label collegeLogo = new Label("", WidgetFactory.genCollegeLabelStyle(collegeNameLabels[n].getText().toString()));
+                collegeLogos[n] = collegeLogo;
+            }
 
-            Button collegeLeftButton = WidgetFactory.genCollegeLeftButton();
-            collegeLeftButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    nameBoxLabel.setText(selectCollegeLeft(nameBoxLabel));
-                    collegeLogo.setStyle(WidgetFactory.genCollegeLabelStyle(nameBoxLabel.getText().toString()));
-                }
-            });
-            Button collegeRightButton = WidgetFactory.genCollegeRightButton();
-            collegeRightButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    nameBoxLabel.setText(selectCollegeRight(nameBoxLabel));
-                    collegeLogo.setStyle(WidgetFactory.genCollegeLabelStyle(nameBoxLabel.getText().toString()));
-                }
-            });
+            Button[][] cButtons = collegeButtons(NUMBER_OF_PLAYERS, collegeLogos, collegeNameLabels);
+            TextField[] pTextFields = playerTextFields(NUMBER_OF_PLAYERS);
 
-            Table collegeSelector = new Table();
-            collegeSelector.setDebug(true);
-            collegeSelector.add(collegeLeftButton).height(50).width(25);
-            collegeSelector.add(collegeLogo).height(80).width(100);
-            collegeSelector.add(collegeRightButton).height(50).width(25);
+            //Initialise college selectors for all players
+            Table[] collegeSelectors = new Table[NUMBER_OF_PLAYERS];
+            for(int n=0; n<NUMBER_OF_PLAYERS; n++) {
+                Table collegeSelector = new Table();
+                collegeSelector.add(cButtons[n][0]).height(50).width(25);
+                collegeSelector.add(collegeLogos[n]).height(80).width(100);
+                collegeSelector.add(cButtons[n][1]).height(50).width(25);
+                collegeSelectors[n] = collegeSelector;
+            }
 
-            Table infoDisplay = new Table();
-            infoDisplay.setDebug(true);
-            infoDisplay.add(playerName).padBottom(10).width(220).left();
-            infoDisplay.row();
-            infoDisplay.add(nameBoxLabel).height(20).width(220);
+            //Initialise player name and college name display for all players
+            Table[] infoDisplay = new Table[NUMBER_OF_PLAYERS];
+            for(int n=0; n<NUMBER_OF_PLAYERS; n++) {
+                Table playerInfo = new Table();
+                playerInfo.add(pTextFields[n]).padBottom(10).width(220).left();
+                playerInfo.row();
+                playerInfo.add(collegeNameLabels[n]).height(20).width(220);
+                infoDisplay[n] = playerInfo;
+            }
 
+            Table[]  cTables = collegeTables(NUMBER_OF_PLAYERS, infoDisplay, collegeSelectors);
 
-            Table collegeTable = new Table();
-            collegeTable.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Game-Setup-Name-Box.png"))));
-            collegeTable.setDebug(true);
-            collegeTable.add(infoDisplay).expand().left().padLeft(20);
-            collegeTable.add(collegeSelector).padRight(60);
-            return collegeTable;
+            Table rightTable = new Table();
+            for(int n=0; n<NUMBER_OF_PLAYERS; n++){
+                rightTable.add(cTables[n]).padBottom(10).padTop(10);
+                rightTable.row();
+            }
+
+            return rightTable;
         }
 
 
@@ -324,7 +349,7 @@ public class GameSetupScreen implements Screen{
 
         table.row();
         table.center();
-        table.add(WidgetFactory.genBottomBar()).colspan(2);
+        table.add(WidgetFactory.genBottomBar("MAIN MENU")).colspan(2);
     }
 
 
