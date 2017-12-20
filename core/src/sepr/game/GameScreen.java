@@ -212,6 +212,20 @@ public class GameScreen implements Screen, InputProcessor{
         gameplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
     }
 
+    /**
+     *
+     * @param players
+     * @param turnTimerEnabled
+     * @param maxTurnTime
+     */
+    public void setupGame(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
+        this.players = players;
+        this.turnTimerEnabled = turnTimerEnabled;
+        this.maxTurnTime = maxTurnTime;
+
+        this.map.allocateSectors(this.players);
+    }
+
     @Override
     public void show() {
         this.updateInputProcessor();
