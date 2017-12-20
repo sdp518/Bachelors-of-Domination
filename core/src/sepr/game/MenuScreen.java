@@ -105,7 +105,12 @@ public class MenuScreen implements Screen {
 
         table.row();
         table.center();
-        table.add(WidgetFactory.genBottomBar("QUIT")).colspan(2);
+        table.add(WidgetFactory.genBottomBar("QUIT", new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();}
+
+        })).colspan(2);
     }
 
     @Override
