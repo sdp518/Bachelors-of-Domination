@@ -124,7 +124,8 @@ public class WidgetFactory {
 
         return topBar;
     }
-    public static Table genBottomBar(String buttonText){
+
+    public static Table genBottomBar(String buttonText, ChangeListener changeListener){
 
         Image leftPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Left-Part-End-Bottom-Bar.png"))));
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
@@ -132,12 +133,7 @@ public class WidgetFactory {
         buttonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Esc-Button-Bottom-Bar.png")));
         buttonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Esc-Button-Bottom-Bar.png")));
         final TextButton escButton = new TextButton(buttonText, buttonStyle);
-        escButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                    Gdx.app.exit();}
-
-        });
+        escButton.addListener(changeListener);
 
         Image centerPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Center-Part-Bottom-Bar.png"))));
 

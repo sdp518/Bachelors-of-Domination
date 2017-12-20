@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
- * Created by Dom's Surface Mark 2 on 14/12/2017.
+ *
  */
 public class HUD extends Stage {
     private Table table;

@@ -50,6 +50,7 @@ public class GameScreen implements Screen, InputProcessor{
     private int currentPlayer; // index of current player in turnOrder list
     private TurnPhase currentPhase = TurnPhase.REINFORCEMENT; // first phase of game is reinforcement
 
+    private TextureRegion arrow; // TextureRegion for rendering attack visualisation
     private Sector attackingSector; // Stores the sector being used to attack in the attack phase (could store as ID and lookup object each time to save memory)
     private Sector defendingSector; // Stores the sector being attacked in the attack phase (could store as ID and lookup object each time to save memory)
 
@@ -96,7 +97,9 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimeElapsed = 0;
         this.turnOrder = new ArrayList<Integer>(players.keySet());
         this.currentPlayer = 0;
-      
+
+
+        this.arrow = new TextureRegion(new Texture(Gdx.files.internal("arrow.png")));
         this.attackingSector = null;
         this.defendingSector = null;
 
@@ -106,7 +109,7 @@ public class GameScreen implements Screen, InputProcessor{
 
         setupUi();
             
-        allocateSectors();
+        map.allocateSectors(players);
     }
 
     /**
@@ -118,46 +121,6 @@ public class GameScreen implements Screen, InputProcessor{
         style.up = new TextureRegionDrawable(new TextureRegion(buttons, 0, 0, 400, 150)); // image for button to use in default state
         style.down = new TextureRegionDrawable(new TextureRegion(buttons, 0, 150, 400, 150)); // image for button to use when pressed down
         style.font = new BitmapFont(); // set button font to the default Bitmap Font
-    }
-
-
-    /**
-     * Created by Owain's Asus on 10/12/2017.
-     * Allocate sectors to each player in a balanced manner.
-     * Just need the finished csv file so we can calculate Total reinforcements but apart from
-     * that the method is finished. The method also has an if statement to catch a divide by zero
-     * error in players.size(). This won't be needed as later on when more of the game implementation is
-     * introduced this method will only be called when all players have been declared after the intermediate
-     * setup menu.
-     */
-    private void allocateSectors() {
-        if (players.size() == 0) {
-            throw new RuntimeException("Cannot allocate sectors to 0 players");
-        }
-
-        HashMap<Integer, Integer> playerReinforcements = new HashMap<Integer, Integer>(); // mapping of player id to amount of reinforcements they will receive currently
-        // set all players to currently be receiving 0 reinforcements
-        for (Integer i : players.keySet()) {
-            playerReinforcements.put(i, 0);
-        }
-
-        int lowestReinforcementId = players.get(0).getId();; // id of player currently receiving the least reinforcements
-        for (Integer i : map.getSectorIds()) {
-            if (map.getSector(i).isDecor()) {
-                continue; // skip allocating sector if it is a decor sector
-            }
-            map.getSector(i).setOwner(players.get(lowestReinforcementId));
-            playerReinforcements.put(lowestReinforcementId, playerReinforcements.get(lowestReinforcementId) + map.getSector(i).getReinforcementsProvided()); // updates player reinforcements hashmap
-
-            // find the new player with lowest reinforcements
-            int minReinforcements = Collections.min(playerReinforcements.values()); // get lowest reinforcement amount
-            for (Integer j : playerReinforcements.keySet()) {
-                if (playerReinforcements.get(j) == minReinforcements) { // if this player has the reinforcements matching the min amount set them to the new lowest player
-                    lowestReinforcementId = j;
-                    break;
-                }
-            }
-        }
     }
 
     /**
@@ -267,7 +230,7 @@ public class GameScreen implements Screen, InputProcessor{
 
         renderBackground();
         map.draw(gameplayBatch);
-        gameplayBatch = attackVisualisation(gameplayBatch);
+        attackVisualisation(gameplayBatch);
         gameplayBatch.end();
 
         /* UI */
@@ -314,9 +277,8 @@ public class GameScreen implements Screen, InputProcessor{
     /**
      * Function used to create the attack visualisations
      * @param gameplayBatch The main sprite batch
-     * @return gameplayBatch
      */
-    private  SpriteBatch attackVisualisation(SpriteBatch gameplayBatch) {
+    private void attackVisualisation(SpriteBatch gameplayBatch) {
         if (this.attackingSector != null) { // If attacking
             if (this.defendingSector == null) { // In mid attack
                 generateArrow(gameplayBatch, this.arrowPositionsBase.x, this.arrowPositionsBase.y, this.mousePositionX, this.mousePositionY);
@@ -324,8 +286,6 @@ public class GameScreen implements Screen, InputProcessor{
                 generateArrow(gameplayBatch, this.arrowPositionsBase.x, this.arrowPositionsBase.y, this.arrowPositionsPoint.x, this.arrowPositionsPoint.y);
             }
         }
-
-        return gameplayBatch;
     }
 
     /**
@@ -335,17 +295,14 @@ public class GameScreen implements Screen, InputProcessor{
      * @param startY Base of the arrow y
      * @param endX Tip of the arrow x
      * @param endY Tip of the arrow y
-     * @return The sprite batch
      */
-    private SpriteBatch generateArrow(SpriteBatch gameplayBatch, float startX, float startY, float endX, float endY) {
-        TextureRegion arrow = new TextureRegion(new Texture(Gdx.files.internal("arrow.png"))); // Load the arrow sprite
+    private void generateArrow(SpriteBatch gameplayBatch, float startX, float startY, float endX, float endY) {
         int thickness = 30;
         // Calculates the transformations to apply to the sprite - had to refresh my GCSE maths knowledge lol
         double angle = Math.toDegrees(Math.atan((endY - startY) / (endX - startX)));
         double height = (endY - startY) /  Math.sin(Math.toRadians(angle));
         gameplayBatch.draw(arrow, startX, (startY - thickness/2), 0, thickness/2, (float)height, thickness,1, 1, (float)angle);
-        return gameplayBatch;
-   }
+    }
 
    /**
      * handles mouse clicks during the reinforcement phase

@@ -5,32 +5,22 @@ import java.util.List;
 import java.util.HashMap;
 
 /**
- * Created by jackr on 01/12/2017.
+ *
  */
 public class College {
 
-    private List<Integer> sectorIds;
-    private int reinforcementAmount;
-    private String displayName;
     private int id;
+    private List<Integer> sectorIds; // ids of sectors contained within this college
+    private int reinforcementAmount; // amount of bonus troops provided per round if all college sectors are held
+    private String displayName; // name of college shown to players
 
     /**
-     * Wasn't sure how you'd like to add new colleges, so here's all three options
+     *
+     * @param id
+     * @param displayName
+     * @param reinforcementAmount
+     * @param sectorIds
      */
-    public College(int id, String displayName){
-        this.id = id;
-        this.displayName = displayName;
-        this.sectorIds = new ArrayList<Integer>();
-        this.reinforcementAmount = 0;
-    }
-
-    public College(int id, String displayName, int reinforcementAmount){
-        this.id = id;
-        this.displayName = displayName;
-        this.sectorIds = new ArrayList<Integer>();
-        this.reinforcementAmount = reinforcementAmount;
-    }
-  
     public College(int id, String displayName, int reinforcementAmount, List<Integer> sectorIds){
         this.id = id;
         this.displayName = displayName;
@@ -77,5 +67,9 @@ public class College {
         return true;
     }
 
+    /**
+     *
+     * @return the name of the college to be shown to players
+     */
     public String getDisplayName() { return displayName; }
 }

@@ -95,7 +95,6 @@ public class OptionsScreen implements Screen {
         Label colourblindModeSwitchLabel = WidgetFactory.genMenuBtnLabel("COLOURBLIND MODE");
         colourblindModeSwitchLabel.setAlignment(Align.center);
 
-
         Table table = new Table();
         table.setDebug(true);
         table.left();
@@ -126,15 +125,7 @@ public class OptionsScreen implements Screen {
         table.add(colourblindModeSwitchLabel).height(60).width(420).pad(20);
         table.right();
         table.add(colourblindModeSwitch).padLeft(150);
-/**
-        TextButton cancelButton = WidgetFactory.genBasicButton("Cancel");
-        cancelButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                main.setMenuScreen();
-            }
-        });
-**/
+
         TextButton acceptButton = WidgetFactory.genBasicButton("CONFIRM CHANGES");
         acceptButton.addListener(new ChangeListener() {
             @Override
@@ -146,8 +137,7 @@ public class OptionsScreen implements Screen {
 
         table.row();
         table.left();
-        //table.add(cancelButton).height(60).width(420).pad(20);
-        //table.right();
+
         table.add(acceptButton).height(60).width(420).pad(20);
 
         return table;
@@ -165,7 +155,12 @@ public class OptionsScreen implements Screen {
         table.add(WidgetFactory.genOptionsGraphic()).height(700).width(540).pad(30);
 
         table.row();
-        table.add(WidgetFactory.genBottomBar("MAIN MENU")).colspan(2);
+        table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                main.setMenuScreen();}
+
+        })).colspan(2);
     }
 
     /**
@@ -177,8 +172,6 @@ public class OptionsScreen implements Screen {
         Preferences prefs = Gdx.app.getPreferences(PREFERENCES_NAME);
         prefs.putFloat(MUSIC_VOL_PREF, musicSlider.getPercent());
         prefs.putFloat(FX_VOL_PREF, fxSlider.getPercent());
-
-
 
         int screenWidth = Integer.parseInt(resolutionSelector.getSelected().split(" x ")[0]);
         int screenHeight = Integer.parseInt(resolutionSelector.getSelected().split(" x ")[1]);
