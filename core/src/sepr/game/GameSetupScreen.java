@@ -24,18 +24,18 @@ public class GameSetupScreen implements Screen{
     private Stage stage;
     private Table table;
 
-    private CheckBox turnTimerSwitch;
-    private CheckBox neutralPlayerSwitch;
-    final int MAX_NUMBER_OF_PLAYERS = 4;
+    private final int MAX_NUMBER_OF_PLAYERS = 4;
 
     private Label[] playerTypes; // array of player types, index n -> player n's type
     private TextField[] playerNames; // array of textfields for players to enter names, index n -> player n's name
     private Pair<Label, Image>[] playerColleges; // array of pairs of college name and college logo, index n -> player n's college
+    private CheckBox neutralPlayerSwitch;
+    private CheckBox turnTimerSwitch;
 
     private Texture collegeTableBackground;
 
     /**
-     *
+     * Possible types of player
      */
     public enum PlayerType {
         NONE("NONE"),
@@ -55,7 +55,7 @@ public class GameSetupScreen implements Screen{
     }
 
     /**
-     *
+     * The colleges available to play as
      */
     public enum CollegeName {
         ALCUIN("ALCUIN"),
@@ -78,7 +78,10 @@ public class GameSetupScreen implements Screen{
         }
     }
 
-
+    /**
+     *
+     * @param main
+     */
     public GameSetupScreen (Main main) {
         this.main = main;
 
@@ -98,7 +101,7 @@ public class GameSetupScreen implements Screen{
      *
      * @param playerLabel
      */
-    private void selectPlayerLeft(Label playerLabel){
+    private void leftPlayerTypeButtonPress(Label playerLabel){
         if (playerLabel.getText().toString().equals(PlayerType.NONE.getPlayerType())){
             playerLabel.setText(PlayerType.AI.getPlayerType());
         }else if (playerLabel.getText().toString().equals(PlayerType.HUMAN.getPlayerType())){
@@ -112,7 +115,7 @@ public class GameSetupScreen implements Screen{
      *
      * @param playerLabel
      */
-    private void selectPlayerRight(Label playerLabel){
+    private void rightPlayerTypeButtonPress(Label playerLabel){
         if (playerLabel.getText().toString().equals(PlayerType.NONE.getPlayerType())){
             playerLabel.setText(PlayerType.HUMAN.getPlayerType());
         }else if (playerLabel.getText().toString().equals(PlayerType.HUMAN.getPlayerType())){
@@ -127,7 +130,7 @@ public class GameSetupScreen implements Screen{
      * @param collegeLabel
      * @return
      */
-    private CollegeName selectCollegeLeft(Label collegeLabel){
+    private CollegeName leftCollegeTypeButtonPress(Label collegeLabel){
         if (collegeLabel.getText().toString().equals(CollegeName.ALCUIN.getCollegeName())){
             return CollegeName.WENTWORTH;
         }else if(collegeLabel.getText().toString().equals(CollegeName.DERWENT.getCollegeName())){
@@ -152,7 +155,7 @@ public class GameSetupScreen implements Screen{
      * @param collegeLabel
      * @return
      */
-    private CollegeName selectCollegeRight(Label collegeLabel){
+    private CollegeName rightCollegeTypeButtonPress(Label collegeLabel){
         if (collegeLabel.getText().toString().equals(CollegeName.ALCUIN.getCollegeName())){
             return CollegeName.DERWENT;
         }else if(collegeLabel.getText().toString().equals(CollegeName.DERWENT.getCollegeName())){
@@ -191,37 +194,6 @@ public class GameSetupScreen implements Screen{
 
     /**
      *
-     * @param numberOfPlayers
-     * @param playerLabels
-     * @return
-     */
-    private Button[][] playerButtons(int numberOfPlayers, final Label[] playerLabels){
-        Button[][] buttonList = new Button[numberOfPlayers][2];
-        for(int i =0; i<numberOfPlayers; i++){
-            Button playerLeftButton = WidgetFactory.genPlayerLeftButton();
-            final int finalI = i;
-            playerLeftButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    selectPlayerLeft(playerLabels[finalI]);
-                }
-            });
-            Button playerRightButton = WidgetFactory.genPlayerRightButton();
-            playerRightButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    selectPlayerRight(playerLabels[finalI]);
-                }
-            });
-            
-            buttonList[i][0] = playerLeftButton;
-            buttonList[i][1] = playerRightButton;
-        }
-        return buttonList;
-    }
-
-    /**
-     *
      * @return
      */
     private Table setUpPlayerTypesTable() {
@@ -237,14 +209,14 @@ public class GameSetupScreen implements Screen{
             leftButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    selectPlayerLeft(playerTypes[finalI]);
+                    leftPlayerTypeButtonPress(playerTypes[finalI]);
                 }
             });
 
             rightButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    selectPlayerRight(playerTypes[finalI]);
+                    rightPlayerTypeButtonPress(playerTypes[finalI]);
                 }
             });
 
@@ -339,7 +311,7 @@ public class GameSetupScreen implements Screen{
             leftButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    CollegeName nextCollege = selectCollegeLeft(playerColleges[finalI].getKey());
+                    CollegeName nextCollege = leftCollegeTypeButtonPress(playerColleges[finalI].getKey());
 
                     playerColleges[finalI].getKey().setText(nextCollege.getCollegeName());
                     playerColleges[finalI].getValue().setDrawable(WidgetFactory.genCollegeLogoDrawable(nextCollege));
@@ -349,7 +321,7 @@ public class GameSetupScreen implements Screen{
             rightButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    CollegeName nextCollege = selectCollegeRight(playerColleges[finalI].getKey());
+                    CollegeName nextCollege = rightCollegeTypeButtonPress(playerColleges[finalI].getKey());
 
                     playerColleges[finalI].getKey().setText(nextCollege.getCollegeName());
                     playerColleges[finalI].getValue().setDrawable(WidgetFactory.genCollegeLogoDrawable(nextCollege));
@@ -379,6 +351,11 @@ public class GameSetupScreen implements Screen{
         return rightTable;
     }
 
+    /**
+     * takes a string and returns the CollegeName of the CollegeName with the matching string value
+     * @param collegeName string to convert to a college
+     * @return CollegeName with matching string value to string passed
+     */
     private static CollegeName stringToCollege(String collegeName) {
         if (collegeName.equals(CollegeName.ALCUIN.getCollegeName())) {
             return CollegeName.ALCUIN;
@@ -397,9 +374,14 @@ public class GameSetupScreen implements Screen{
         } else if (collegeName.equals(CollegeName.WENTWORTH.getCollegeName())) {
             return CollegeName.WENTWORTH;
         }
-        return CollegeName.WENTWORTH;
+        return null;
     }
 
+    /**
+     *
+     * @param collegeName name of college to get colour for
+     * @return Color corresponding to the given college
+     */
     private static Color getCollegeColor (CollegeName collegeName) {
         switch (collegeName) {
             case ALCUIN:
@@ -422,6 +404,10 @@ public class GameSetupScreen implements Screen{
         return Color.BLACK;
     }
 
+    /**
+     *
+     * @return HashMap of Players derived from the Setup Screen
+     */
     private HashMap<Integer, Player> generatePlayerHashmaps() {
         HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 
