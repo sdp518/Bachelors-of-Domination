@@ -84,7 +84,8 @@ public class Main extends Game implements ApplicationListener {
 		this.setScreen(menuScreen);
 	}
 
-	public void setGameScreen() {
+	public void setGameScreen(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
+		gameScreen.setupGame(players, turnTimerEnabled, maxTurnTime);
 		this.setScreen(gameScreen);
 	}
 
@@ -92,7 +93,9 @@ public class Main extends Game implements ApplicationListener {
 		this.setScreen(optionsScreen);
 	}
 
-	public void setGameSetupScreen() {this.setScreen(gameSetupScreen); }
+	public void setGameSetupScreen() {
+		this.setScreen(gameSetupScreen);
+	}
 
 	/**
 	 * Applies the players options preferences

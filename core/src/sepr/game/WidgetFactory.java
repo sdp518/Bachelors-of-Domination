@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
@@ -164,33 +165,40 @@ public class WidgetFactory {
         return new Image(optionsGraphicTexture);
     }
 
-   
-
-    public static Label.LabelStyle genCollegeLabelStyle(String collegeName){
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont(alteDinSmall);
-
-        if(collegeName.equals("ALCUIN")){
-            style.background = new TextureRegionDrawable((new TextureRegion(alcuinLogoTexture)));
-        }else if(collegeName.equals("DERWENT")){
-            style.background = new TextureRegionDrawable((new TextureRegion(derwentLogoTexture)));
-        }else if(collegeName.equals("HALIFAX")){
-            style.background = new TextureRegionDrawable((new TextureRegion(halifaxLogoTexture)));
-        }else if(collegeName.equals("HESLINGTON EAST")){
-            style.background = new TextureRegionDrawable((new TextureRegion(hesEastLogoTexture)));
-        }else if(collegeName.equals("JAMES")){
-            style.background = new TextureRegionDrawable((new TextureRegion(jamesLogoTexture)));
-        }else if(collegeName.equals("UNIVERSITY OF YORK")){
-            style.background = new TextureRegionDrawable((new TextureRegion(uniOfYorkLogoTexture)));
-        }else if(collegeName.equals("VANBRUGH")){
-            style.background = new TextureRegionDrawable((new TextureRegion(vanbrughLogoTexture)));
-        }else if(collegeName.equals("WENTWORTH")){
-            style.background = new TextureRegionDrawable((new TextureRegion(wentworthLogoTexture)));
-        }else{
-            System.out.println("ERROR");
-            return null;
+    /**
+     *
+     * @param college
+     * @return
+     */
+    public static Drawable genCollegeLogoDrawable(GameSetupScreen.CollegeName college) {
+        switch (college) {
+            case ALCUIN:
+                return new TextureRegionDrawable(new TextureRegion(alcuinLogoTexture));
+            case DERWENT:
+                return new TextureRegionDrawable(new TextureRegion(derwentLogoTexture));
+            case HALIFAX:
+                return new TextureRegionDrawable(new TextureRegion(halifaxLogoTexture));
+            case HES_EAST:
+                return new TextureRegionDrawable(new TextureRegion(hesEastLogoTexture));
+            case JAMES:
+                return new TextureRegionDrawable(new TextureRegion(jamesLogoTexture));
+            case UNI_OF_YORK:
+                return new TextureRegionDrawable(new TextureRegion(uniOfYorkLogoTexture));
+            case VANBRUGH:
+                return new TextureRegionDrawable(new TextureRegion(vanbrughLogoTexture));
+            case WENTWORTH:
+                return new TextureRegionDrawable(new TextureRegion(wentworthLogoTexture));
         }
-        return new Label.LabelStyle(style);
+        return null;
+    }
+
+    /**
+     *
+     * @param college college to get logo Image off
+     * @return an Image of the college logo
+     */
+    public static Image genCollegeLogoImage(GameSetupScreen.CollegeName college){
+        return new Image(genCollegeLogoDrawable(college));
     }
 
 
@@ -199,7 +207,10 @@ public class WidgetFactory {
         style.font = new BitmapFont(alteDinSmall);
         style.background = new TextureRegionDrawable(new TextureRegion(playerLabelTexture));
 
-        return new Label(labelText, style);
+        Label label = new Label(labelText, style);
+        label.setAlignment(Align.center);
+
+        return label;
     }
 
     public static Label genMenuBtnLabel(String labelText) {
@@ -213,8 +224,10 @@ public class WidgetFactory {
     public static Label genNameBoxLabel(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = new BitmapFont(alteDinSmall);
+        Label label = new Label(labelText, style);
+        label.setAlignment(Align.left);
 
-        return new Label(labelText, style);
+        return label;
     }
 
     public static TextField playerNameTextField(String name){
