@@ -5,7 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -24,6 +26,9 @@ public class GameSetupScreen implements Screen{
     private Stage stage;
     private Table table;
 
+    private Dialog errorDialog;
+    private Label errorMessageLabel;
+
     private final int MAX_NUMBER_OF_PLAYERS = 4;
 
     private Label[] playerTypes; // array of player types, index n -> player n's type
@@ -33,6 +38,7 @@ public class GameSetupScreen implements Screen{
     private CheckBox turnTimerSwitch;
 
     private Texture collegeTableBackground;
+    private Texture errorMessageDialogTexture;
 
     /**
      * Possible types of player
@@ -93,8 +99,30 @@ public class GameSetupScreen implements Screen{
         this.table.setDebug(false); // enable table drawing for ui debug
 
         this.collegeTableBackground = new Texture("ui/HD-assets/Game-Setup-Name-Box.png");
+        this.errorMessageDialogTexture = new Texture("ui/errorMessageDialog.png");
 
         this.setupUi();
+    }
+
+    /**
+     * WARNING THIS DOESNT WORK PROPERLY FOR SOME REASON
+     * @param errorMessage
+     */
+    private void initialiseErrorMessageDialogue(String errorMessage) {
+        Window.WindowStyle windowStyle = new Window.WindowStyle(new BitmapFont(), Color.BLACK, new TextureRegionDrawable(new TextureRegion(errorMessageDialogTexture)));
+        errorDialog = new Dialog("", windowStyle);
+        errorDialog.setPosition(Gdx.graphics.getWidth()/2 - errorDialog.getWidth()/2, Gdx.graphics.getHeight()/2 - errorDialog.getHeight()/2);
+        errorDialog.setSize(620, 80);
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+        errorMessageLabel = new Label("", labelStyle);
+        errorDialog.text(errorMessage, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        errorDialog.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                errorDialog.hide();
+            }
+        });
     }
 
     /**
@@ -451,7 +479,24 @@ public class GameSetupScreen implements Screen{
      * @throws GameSetupException if player configuration conditions are not met
      */
     private void validatePlayerConfiguration() throws GameSetupException{
-
+        int totalNumPlayers = 0;
+        boolean humanPlayerPresent = false;
+        for (Label label : playerTypes) {
+            if (label.getText().equals(PlayerType.HUMAN.getPlayerType())) {
+                totalNumPlayers++;
+                humanPlayerPresent = true;
+            } else if (label.getText().equals(PlayerType.AI.getPlayerType())) {
+                totalNumPlayers++;
+            }
+        }
+        /*  TOTAL NUM PLAYERS not being added to for some reason so commented out as always throwing error
+        if (totalNumPlayers < 2) { // must be at least two players
+            throw new GameSetupException(GameSetupException.GameSetupExceptionType.MINIMUM_TWO_PLAYERS);
+        } else if (!humanPlayerPresent) { // no human player present
+            throw new GameSetupException(GameSetupException.GameSetupExceptionType.NO_HUMAN_PLAYER);
+        } else if (totalNumPlayers == 2 && !neutralPlayerSwitch.isChecked()) { // only two players need neutral player
+            throw new GameSetupException(GameSetupException.GameSetupExceptionType.NO_NEUTRAL_PLAYER);
+        }*/
     }
 
     /**
@@ -471,8 +516,8 @@ public class GameSetupScreen implements Screen{
             validateCollegeSelection();
             validatePlayerConfiguration();
         } catch (GameSetupException e) {
-            Dialog errorDialog = new Dialog("Game Setup error", new Window.WindowStyle());
-            errorDialog.text(WidgetFactory.genPlayerLabel(e.getExceptionType().getErrorMessage()));
+            initialiseErrorMessageDialogue(e.getExceptionType().getErrorMessage());
+            errorDialog.show(stage);
             return;
         }
 
@@ -490,7 +535,6 @@ public class GameSetupScreen implements Screen{
 
         // add the menu background
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Menu-Background.png"))));
-
 
         table.center();
         table.add(WidgetFactory.genTopBar("GAME SETUP")).colspan(2);
@@ -527,7 +571,6 @@ public class GameSetupScreen implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.stage.act(Gdx.graphics.getDeltaTime());
         this.stage.draw();
-
     }
 
     @Override

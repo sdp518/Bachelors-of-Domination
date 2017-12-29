@@ -98,7 +98,6 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnOrder = new ArrayList<Integer>(players.keySet());
         this.currentPlayer = 0;
 
-
         this.arrow = new TextureRegion(new Texture(Gdx.files.internal("arrow.png")));
         this.attackingSector = null;
         this.defendingSector = null;
