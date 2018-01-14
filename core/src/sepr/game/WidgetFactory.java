@@ -297,7 +297,7 @@ public class WidgetFactory {
     }
 
 
-    public static Label genPhaseIndicator(TurnPhase turnPhase) {
+    public static Label genPhaseIndicator(TurnPhaseType turnPhase) {
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = new BitmapFont();
 
