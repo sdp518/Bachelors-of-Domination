@@ -15,9 +15,9 @@ public class HUD extends Stage {
     private Table table;
     private GameScreen gameScreen;
     private Label bottomBar;
-    private TurnPhase turnPhase;
+    private TurnPhaseType turnPhase;
 
-    public HUD(GameScreen gameScreen, TurnPhase turnPhase) {
+    public HUD(GameScreen gameScreen, TurnPhaseType turnPhase) {
         super();
         this.gameScreen = gameScreen;
         this.turnPhase = turnPhase;
