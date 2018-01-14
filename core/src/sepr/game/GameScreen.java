@@ -32,7 +32,7 @@ public class GameScreen implements Screen, InputProcessor{
     private Main main;
 
     private TurnPhaseType currentPhase = TurnPhaseType.REINFORCEMENT; // first phase of game is reinforcement
-    private HashMap<TurnPhaseType, HUD> stages;
+
     private HashMap<TurnPhaseType, Phase> phases;
 
     private Map map;
@@ -68,11 +68,6 @@ public class GameScreen implements Screen, InputProcessor{
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
         this.mapBackground = new Texture("ui/mapBackground.png");
 
-        this.stages = new HashMap<TurnPhaseType, HUD>();
-        this.stages.put(TurnPhaseType.REINFORCEMENT, new HUDReinforcement(this));
-        this.stages.put(TurnPhaseType.ATTACK, new HUDAttack(this));
-        this.stages.put(TurnPhaseType.MOVEMENT, new HUDMovement(this));
-
         this.phases = new HashMap<TurnPhaseType, Phase>();
         this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, map));
         this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, map));
@@ -94,21 +89,10 @@ public class GameScreen implements Screen, InputProcessor{
 
         gameplayCamera.translate(new Vector3(0, 0, 0));
 
-        setupUi();
-            
         map.allocateSectors(players);
     }
 
-    /**
-     * Performs the games UI setup
-     */
-    private void setupUi() {
-        Texture buttons = new Texture("ui/buttons.png"); // texture sheet for buttons
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); // create style for buttons to use
-        style.up = new TextureRegionDrawable(new TextureRegion(buttons, 0, 0, 400, 150)); // image for button to use in default state
-        style.down = new TextureRegionDrawable(new TextureRegion(buttons, 0, 150, 400, 150)); // image for button to use when pressed down
-        style.font = new BitmapFont(); // set button font to the default Bitmap Font
-    }
+
 
     /**
      *
@@ -130,9 +114,8 @@ public class GameScreen implements Screen, InputProcessor{
      */
     private void updateInputProcessor() {
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(stages.get(currentPhase));
-        inputMultiplexer.addProcessor(this);
         inputMultiplexer.addProcessor(phases.get(currentPhase));
+        inputMultiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
@@ -169,6 +152,10 @@ public class GameScreen implements Screen, InputProcessor{
         if (currentPlayer == turnOrder.size()) {
             currentPlayer = 0;
         }
+    }
+
+    protected SpriteBatch getGameplayBatch() {
+        return this.gameplayBatch;
     }
 
     /**
@@ -231,21 +218,18 @@ public class GameScreen implements Screen, InputProcessor{
         renderBackground();
 
         map.draw(gameplayBatch);
-        phases.get(currentPhase).visualisePhase(gameplayBatch);
-
         gameplayBatch.end();
 
-        /* UI */
-        // update UI
-        this.stages.get(currentPhase).act(delta);
 
-        // render UI
-        this.stages.get(currentPhase).draw();
+
+        this.phases.get(currentPhase).act(delta);
+        this.phases.get(currentPhase).draw();
+
     }
 
     @Override
     public void resize(int width, int height) {
-        for (Stage stage : stages.values()) {
+        for (Stage stage : phases.values()) {
             stage.getViewport().update(width, height);
             stage.getCamera().viewportWidth = width;
             stage.getCamera().viewportHeight = height;
@@ -278,9 +262,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void dispose() {
-        for (Stage stage : stages.values()) {
-            stage.dispose();
-        }
+
     }
 
     /**
@@ -356,7 +338,7 @@ public class GameScreen implements Screen, InputProcessor{
         Vector2 worldCoords = screenToWorldCoord(screenX, screenY);
 
         Sector hoveredSector = map.getSector(map.detectSectorContainsPoint((int)worldCoords.x, (int)worldCoords.y));
-        stages.get(currentPhase).setBottomBarText(hoveredSector);
+        phases.get(currentPhase).setBottomBarText(hoveredSector);
         return false;
     }
 

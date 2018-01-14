@@ -18,7 +18,7 @@ public class PhaseAttack extends Phase{
     private Vector2 arrowHeadPosition; // Vector x,y for the point of the arrow
 
     public PhaseAttack(GameScreen gameScreen, Map map) {
-        super(gameScreen, map);
+        super(gameScreen, map, TurnPhaseType.ATTACK);
 
         this.arrow = new TextureRegion(new Texture(Gdx.files.internal("arrow.png")));
         this.attackingSector = null;
@@ -39,7 +39,6 @@ public class PhaseAttack extends Phase{
      */
     private void generateArrow(SpriteBatch gameplayBatch, float startX, float startY, float endX, float endY) {
         int thickness = 30;
-        // Calculates the transformations to apply to the sprite - had to refresh my GCSE maths knowledge lol
         double angle = Math.toDegrees(Math.atan((endY - startY) / (endX - startX)));
         double height = (endY - startY) /  Math.sin(Math.toRadians(angle));
         gameplayBatch.draw(arrow, startX, (startY - thickness/2), 0, thickness/2, (float)height, thickness,1, 1, (float)angle);
@@ -57,27 +56,54 @@ public class PhaseAttack extends Phase{
     }
 
     @Override
+    public void endPhase() {
+        super.endPhase();
+        attackingSector = null;
+        defendingSector = null;
+    }
+
+    @Override
     public boolean keyDown(int keycode) {
+        if (super.keyDown(keycode)) {
+            return true;
+        }
+
+
+
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
+        if (super.keyUp(keycode)) {
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public boolean keyTyped(char character) {
+        if (super.keyTyped(character)) {
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (super.touchDown(screenX, screenY, pointer, button)) {
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (super.touchUp(screenX, screenY, pointer, button)) {
+            return true;
+        }
+
         Vector2 worldCoord = gameScreen.screenToWorldCoord(screenX, screenY);
 
         int sectorid = map.detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
@@ -115,26 +141,28 @@ public class PhaseAttack extends Phase{
     }
 
     @Override
-    public void endPhase() {
-        super.endPhase();
-        attackingSector = null;
-        defendingSector = null;
-    }
-
-    @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (super.touchDragged(screenX, screenY, pointer)) {
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        if (super.mouseMoved(screenX, screenY)) {
+            return true;
+        }
         this.mousePos.x = (gameScreen.gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x);
         this.mousePos.y = (gameScreen.gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y);
-        return true;
+        return false;
     }
 
     @Override
     public boolean scrolled(int amount) {
+        if (super.scrolled(amount)) {
+            return true;
+        }
         return false;
     }
 }
