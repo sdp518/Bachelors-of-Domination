@@ -92,7 +92,6 @@ public class GameSetupScreen implements Screen{
         this.main = main;
 
         this.stage = new Stage();
-        this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
         this.table.setFillParent(true); // make ui table fill the entire screen
         this.stage.addActor(table);
