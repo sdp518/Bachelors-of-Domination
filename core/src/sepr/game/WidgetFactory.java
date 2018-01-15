@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import javax.xml.soap.Text;
 
@@ -97,6 +99,25 @@ public class WidgetFactory {
         gameHUDTurnIndicatorTexture = new Texture("ui/gameHUDTurnIndicator.png");
 
 
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param title String to be used at the top of the dialog box
+     * @param message String to be used as the content of the dialog
+     * @param stage The stage to draw the box onto
+     */
+    public static void dialogBox(String title, String message, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        Dialog dialog = new Dialog(title, skin) {
+            protected void result(Object object) {
+                // object is the button pressed
+            }
+        };
+        dialog.text(message);
+        dialog.button("Ok", 1L);
+        dialog.show(stage);
     }
 
     public static TextButton genBasicButton(String buttonText) {

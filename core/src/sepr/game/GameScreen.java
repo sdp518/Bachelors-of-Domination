@@ -42,7 +42,7 @@ public class GameScreen implements Screen, InputProcessor{
     private boolean turnTimerEnabled;
     private boolean turnTimerPaused;
     private int maxTurnTime;
-    private int turnTimeElapsed;
+    private long turnTimeStart;
     private List<Integer> turnOrder; // array of player ids in order of players' turns;
     private int currentPlayer; // index of current player in turnOrder list
 
@@ -79,7 +79,6 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimerEnabled = turnTimerEnabled;
         this.turnTimerPaused = false;
         this.maxTurnTime = maxTurnTime;
-        this.turnTimeElapsed = 0;
         this.currentPlayer = 0;
 
         map.allocateSectors(players);
@@ -95,7 +94,8 @@ public class GameScreen implements Screen, InputProcessor{
         this.players = players;
         this.turnOrder = new ArrayList<Integer>(players.keySet());
         this.turnTimerEnabled = turnTimerEnabled;
-        this.maxTurnTime = maxTurnTime;
+        this.maxTurnTime = maxTurnTime * 1000; // Seconds to milliseconds
+        this.turnTimeStart = System.currentTimeMillis();
 
         this.map.allocateSectors(this.players);
     }
@@ -143,11 +143,16 @@ public class GameScreen implements Screen, InputProcessor{
         if (currentPlayer == turnOrder.size()) {
             currentPlayer = 0;
         }
-
+      
+      
         // reset camera position
         this.gameplayCamera.position.x = 1920/2;
         this.gameplayCamera.position.y = 1080/2;
         this.gameplayCamera.zoom = 1;
+      
+        if (this.turnTimerEnabled) {
+            this.turnTimeStart = System.currentTimeMillis();
+        }      
     }
 
     protected SpriteBatch getGameplayBatch() {
@@ -218,6 +223,9 @@ public class GameScreen implements Screen, InputProcessor{
 
         this.phases.get(currentPhase).act(delta);
         this.phases.get(currentPhase).draw();
+        if (this.turnTimerEnabled && (System.currentTimeMillis() - this.turnTimeStart >= this.maxTurnTime)) {
+            nextPlayer();
+        }
 
     }
 
