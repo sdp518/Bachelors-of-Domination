@@ -16,7 +16,7 @@ public class AttackWheel {
   
   /**
      * Function to calculate the sector percentages
-     * Gives boundaries for min and max sector percentages for normal, critical and failed
+     * Gives boundaries for min and max sector percentages for: normal, critical, failed
      * @return hashMap of each sector and its percentage
      */
     private static HashMap<String, Double> sectorCalc() {
