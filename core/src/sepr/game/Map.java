@@ -1,7 +1,6 @@
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -108,19 +107,26 @@ public class Map{
     }
 
     /**
-     *
+     * Accesses collegeProperties.csv to load college data
      */
-    private void loadColleges() {
+    private void loadColleges(){
         this.colleges = new HashMap<Integer, College>();
 
-        this.colleges.put(0, new College(0, "Hes East", 0, Arrays.asList(0, 1, 2, 3)));
-        this.colleges.put(1, new College(0, "Halifax", 0, Arrays.asList(4,5,6,7)));
-        this.colleges.put(2, new College(0, "Derwent", 0, Arrays.asList(8,9,10,11)));
-        this.colleges.put(3, new College(0, "Alcuin", 0, Arrays.asList(12,13,14)));
-        this.colleges.put(4, new College(0, "Vanbrugh", 0, Arrays.asList(18,19,20)));
-        this.colleges.put(5, new College(0, "Wentworth", 0, Arrays.asList(22,23)));
-        this.colleges.put(6, new College(0, "James", 0, Arrays.asList(24,25,26,27)));
-        this.colleges.put(7, new College(0, "Neutral", 0, Arrays.asList(15,16,17,28,29,30)));
+        String csvFile = "collegeProperties.csv";
+        String line = "";
+        Integer ID = 0;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+                College temp = collegeDataToCollege(line.split(","));
+                this.colleges.put(temp.getId(), temp);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
