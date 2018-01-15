@@ -23,7 +23,7 @@ public class Main extends Game implements ApplicationListener {
 		new WidgetFactory(); // setup widget factory for generating UI components
 
 		HashMap<Integer, Player> players = new HashMap<Integer, Player>();
-		players.put(0, new Player(0, "x", Color.BLUE) {
+		players.put(0, new Player(0, GameSetupScreen.CollegeName.ALCUIN , Color.BLUE) {
 			@Override
 			protected void processAttackPhase() {
 
@@ -39,7 +39,7 @@ public class Main extends Game implements ApplicationListener {
 				return 0;
 			}
 		});
-		players.put(1, new Player(1, "y", Color.RED) {
+		players.put(1, new Player(1, GameSetupScreen.CollegeName.DERWENT, Color.RED) {
 			@Override
 			protected void processAttackPhase() {
 
@@ -55,7 +55,7 @@ public class Main extends Game implements ApplicationListener {
 				return 0;
 			}
 		});
-		players.put(2, new Player(2, "z", Color.GREEN) {
+		players.put(2, new Player(2, GameSetupScreen.CollegeName.VANBRUGH, Color.GREEN) {
 			@Override
 			protected void processAttackPhase() {
 

@@ -14,7 +14,8 @@ import java.util.HashMap;
  */
 public abstract class Player {
     private int id;
-    private String collegeName;
+    private GameSetupScreen.CollegeName collegeName;
+    private String playerName;
     private int troopsToAllocate; // how many troops the player has to allocate at the start of their next reinforcement phase
     private Color sectorColour; // what colour to shade sectors owned by the player
 
@@ -23,15 +24,20 @@ public abstract class Player {
      * @param id player's unique identifier
      * @param collegeName display name for this player
      */
-    public Player(int id, String collegeName, Color sectorColour) {
+    public Player(int id, GameSetupScreen.CollegeName collegeName, Color sectorColour) {
         this.id = id;
         this.collegeName = collegeName;
+        //this.playerName = playerName;
         this.troopsToAllocate = 0;
         this.sectorColour = sectorColour;
     }
 
     public int getId() {
         return id;
+    }
+
+    public GameSetupScreen.CollegeName getCollegeName() {
+        return collegeName;
     }
 
     public Color getSectorColour() {

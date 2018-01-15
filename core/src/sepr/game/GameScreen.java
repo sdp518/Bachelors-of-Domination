@@ -66,7 +66,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.gameplayBatch = new SpriteBatch();
         this.gameplayCamera = new OrthographicCamera();
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
-        this.mapBackground = new Texture("ui/mapBackground.png");
+        this.mapBackground = new Texture("ui/HD-assets/Background.png");
 
         this.phases = new HashMap<TurnPhaseType, Phase>();
         this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, map));
@@ -141,6 +141,10 @@ public class GameScreen implements Screen, InputProcessor{
         }
         this.updateInputProcessor();
         this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
+    }
+
+    public int getTurnTimeElapsed(){
+        return this.turnTimeElapsed;
     }
 
     /**

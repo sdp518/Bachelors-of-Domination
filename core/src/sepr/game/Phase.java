@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import sun.tools.jconsole.Tab;
 
 public abstract class Phase extends Stage {
 
@@ -16,12 +17,14 @@ public abstract class Phase extends Stage {
     protected Player currentPlayer;
 
     private Table table;
-    private Label bottomBar;
+    private Label bottomBarRightPart;
+    private Table bottomBarLeftPart;
     private TurnPhaseType turnPhase;
 
 
     public Phase(GameScreen gameScreen, Map map, TurnPhaseType turnPhase) {
         //super();
+
         this.setViewport(new ScreenViewport());
 
         this.gameScreen = gameScreen;
@@ -40,30 +43,37 @@ public abstract class Phase extends Stage {
 
 
     private void setupUi() {
-        TextButton endPhaseButton = WidgetFactory.genBasicButton("End Phase");
+        TextButton endPhaseButton = WidgetFactory.genEndPhaseButton("END PHASE");
         endPhaseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.advancePhase();
             }
         });
-        bottomBar = WidgetFactory.genGameHUDBottomBar("INIT");
+        bottomBarRightPart = WidgetFactory.genGameHUDBottomBarRightPart("INIT");
+        bottomBarLeftPart = WidgetFactory.genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName.ALCUIN, "Player1", "Troops Available: 13", "Turn Timer: " + gameScreen.getTurnTimeElapsed());
 
         table.top().center();
-        table.add(WidgetFactory.genPhaseIndicator(turnPhase)).colspan(2).expandX().fill(0.9f, 0);
+        table.add(WidgetFactory.genGameHUDTopBar(turnPhase, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //main.setMenuScreen();
+            }
+        })).colspan(2).expandX().height(60).width(910);
 
         table.row();
         table.add(new Table()).expand();
 
         Table subTable = new Table();
 
-        subTable.center().bottom();
-        subTable.add(bottomBar).expandX().fill(0.9f, 0);
+        subTable.bottom();
+        subTable.add(bottomBarLeftPart).height(190).width(250);
+        subTable.add(bottomBarRightPart).bottom().expandX().fillX().height(60);
 
         table.row();
         table.add(subTable).expandX().fill();
         table.bottom().right();
-        table.add(endPhaseButton).fill();
+        table.add(endPhaseButton).fill().height(60).width(170);
 
         setBottomBarText(null);
     }
@@ -76,9 +86,9 @@ public abstract class Phase extends Stage {
      */
     public void setBottomBarText(Sector sector) {
         if (sector == null) {
-            this.bottomBar.setText("Mouse over a sector to see further details");
+            this.bottomBarRightPart.setText("Mouse over a sector to see further details");
         } else {
-            this.bottomBar.setText(sector.getDisplayName() + " - " + "Owned By: " + sector.getOwnerId() + " - " + "Grants +" + sector.getReinforcementsProvided() + " Troops");
+            this.bottomBarRightPart.setText(sector.getDisplayName() + " - " + "Owned By: " + sector.getOwnerId() + " - " + "Grants +" + sector.getReinforcementsProvided() + " Troops");
         }
     }
 
