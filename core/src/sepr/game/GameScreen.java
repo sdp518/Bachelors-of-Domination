@@ -15,15 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.Collection;
+import java.util.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Iterator;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
@@ -86,12 +81,8 @@ public class GameScreen implements Screen, InputProcessor{
         this.maxTurnTime = maxTurnTime;
         this.currentPlayer = 0;
 
-        gameplayCamera.translate(new Vector3(0, 0, 0));
-
         map.allocateSectors(players);
     }
-
-
 
     /**
      *
@@ -152,9 +143,16 @@ public class GameScreen implements Screen, InputProcessor{
         if (currentPlayer == turnOrder.size()) {
             currentPlayer = 0;
         }
+      
+      
+        // reset camera position
+        this.gameplayCamera.position.x = 1920/2;
+        this.gameplayCamera.position.y = 1080/2;
+        this.gameplayCamera.zoom = 1;
+      
         if (this.turnTimerEnabled) {
             this.turnTimeStart = System.currentTimeMillis();
-        }
+        }      
     }
 
     protected SpriteBatch getGameplayBatch() {
@@ -222,8 +220,6 @@ public class GameScreen implements Screen, InputProcessor{
 
         map.draw(gameplayBatch);
         gameplayBatch.end();
-
-
 
         this.phases.get(currentPhase).act(delta);
         this.phases.get(currentPhase).draw();
