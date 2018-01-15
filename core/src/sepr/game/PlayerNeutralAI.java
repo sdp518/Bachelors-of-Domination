@@ -11,7 +11,7 @@ public class PlayerNeutralAI extends PlayerAI{
      * @param id           player's unique identifier
      * @param collegeName  display name for this player
      */
-    public PlayerNeutralAI(int id, String collegeName) {
+    public PlayerNeutralAI(int id, GameSetupScreen.CollegeName collegeName) {
         super(id, collegeName, Color.WHITE);
     }
 }

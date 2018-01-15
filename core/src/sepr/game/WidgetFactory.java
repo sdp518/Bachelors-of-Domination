@@ -1,6 +1,5 @@
 package sepr.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import javax.xml.soap.Text;
@@ -35,8 +35,10 @@ public class WidgetFactory {
     private static Texture onSwitchTexture;
     private static Texture offSwitchTexture;
   
-    private static Texture gameHUDBottomBarTexture;
-    private static Texture gameHUDTurnIndicatorTexture;
+    private static Texture gameHUDBottomBarRightPartTexture;
+    private static Texture gameHUDBottomBarLeftPartTexture;
+    private static Texture gameHUDTopBarTexture;
+    private static Texture endPhaseBtnTexture;
 
     private static Texture playerLabelTexture;
     private static Texture playerLeftBtnTexture;
@@ -95,8 +97,10 @@ public class WidgetFactory {
         vanbrughLogoTexture = new Texture("ui/HD-assets/vanbrugh-logo.png");
         wentworthLogoTexture = new Texture("ui/HD-assets/wentworth-logo.png");
 
-        gameHUDBottomBarTexture = new Texture("ui/gameHUDBottomBar.png");
-        gameHUDTurnIndicatorTexture = new Texture("ui/gameHUDTurnIndicator.png");
+        gameHUDBottomBarRightPartTexture = new Texture("ui/HD-assets/HUD-Bottom-Bar-Right-Part.png");
+        gameHUDBottomBarLeftPartTexture = new Texture("ui/HD-assets/HUD-Bottom-Bar-Left-Part.png");
+        gameHUDTopBarTexture = new Texture("ui/HD-assets/HUD-Top-Bar.png");
+        endPhaseBtnTexture = new Texture("ui/HD-assets/End-Phase-Button.png");
 
 
     }
@@ -300,16 +304,26 @@ public class WidgetFactory {
         return new TextButton(buttonText,style);
     }
 
+    public static TextButton genEndPhaseButton(String buttonText){
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,0, 348, 123));
+        style.down = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,123, 348, 123));
+        style.font = new BitmapFont(alteDinSmall);
+
+        return new TextButton(buttonText, style);
+    }
+
+
 
     /**
      * Generates the UI widget to be displayed at the bottom of the HUD
      * @param labelText what the bar should say
      * @return
      */
-    public static Label genGameHUDBottomBar(String labelText) {
+    public static Label genGameHUDBottomBarRightPart(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont();
-        style.background = new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarTexture));
+        style.font = new BitmapFont(alteDinSmall);
+        style.background = new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarRightPartTexture));
 
         Label label = new Label(labelText, style);
         label.setAlignment(Align.center);
@@ -317,32 +331,74 @@ public class WidgetFactory {
         return label;
     }
 
-
-    public static Label genPhaseIndicator(TurnPhaseType turnPhase) {
+    /**
+     * Generates the UI widget to be displayed at the bottom left of the HUD
+     * @param collegeName  name of college chosen by player
+     * @param playerName name of the player
+     * @param troopsNumber number of troops that can be placed
+     * @param turnTimer time for the turn
+     * @return table containing the information to display in the HUD
+     */
+    public static Table genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName collegeName, String playerName, String troopsNumber, String turnTimer){
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont();
+        style.font = new BitmapFont(alteDinSmall);
+        Label playerNameLabel = new Label(playerName, style);
+        Label troopsNumberLabel = new Label(troopsNumber, style);
+        Label turnTimerLabel = new Label(turnTimer, style);
+        Image collegeLogo = new Image(genCollegeLogoDrawable(collegeName));
 
-        style.background = new TextureRegionDrawable(new TextureRegion(gameHUDTurnIndicatorTexture));
+        Table table = new Table();
+        table.background(new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarLeftPartTexture)));
+
+        Table subTable = new Table();
+        subTable.setDebug(true);
+        subTable.left().add(collegeLogo);
+        subTable.right().add(playerNameLabel);
+        subTable.row();
+        subTable.add(troopsNumberLabel).colspan(2);
+        subTable.row();
+        subTable.add(turnTimerLabel).colspan(2);
+
+        table.add(subTable);
+
+        return table;
+    }
+
+
+    public static Table genGameHUDTopBar(TurnPhaseType turnPhase, ChangeListener changeListener) {
+        TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
+        btnStyle.font = new BitmapFont(alteDinSmall);
+        TextButton exitButton = new TextButton("QUIT", btnStyle);
+
+        exitButton.addListener(changeListener);
+
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = new BitmapFont(alteDinSmall);
 
         String text = "";
         switch (turnPhase) {
             case REINFORCEMENT:
-                text = "> REINFORCEMENT < -  ATTACK  -  MOVEMENT  ";
+                text = "REINFORCEMENT  -  Attack  -  Movement";
                 break;
             case ATTACK:
-                text = "  REINFORCEMENT  - > ATTACK < -  MOVEMENT  ";
+                text = "Reinforcement  -  ATTACK  -  Movement";
                 break;
             case MOVEMENT:
-                text = "  REINFORCEMENT  -  ATTACK  - > MOVEMENT <";
+                text = "Reinforcement  -  Attack  -  MOVEMENT";
                 break;
         }
 
         Label label = new Label(text, style);
-
         label.setAlignment(Align.center);
 
-        return label;
+        Table table = new Table();
+        table.background(new TextureRegionDrawable(new TextureRegion(gameHUDTopBarTexture)));
+        table.left().add(exitButton).padRight(190).padLeft(20);
+        table.add(label).height(60);
+
+        return table;
     }
+
 
     /**
      *

@@ -12,7 +12,7 @@ public class PlayerHuman extends Player {
      * @param collegeName  display name for this player
      * @param sectorColour
      */
-    public PlayerHuman(int id, String collegeName, Color sectorColour) {
+    public PlayerHuman(int id, GameSetupScreen.CollegeName collegeName, Color sectorColour) {
         super(id, collegeName, sectorColour);
     }
 
