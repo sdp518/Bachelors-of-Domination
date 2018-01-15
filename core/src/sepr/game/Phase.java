@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import sun.tools.jconsole.Tab;
 
 public abstract class Phase extends Stage {
 
@@ -23,8 +22,6 @@ public abstract class Phase extends Stage {
 
 
     public Phase(GameScreen gameScreen, Map map, TurnPhaseType turnPhase) {
-        //super();
-
         this.setViewport(new ScreenViewport());
 
         this.gameScreen = gameScreen;
@@ -57,7 +54,7 @@ public abstract class Phase extends Stage {
         table.add(WidgetFactory.genGameHUDTopBar(turnPhase, new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //main.setMenuScreen();
+                gameScreen.openMenu();
             }
         })).colspan(2).expandX().height(60).width(910);
 

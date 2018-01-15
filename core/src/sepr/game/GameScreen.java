@@ -85,7 +85,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     *
+     * sets up a new game
      * @param players
      * @param turnTimerEnabled
      * @param maxTurnTime
@@ -98,6 +98,8 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimeStart = System.currentTimeMillis();
 
         this.map.allocateSectors(this.players);
+
+        resetCameraPosition();
     }
 
     /**
@@ -135,7 +137,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     public int getTurnTimeElapsed(){
-        return this.turnTimeElapsed;
+        return maxTurnTime - (int)((System.currentTimeMillis() - turnTimeStart)/1000);
     }
 
     /**
@@ -148,12 +150,10 @@ public class GameScreen implements Screen, InputProcessor{
             currentPlayer = 0;
         }
       
-      
-        // reset camera position
-        this.gameplayCamera.position.x = 1920/2;
-        this.gameplayCamera.position.y = 1080/2;
-        this.gameplayCamera.zoom = 1;
-      
+        resetCameraPosition();
+
+        // add the next player dialog box here
+
         if (this.turnTimerEnabled) {
             this.turnTimeStart = System.currentTimeMillis();
         }      
@@ -207,6 +207,19 @@ public class GameScreen implements Screen, InputProcessor{
         gameplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
     }
 
+    /**
+     * changes the screen currently being displayed to the menu
+     */
+    public void openMenu() {
+        main.setMenuScreen();
+    }
+
+    private void resetCameraPosition() {
+        this.gameplayCamera.position.x = 1920/2;
+        this.gameplayCamera.position.y = 1080/2;
+        this.gameplayCamera.zoom = 1;
+    }
+
     @Override
     public void show() {
         this.updateInputProcessor();
@@ -230,7 +243,6 @@ public class GameScreen implements Screen, InputProcessor{
         if (this.turnTimerEnabled && (System.currentTimeMillis() - this.turnTimeStart >= this.maxTurnTime)) {
             nextPlayer();
         }
-
     }
 
     @Override
