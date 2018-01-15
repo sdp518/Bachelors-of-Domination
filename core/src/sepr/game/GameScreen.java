@@ -3,20 +3,14 @@ package sepr.game;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.*;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -136,7 +130,11 @@ public class GameScreen implements Screen, InputProcessor{
         this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
     }
 
-    public int getTurnTimeElapsed(){
+    /**
+     *
+     * @return time remaining in turn in seconds
+     */
+    public int getTurnTimeRemaining(){
         return maxTurnTime - (int)((System.currentTimeMillis() - turnTimeStart)/1000);
     }
 
@@ -238,6 +236,9 @@ public class GameScreen implements Screen, InputProcessor{
         map.draw(gameplayBatch);
         gameplayBatch.end();
 
+        if (this.turnTimerEnabled) {
+            this.phases.get(currentPhase).setTimerValue(getTurnTimeRemaining());
+        }
         this.phases.get(currentPhase).act(delta);
         this.phases.get(currentPhase).draw();
         if (this.turnTimerEnabled && (System.currentTimeMillis() - this.turnTimeStart >= this.maxTurnTime)) {

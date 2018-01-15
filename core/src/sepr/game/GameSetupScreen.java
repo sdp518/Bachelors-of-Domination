@@ -520,7 +520,7 @@ public class GameSetupScreen implements Screen{
             return;
         }
 
-        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), 120);
+        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), 1);
     }
 
     private void setupUi() {
