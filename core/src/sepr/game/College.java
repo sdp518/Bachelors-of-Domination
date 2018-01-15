@@ -28,6 +28,8 @@ public class College {
         this.reinforcementAmount = reinforcementAmount;
     }
 
+    public int getId() { return id; }
+
     /**
      * @param reinforcementAmount the amount of reinforcements provided by the college each turn
      */

@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -107,6 +108,37 @@ public class Map{
     }
 
     /**
+     * conversion of String type to List<integer> for use in collegeDataToCollege
+     * @param stringData
+     * @return ListArray
+     */
+    private List<Integer> strToListInt(String stringData){
+        String[] strArray = stringData.split(" ");
+        List<Integer> listArray = new ArrayList<Integer>(strArray.length);
+        for (int i = 0; i < listArray.size(); i++) {
+            if (strArray[i].equals("")) {
+                continue; //skip if sector not in college
+            }
+            listArray.set(i, Integer.parseInt(strArray[i]));
+        }
+        return listArray;
+    }
+
+    /**
+     *
+     * @param collegeData
+     * @return College(collegeId, displayName, reinforcementAmount, sectorIds)
+     */
+    private College collegeDataToCollege(String[] collegeData){
+        int collegeId = Integer.parseInt(collegeData[0]);
+        String displayName = collegeData[1];
+        int reinforcementAmount = Integer.parseInt(collegeData[2]);
+        List<Integer> sectorIds = strToListInt(collegeData[3]);
+
+        return new College(collegeId, displayName, reinforcementAmount, sectorIds);
+    }
+
+    /**
      * Accesses collegeProperties.csv to load college data
      */
     private void loadColleges(){
@@ -154,13 +186,25 @@ public class Map{
             throw new RuntimeException("Cannot allocate sectors to 0 players");
         }
 
+        PlayerType neutralAI = PlayerType.PLAYER_NEUTRAL_AI;
+
+        for (Integer i : players.keySet()) {
+            if (players.containsValue(neutralAI)){
+                for (Integer j : this.getSectorIds()){
+                    if (this.getSector(j).isNeutral()){
+                        this.getSector(j).setOwner(players.get(i));
+                    }
+                }
+            }
+        }
+
         HashMap<Integer, Integer> playerReinforcements = new HashMap<Integer, Integer>(); // mapping of player id to amount of reinforcements they will receive currently
         // set all players to currently be receiving 0 reinforcements
         for (Integer i : players.keySet()) {
             playerReinforcements.put(i, 0);
         }
 
-        int lowestReinforcementId = players.get(0).getId();; // id of player currently receiving the least reinforcements
+        int lowestReinforcementId = players.get(0).getId(); // id of player currently receiving the least reinforcements
         for (Integer i : this.getSectorIds()) {
             if (this.getSector(i).isDecor()) {
                 continue; // skip allocating sector if it is a decor sector
