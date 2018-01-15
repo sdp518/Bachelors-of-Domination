@@ -15,15 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.Collection;
+import java.util.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Iterator;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
@@ -47,7 +42,7 @@ public class GameScreen implements Screen, InputProcessor{
     private boolean turnTimerEnabled;
     private boolean turnTimerPaused;
     private int maxTurnTime;
-    private int turnTimeElapsed;
+    private long turnTimeStart;
     private List<Integer> turnOrder; // array of player ids in order of players' turns;
     private int currentPlayer; // index of current player in turnOrder list
 
@@ -66,7 +61,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.gameplayBatch = new SpriteBatch();
         this.gameplayCamera = new OrthographicCamera();
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
-        this.mapBackground = new Texture("ui/mapBackground.png");
+        this.mapBackground = new Texture("ui/HD-assets/Background.png");
 
         this.phases = new HashMap<TurnPhaseType, Phase>();
         this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, map));
@@ -84,18 +79,13 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimerEnabled = turnTimerEnabled;
         this.turnTimerPaused = false;
         this.maxTurnTime = maxTurnTime;
-        this.turnTimeElapsed = 0;
         this.currentPlayer = 0;
-
-        gameplayCamera.translate(new Vector3(0, 0, 0));
 
         map.allocateSectors(players);
     }
 
-
-
     /**
-     *
+     * sets up a new game
      * @param players
      * @param turnTimerEnabled
      * @param maxTurnTime
@@ -104,9 +94,12 @@ public class GameScreen implements Screen, InputProcessor{
         this.players = players;
         this.turnOrder = new ArrayList<Integer>(players.keySet());
         this.turnTimerEnabled = turnTimerEnabled;
-        this.maxTurnTime = maxTurnTime;
+        this.maxTurnTime = maxTurnTime * 1000; // Seconds to milliseconds
+        this.turnTimeStart = System.currentTimeMillis();
 
         this.map.allocateSectors(this.players);
+
+        resetCameraPosition();
     }
 
     /**
@@ -143,6 +136,10 @@ public class GameScreen implements Screen, InputProcessor{
         this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
     }
 
+    public int getTurnTimeElapsed(){
+        return maxTurnTime - (int)((System.currentTimeMillis() - turnTimeStart)/1000);
+    }
+
     /**
      * Called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
      */
@@ -152,6 +149,14 @@ public class GameScreen implements Screen, InputProcessor{
         if (currentPlayer == turnOrder.size()) {
             currentPlayer = 0;
         }
+      
+        resetCameraPosition();
+
+        // add the next player dialog box here
+
+        if (this.turnTimerEnabled) {
+            this.turnTimeStart = System.currentTimeMillis();
+        }      
     }
 
     protected SpriteBatch getGameplayBatch() {
@@ -202,6 +207,19 @@ public class GameScreen implements Screen, InputProcessor{
         gameplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
     }
 
+    /**
+     * changes the screen currently being displayed to the menu
+     */
+    public void openMenu() {
+        main.setMenuScreen();
+    }
+
+    private void resetCameraPosition() {
+        this.gameplayCamera.position.x = 1920/2;
+        this.gameplayCamera.position.y = 1080/2;
+        this.gameplayCamera.zoom = 1;
+    }
+
     @Override
     public void show() {
         this.updateInputProcessor();
@@ -220,11 +238,11 @@ public class GameScreen implements Screen, InputProcessor{
         map.draw(gameplayBatch);
         gameplayBatch.end();
 
-
-
         this.phases.get(currentPhase).act(delta);
         this.phases.get(currentPhase).draw();
-
+        if (this.turnTimerEnabled && (System.currentTimeMillis() - this.turnTimeStart >= this.maxTurnTime)) {
+            nextPlayer();
+        }
     }
 
     @Override

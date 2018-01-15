@@ -92,7 +92,6 @@ public class GameSetupScreen implements Screen{
         this.main = main;
 
         this.stage = new Stage();
-        this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
         this.table.setFillParent(true); // make ui table fill the entire screen
         this.stage.addActor(table);
@@ -415,19 +414,19 @@ public class GameSetupScreen implements Screen{
             case ALCUIN:
                 return Color.RED;
             case DERWENT:
-                return Color.GREEN;
-            case HALIFAX:
                 return Color.BLUE;
+            case HALIFAX:
+                return Color.CYAN;
             case HES_EAST:
-                return Color.YELLOW;
+                return Color.GREEN;
             case JAMES:
-                return Color.MAGENTA;
+                return Color.GRAY;
             case UNI_OF_YORK:
                 return Color.WHITE;
             case VANBRUGH:
                 return Color.PURPLE;
             case WENTWORTH:
-                return Color.CYAN;
+                return Color.ORANGE;
         }
         return Color.BLACK;
     }
@@ -442,10 +441,10 @@ public class GameSetupScreen implements Screen{
         for (int i = 0; i < MAX_NUMBER_OF_PLAYERS; i++) {
             if (playerTypes[i].getText().toString().equals(PlayerType.HUMAN.getPlayerType())) {
                 // create human player
-                players.put(i, new PlayerHuman(i, playerColleges[i].getKey().getText().toString(), getCollegeColor(stringToCollege(playerColleges[i].getKey().getText().toString()))));
+                players.put(i, new PlayerHuman(i, stringToCollege(playerColleges[i].getKey().getText().toString()), getCollegeColor(stringToCollege(playerColleges[i].getKey().getText().toString()))));
             } else if (playerTypes[i].getText().toString().equals(PlayerType.AI.getPlayerType())) {
                 // create AI player
-                players.put(i, new PlayerAI(i, playerColleges[i].getKey().getText().toString(), getCollegeColor(stringToCollege(playerColleges[i].getKey().getText().toString()))));
+                players.put(i, new PlayerAI(i, stringToCollege(playerColleges[i].getKey().getText().toString()), getCollegeColor(stringToCollege(playerColleges[i].getKey().getText().toString()))));
             }
         }
         return players;
@@ -554,7 +553,8 @@ public class GameSetupScreen implements Screen{
         table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                main.setMenuScreen();}
+                main.setMenuScreen();
+            }
 
         })).colspan(2);
     }

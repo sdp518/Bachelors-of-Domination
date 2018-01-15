@@ -160,10 +160,13 @@ public class Sector {
      * @throws IllegalArgumentException if units in sector is below 0
      * @param amount number of units to change by, (can be negative to subtract units
      */
-    public void addUnits(int amount) {
+    public void addUnits(int amount) throws IllegalArgumentException {
         this.unitsInSector += amount;
+        if (this.unitsInSector < 0) {
+            this.unitsInSector = 0;
+            throw new IllegalArgumentException("Cannot have less than 0 units on a sector");
+        }
     }
-
 
     /**
      * The method takes a sectorId and recolors it to the specified color

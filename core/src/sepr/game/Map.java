@@ -1,7 +1,6 @@
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.math.Vector2;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -23,6 +23,7 @@ import java.util.*;
 public class Map{
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
     private HashMap<Integer, College> colleges; // mapping of a college ID to the college object
+    private List<UnitChangeParticle> particles; // graphics used to display the changes to the amount of units on a sector
 
     private BitmapFont font; // font for rendering sector unit data
     private GlyphLayout layout = new GlyphLayout();
@@ -39,6 +40,8 @@ public class Map{
         this.loadSectors();
         this.loadColleges();
         this.setupFont();
+
+        particles = new ArrayList<UnitChangeParticle>();
     }
 
     /**
@@ -241,6 +244,11 @@ public class Map{
 
     }
 
+    public void addUnitsToSectorAnimated(int sectorId, int amount) {
+        //this.sectors.get(sectorId).addUnits(amount);
+        this.particles.add(new UnitChangeParticle(amount, new Vector2(sectors.get(sectorId).getSectorCentreX(), sectors.get(sectorId).getSectorCentreY())));
+    }
+
     /**
      * calculates how many reinforcements the given player should receive based on the sectors they control by summing reinforcementsProvided for each Sector they control
      * @param playerId player who calculation is for
@@ -317,5 +325,15 @@ public class Map{
                 font.draw(batch, layout, sector.getSectorCentreX() - layout.width / 2, sector.getSectorCentreY() + layout.height / 2);
             }
         }
+
+        // render particles
+        List<UnitChangeParticle> toDelete = new ArrayList<UnitChangeParticle>();
+        for (UnitChangeParticle particle : particles) {
+            particle.draw(batch);
+            if (particle.toDelete()) {
+                toDelete.add(particle);
+            }
+        }
+        particles.removeAll(toDelete);
     }
 }
