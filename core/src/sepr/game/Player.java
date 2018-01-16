@@ -70,11 +70,12 @@ public abstract class Player {
 
     /**
      * resolves a conflict between two territories
+     *
+     * @param attackingSectorId       id of sector carrying out the attack
+     * @param defendingSectorId       id of sector being attacked
+     * @param amountOfTroopsAttacking number of troops that are being used to attack with
      * @throws IllegalArgumentException if a player is attacking a sector it owns
      * @throws IllegalArgumentException if sectors are not connected
-     * @param attackingSectorId id of sector carrying out the attack
-     * @param defendingSectorId id of sector being attacked
-     * @param amountOfTroopsAttacking number of troops that are being used to attack with
      */
     private static void resolveCombat(int attackingSectorId, int defendingSectorId, int amountOfTroopsAttacking) {
 

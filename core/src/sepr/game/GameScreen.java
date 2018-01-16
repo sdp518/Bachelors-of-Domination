@@ -128,13 +128,12 @@ public class GameScreen implements Screen, InputProcessor{
         this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
     }
 
-
     /**
      *
      * @return time remaining in turn in seconds
      */
     public int getTurnTimeRemaining(){
-        return maxTurnTime - (int)((System.currentTimeMillis() - turnTimeStart)/1000);
+        return maxTurnTime - (int)((System.currentTimeMillis() - turnTimeStart) / 1000);
     }
 
     /**
@@ -259,6 +258,7 @@ public class GameScreen implements Screen, InputProcessor{
         }
         this.phases.get(currentPhase).act(delta); // update the stage of the current phase
         this.phases.get(currentPhase).draw(); // draw the phase UI
+
         if (this.turnTimerEnabled && (getTurnTimeRemaining() <= 0)) { // goto the next player's turn if the timer is enabled and they have run out of time
             nextPlayer();
         }

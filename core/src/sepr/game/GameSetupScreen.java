@@ -41,6 +41,7 @@ public class GameSetupScreen implements Screen{
     private Table table; // table for laying out the UI components
 
     private final int MAX_NUMBER_OF_PLAYERS = 4; // maximum number of players that cna be in a game
+    private final int MAX_TURN_TIME = 120; // max time for a player's turn if the timer is enabled
 
     private Label[] playerTypes; // array of player types, index n -> player n's type
     private TextField[] playerNames; // array of TextFields for players to enter names, index n -> player n's name
@@ -69,6 +70,18 @@ public class GameSetupScreen implements Screen{
             return this.shortCode;
         }
 
+        /**
+         * converts the string representation of the enum to the enum value
+         * @throws IllegalArgumentException if the text does not match any of the enum's string values
+         * @param text string representation of the enum
+         * @return the enum value of the provided text
+         */
+        public static PlayerType fromString(String text) throws IllegalArgumentException {
+            for (PlayerType playerType : PlayerType.values()) {
+                if (playerType.getPlayerType().equals(text)) return playerType;
+            }
+            throw new IllegalArgumentException("Text parameter must match one of the enums");
+        }
     }
 
     /**
@@ -421,6 +434,9 @@ public class GameSetupScreen implements Screen{
     private void validatePlayerNames() throws GameSetupException{
         Set<String> appeared = new HashSet();
         for (int i = 0; i < playerNames.length; i++) {
+            if (PlayerType.fromString(playerTypes[i].getText().toString()) == PlayerType.NONE) {
+                continue;
+            }
             Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
             Matcher m = p.matcher(playerNames[i].getText());
             boolean b = m.find();
@@ -444,7 +460,7 @@ public class GameSetupScreen implements Screen{
     private void validateCollegeSelection() throws GameSetupException{
         Set<String> appeared = new HashSet();
         for (int i = 0; i < playerNames.length; i++) {
-            if (!appeared.add(playerColleges[i].getKey().getText().toString())) {
+            if (PlayerType.fromString(playerTypes[i].getText().toString()) != PlayerType.NONE && !appeared.add(playerColleges[i].getKey().getText().toString())) {
                 throw new GameSetupException(GameSetupException.GameSetupExceptionType.DUPLICATE_COLLEGE_SELECTION);
             }
         }
@@ -495,11 +511,11 @@ public class GameSetupScreen implements Screen{
             validateCollegeSelection();
             validatePlayerConfiguration();
         } catch (GameSetupException e) {
-            WidgetFactory.dialogBox("Game Setup Error", e.getMessage(), stage);
+            WidgetFactory.dialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
             return;
         }
 
-        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), 1);
+        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), MAX_TURN_TIME);
     }
 
     private void setupUi() {

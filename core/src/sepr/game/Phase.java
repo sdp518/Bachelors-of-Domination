@@ -21,7 +21,6 @@ public abstract class Phase extends Stage {
 
     private Table table;
     private Label bottomBarRightPart;
-    private Table bottomBarLeftPart;
     private TurnPhaseType turnPhase;
 
     private Label playerNameLabel;
@@ -38,7 +37,6 @@ public abstract class Phase extends Stage {
         this.map = map;
 
         this.turnPhase = turnPhase;
-
 
         this.table = new Table();
         this.table.setFillParent(true); // make ui table fill the entire screen
@@ -60,7 +58,7 @@ public abstract class Phase extends Stage {
             }
         });
         bottomBarRightPart = WidgetFactory.genGameHUDBottomBarRightPart("INIT");
-        Table bottomBarLeftPart = genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName.ALCUIN, "Player1", "Troops Available: 13", "Turn Timer: " + gameScreen.getTurnTimeRemaining());
+        Table bottomBarLeftPart = genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName.ALCUIN, "Player1", "Troops Available: 13", "Turn Timer: DISABLED");
 
         table.top().center();
         table.add(WidgetFactory.genGameHUDTopBar(turnPhase, new ChangeListener() {
@@ -133,16 +131,16 @@ public abstract class Phase extends Stage {
         }
     }
 
-    public void enterPhase(Player player) {
+    void enterPhase(Player player) {
         this.currentPlayer = player;
-
 
         playerNameLabel.setText(new StringBuilder(currentPlayer.getCollegeName().getCollegeName()));
         troopsNumberLabel.setText(new StringBuilder("xx"));
         collegeLogo.setDrawable(WidgetFactory.genCollegeLogoDrawable(player.getCollegeName()));
     }
 
-    protected void setTimerValue(int timeRemaining) {
+
+    void setTimerValue(int timeRemaining) {
         turnTimerLabel.setText(new StringBuilder("Turn Timer: " + timeRemaining));
     }
 
@@ -162,5 +160,9 @@ public abstract class Phase extends Stage {
         super.draw();
     }
 
+    /**
+     * abstract method for writing phase specific rendering
+     * @param batch
+     */
     public abstract void visualisePhase(SpriteBatch batch);
 }
