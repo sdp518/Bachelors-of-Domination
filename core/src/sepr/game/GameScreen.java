@@ -128,6 +128,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
     }
 
+
     /**
      *
      * @return time remaining in turn in seconds
