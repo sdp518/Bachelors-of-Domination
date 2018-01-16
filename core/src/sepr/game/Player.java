@@ -1,13 +1,6 @@
 package sepr.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-
-import java.util.HashMap;
 
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
@@ -18,14 +11,14 @@ public abstract class Player {
     private String playerName;
     private int troopsToAllocate; // how many troops the player has to allocate at the start of their next reinforcement phase
     private Color sectorColour; // what colour to shade sectors owned by the player
-    protected GameSetupScreen.PlayerType playerType;
+    protected PlayerType playerType;
 
     /**
      *
      * @param id player's unique identifier
      * @param collegeName display name for this player
      */
-    public Player(int id, GameSetupScreen.CollegeName collegeName, Color sectorColour, GameSetupScreen.PlayerType playerType, String playerName) {
+    public Player(int id, GameSetupScreen.CollegeName collegeName, Color sectorColour, PlayerType playerType, String playerName) {
         this.id = id;
         this.collegeName = collegeName;
         //this.playerName = playerName;

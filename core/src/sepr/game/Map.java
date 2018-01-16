@@ -36,12 +36,13 @@ public class Map{
      * Initialises the sectors as objects storing them in a HashMap
      * Initialises the sector colours storing them in a HashMap
      */
-    public Map() {
+    public Map(HashMap<Integer, Player> players) {
         this.loadSectors();
         this.loadColleges();
         this.setupFont();
 
         particles = new ArrayList<UnitChangeParticle>();
+        this.allocateSectors(players);
     }
 
     /**
@@ -76,7 +77,7 @@ public class Map{
         int unitsInSector = Integer.parseInt(sectorData[3]);
         int reinforcementsProvided = Integer.parseInt(sectorData[4]);
         String college = sectorData[5];
-        boolean neutral = Boolean.getBoolean(sectorData[6]);
+        boolean neutral = Boolean.parseBoolean(sectorData[6]);
         int[] adjacentSectors = strToIntArray(sectorData[7]);
         int sectorX = Integer.parseInt(sectorData[8]);
         int sectorY = Integer.parseInt(sectorData[9]);
@@ -174,26 +175,27 @@ public class Map{
     }
 
     /**
-     * Allocate sectors to each player in a balanced manner.
-     * Just need the finished csv file so we can calculate Total reinforcements but apart from
-     * that the method is finished. The method also has an if statement to catch a divide by zero
-     * error in players.size(). This won't be needed as later on when more of the game implementation is
-     * introduced this method will only be called when all players have been declared after the intermediate
-     * setup menu.
+     *
      */
     public void allocateSectors(HashMap<Integer, Player> players) {
         if (players.size() == 0) {
             throw new RuntimeException("Cannot allocate sectors to 0 players");
         }
 
-        PlayerType neutralAI = PlayerType.PLAYER_NEUTRAL_AI;
+        // search for neutral player
+        int neutralPlayerId = -1;
+        for (Player player : players.values()) {
+            if (player.playerType.equals(PlayerType.NEUTRAL_AI)) {
+                neutralPlayerId = player.getId();
+                break;
+            }
+        }
 
-        for (Integer i : players.keySet()) {
-            if (players.containsValue(neutralAI)){
-                for (Integer j : this.getSectorIds()){
-                    if (this.getSector(j).isNeutral()){
-                        this.getSector(j).setOwner(players.get(i));
-                    }
+        // set any default neutral sectors to the neutral player
+        if (neutralPlayerId != -1) {
+            for (Sector sector : sectors.values()) {
+                if (sector.isNeutral()  && !sector.isDecor()) {
+                    sector.setOwner(players.get(neutralPlayerId));
                 }
             }
         }
@@ -201,23 +203,28 @@ public class Map{
         HashMap<Integer, Integer> playerReinforcements = new HashMap<Integer, Integer>(); // mapping of player id to amount of reinforcements they will receive currently
         // set all players to currently be receiving 0 reinforcements
         for (Integer i : players.keySet()) {
-            playerReinforcements.put(i, 0);
+            if (i != neutralPlayerId) playerReinforcements.put(i, 0);
         }
 
         int lowestReinforcementId = players.get(0).getId(); // id of player currently receiving the least reinforcements
-        for (Integer i : this.getSectorIds()) {
-            if (this.getSector(i).isDecor()) {
-                continue; // skip allocating sector if it is a decor sector
-            }
-            this.getSector(i).setOwner(players.get(lowestReinforcementId));
-            playerReinforcements.put(lowestReinforcementId, playerReinforcements.get(lowestReinforcementId) + this.getSector(i).getReinforcementsProvided()); // updates player reinforcements hashmap
+        List<Integer> sectorIdsRandOrder = new ArrayList<Integer>(getSectorIds());
+        Collections.shuffle(sectorIdsRandOrder);
 
-            // find the new player with lowest reinforcements
-            int minReinforcements = Collections.min(playerReinforcements.values()); // get lowest reinforcement amount
-            for (Integer j : playerReinforcements.keySet()) {
-                if (playerReinforcements.get(j) == minReinforcements) { // if this player has the reinforcements matching the min amount set them to the new lowest player
-                    lowestReinforcementId = j;
-                    break;
+        for (Integer i : sectorIdsRandOrder) {
+            if (!sectors.get(i).isAllocated()) {
+                if (this.getSector(i).isDecor()) {
+                    continue; // skip allocating sector if it is a decor sector
+                }
+                this.getSector(i).setOwner(players.get(lowestReinforcementId));
+                playerReinforcements.put(lowestReinforcementId, playerReinforcements.get(lowestReinforcementId) + this.getSector(i).getReinforcementsProvided()); // updates player reinforcements hashmap
+
+                // find the new player with lowest reinforcements
+                int minReinforcements = Collections.min(playerReinforcements.values()); // get lowest reinforcement amount
+                for (Integer j : playerReinforcements.keySet()) {
+                    if (playerReinforcements.get(j) == minReinforcements) { // if this player has the reinforcements matching the min amount set them to the new lowest player
+                        lowestReinforcementId = j;
+                        break;
+                    }
                 }
             }
         }

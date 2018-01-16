@@ -13,7 +13,7 @@ public class PlayerHuman extends Player {
      * @param sectorColour
      */
     public PlayerHuman(int id, GameSetupScreen.CollegeName collegeName, Color sectorColour, String playerName) {
-        super(id, collegeName, sectorColour, GameSetupScreen.PlayerType.HUMAN, playerName);
+        super(id, collegeName, sectorColour, PlayerType.HUMAN, playerName);
     }
 
     @Override

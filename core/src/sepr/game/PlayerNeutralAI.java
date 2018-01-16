@@ -13,6 +13,6 @@ public class PlayerNeutralAI extends PlayerAI{
      */
     public PlayerNeutralAI(int id, GameSetupScreen.CollegeName collegeName, String playerName) {
         super(id, collegeName, Color.WHITE, playerName);
-        playerType = GameSetupScreen.PlayerType.NEUTRAL_AI;
+        playerType = PlayerType.NEUTRAL_AI;
     }
 }

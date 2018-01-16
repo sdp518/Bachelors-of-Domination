@@ -53,7 +53,6 @@ public class GameScreen implements Screen, InputProcessor{
     public GameScreen(Main main) {
         this.main = main;
 
-        this.map = new Map();
         this.gameplayBatch = new SpriteBatch();
         this.gameplayCamera = new OrthographicCamera();
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
@@ -87,9 +86,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.maxTurnTime = maxTurnTime;
         this.turnTimeStart = System.currentTimeMillis();
 
-        this.map.allocateSectors(this.players);
-
-        resetCameraPosition();
+        this.map = new Map(this.players);
 
         gameSetup = true;
     }
@@ -143,7 +140,7 @@ public class GameScreen implements Screen, InputProcessor{
      * @throws IllegalArgumentException if the supplied id does not match any of the players
      */
     protected Player getPlayerById(int id) throws IllegalArgumentException {
-        if (!players.containsKey(id)) throw new IllegalArgumentException("Cannot fetch player as id does not exist");
+        if (!players.containsKey(id)) throw new IllegalArgumentException("Cannot fetch player as id: " + id + " does not exist");
         return players.get(id);
     }
 

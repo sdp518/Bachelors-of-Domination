@@ -24,6 +24,7 @@ public class Sector {
     private int sectorCentreY;
     private boolean decor; // is this sector for visual purposes only, i.e. lakes are decor
     private String fileName;
+    private boolean allocated; // becomes true once the sector has been allocated
 
     /**
      * @param id sector id
@@ -56,6 +57,7 @@ public class Sector {
         this.sectorCentreY = 1080 - sectorCentreY;
         this.decor = decor;
         this.fileName = fileName;
+        this.allocated = false;
     }
 
     public int getId() { return id; }
@@ -73,6 +75,7 @@ public class Sector {
     public void setOwner(Player player) {
         this.ownerId = player.getId();
         this.changeSectorColor(player.getSectorColour());
+        this.allocated = true;
     }
 
     public String getDisplayName() {
@@ -128,6 +131,10 @@ public class Sector {
     }
 
     public boolean isNeutral() { return neutral; }
+
+    public boolean isAllocated() {
+        return allocated;
+    }
 
     public String getCollege() { return college; }
 
