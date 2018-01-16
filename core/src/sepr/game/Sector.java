@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
- * Created by Dom's Surface Mark 2 on 16/11/2017.
+ * Created by Dom's Surface Mark 2 on 16/11/2017
  */
 public class Sector {
     private int id;
@@ -15,6 +15,8 @@ public class Sector {
     private String displayName;
     private int unitsInSector;
     private int reinforcementsProvided;
+    private String college;
+    private boolean neutral;
     private int[] adjacentSectorIds; // <-- May want to reconsider structure
     private Texture sectorTexture;
     private Pixmap sectorPixmap;
@@ -45,6 +47,8 @@ public class Sector {
         this.displayName = displayName;
         this.unitsInSector = unitsInSector;
         this.reinforcementsProvided = reinforcementsProvided;
+        this.college = college;
+        this.neutral = neutral;
         this.adjacentSectorIds = adjacentSectorIds;
         this.sectorTexture = sectorTexture;
         this.sectorPixmap = sectorPixmap;
@@ -54,9 +58,7 @@ public class Sector {
         this.fileName = fileName;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
     public int getPrevOwnerId() { return prevOwnerId; }
 
@@ -124,6 +126,10 @@ public class Sector {
     public boolean isDecor() {
         return decor;
     }
+
+    public boolean isNeutral() { return neutral; }
+
+    public String getCollege() { return college; }
 
     public String getFileName() {
         return fileName;

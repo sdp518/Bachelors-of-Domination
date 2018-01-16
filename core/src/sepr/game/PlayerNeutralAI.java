@@ -8,10 +8,11 @@ import com.badlogic.gdx.graphics.Color;
 public class PlayerNeutralAI extends PlayerAI{
 
     /**
-     * @param id           player's unique identifier
+     * @param id player's unique identifier
      * @param collegeName  display name for this player
      */
-    public PlayerNeutralAI(int id, GameSetupScreen.CollegeName collegeName) {
-        super(id, collegeName, Color.WHITE);
+    public PlayerNeutralAI(int id, GameSetupScreen.CollegeName collegeName, String playerName) {
+        super(id, collegeName, Color.WHITE, playerName);
+        playerType = GameSetupScreen.PlayerType.NEUTRAL_AI;
     }
 }

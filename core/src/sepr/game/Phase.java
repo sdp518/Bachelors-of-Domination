@@ -1,12 +1,16 @@
 package sepr.game;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public abstract class Phase extends Stage {
@@ -20,10 +24,14 @@ public abstract class Phase extends Stage {
     private Table bottomBarLeftPart;
     private TurnPhaseType turnPhase;
 
+    private Label playerNameLabel;
+    private Label troopsNumberLabel;
+    private Label turnTimerLabel;
+    private Image collegeLogo;
+
+    private static Texture gameHUDBottomBarLeftPartTexture;
 
     public Phase(GameScreen gameScreen, Map map, TurnPhaseType turnPhase) {
-        //super();
-
         this.setViewport(new ScreenViewport());
 
         this.gameScreen = gameScreen;
@@ -36,6 +44,8 @@ public abstract class Phase extends Stage {
         this.table.setFillParent(true); // make ui table fill the entire screen
         this.addActor(table);
         this.table.setDebug(true); // enable table drawing for ui debug
+
+        gameHUDBottomBarLeftPartTexture = new Texture("ui/HD-assets/HUD-Bottom-Bar-Left-Part.png");
 
         this.setupUi();
     }
@@ -50,13 +60,13 @@ public abstract class Phase extends Stage {
             }
         });
         bottomBarRightPart = WidgetFactory.genGameHUDBottomBarRightPart("INIT");
-        bottomBarLeftPart = WidgetFactory.genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName.ALCUIN, "Player1", "Troops Available: 13", "Turn Timer: " + gameScreen.getTurnTimeElapsed());
+        Table bottomBarLeftPart = genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName.ALCUIN, "Player1", "Troops Available: 13", "Turn Timer: " + gameScreen.getTurnTimeRemaining());
 
         table.top().center();
         table.add(WidgetFactory.genGameHUDTopBar(turnPhase, new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //main.setMenuScreen();
+                gameScreen.openMenu();
             }
         })).colspan(2).expandX().height(60).width(910);
 
@@ -77,6 +87,38 @@ public abstract class Phase extends Stage {
         setBottomBarText(null);
     }
 
+    /**
+     * Generates the UI widget to be displayed at the bottom left of the HUD
+     * @param collegeName  name of college chosen by player
+     * @param playerName name of the player
+     * @param troopsNumber number of troops that can be placed
+     * @param turnTimer time for the turn
+     * @return table containing the information to display in the HUD
+     */
+    private Table genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName collegeName, String playerName, String troopsNumber, String turnTimer){
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = WidgetFactory.getFontSmall();
+        playerNameLabel = new Label(playerName, style);
+        troopsNumberLabel = new Label(troopsNumber, style);
+        turnTimerLabel = new Label(turnTimer, style);
+        collegeLogo = new Image(WidgetFactory.genCollegeLogoDrawable(collegeName));
+
+        Table table = new Table();
+        table.background(new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarLeftPartTexture)));
+
+        Table subTable = new Table();
+        subTable.setDebug(true);
+        subTable.left().add(collegeLogo);
+        subTable.right().add(playerNameLabel);
+        subTable.row();
+        subTable.add(troopsNumberLabel).colspan(2);
+        subTable.row();
+        subTable.add(turnTimerLabel).colspan(2);
+
+        table.add(subTable);
+
+        return table;
+    }
 
     /**
      * Sets the bar at the bottom of the HUD to the details of the sector currently hovered over
@@ -87,12 +129,21 @@ public abstract class Phase extends Stage {
         if (sector == null) {
             this.bottomBarRightPart.setText("Mouse over a sector to see further details");
         } else {
-            this.bottomBarRightPart.setText(sector.getDisplayName() + " - " + "Owned By: " + sector.getOwnerId() + " - " + "Grants +" + sector.getReinforcementsProvided() + " Troops");
+            this.bottomBarRightPart.setText(sector.getDisplayName() + " - " + "Owned By: " + gameScreen.getPlayerById(sector.getOwnerId()).getPlayerName() + " - " + "Grants +" + sector.getReinforcementsProvided() + " Troops");
         }
     }
 
     public void enterPhase(Player player) {
         this.currentPlayer = player;
+
+
+        playerNameLabel.setText(new StringBuilder(currentPlayer.getCollegeName().getCollegeName()));
+        troopsNumberLabel.setText(new StringBuilder("xx"));
+        collegeLogo.setDrawable(WidgetFactory.genCollegeLogoDrawable(player.getCollegeName()));
+    }
+
+    protected void setTimerValue(int timeRemaining) {
+        turnTimerLabel.setText(new StringBuilder("Turn Timer: " + timeRemaining));
     }
 
     /**
