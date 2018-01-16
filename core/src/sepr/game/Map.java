@@ -1,7 +1,6 @@
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -62,9 +62,9 @@ public class Map{
     }
 
     /**
-     *
-     * @param sectorData
-     * @return
+     * converts an array of sector data to a sector object
+     * @param sectorData sector data taken from the sectorProperties csv file
+     * @return a sector with the properties fo the supplied data
      */
     private Sector sectorDataToSector(String[] sectorData) {
         int sectorId = Integer.parseInt(sectorData[0]);
@@ -86,7 +86,7 @@ public class Map{
     }
 
     /**
-     *
+     * load the sector properties from the sectorProperties csv file
      */
     private void loadSectors() {
         this.sectors = new HashMap<Integer, Sector>();
@@ -108,19 +108,57 @@ public class Map{
     }
 
     /**
-     *
+     * conversion of String type to List<integer> for use in collegeDataToCollege
+     * @param stringData
+     * @return ListArray
      */
-    private void loadColleges() {
+    private List<Integer> strToListInt(String stringData){
+        String[] strArray = stringData.split(" ");
+        List<Integer> listArray = new ArrayList<Integer>(strArray.length);
+        for (int i = 0; i < listArray.size(); i++) {
+            if (strArray[i].equals("")) {
+                continue; //skip if sector not in college
+            }
+            listArray.set(i, Integer.parseInt(strArray[i]));
+        }
+        return listArray;
+    }
+
+    /**
+     *
+     * @param collegeData
+     * @return College(collegeId, displayName, reinforcementAmount, sectorIds)
+     */
+    private College collegeDataToCollege(String[] collegeData){
+        int collegeId = Integer.parseInt(collegeData[0]);
+        String displayName = collegeData[1];
+        int reinforcementAmount = Integer.parseInt(collegeData[2]);
+        List<Integer> sectorIds = strToListInt(collegeData[3]);
+
+        return new College(collegeId, displayName, reinforcementAmount, sectorIds);
+    }
+
+    /**
+     * Accesses collegeProperties.csv to load college data
+     */
+    private void loadColleges(){
         this.colleges = new HashMap<Integer, College>();
 
-        this.colleges.put(0, new College(0, "Hes East", 0, Arrays.asList(0, 1, 2, 3)));
-        this.colleges.put(1, new College(0, "Halifax", 0, Arrays.asList(4,5,6,7)));
-        this.colleges.put(2, new College(0, "Derwent", 0, Arrays.asList(8,9,10,11)));
-        this.colleges.put(3, new College(0, "Alcuin", 0, Arrays.asList(12,13,14)));
-        this.colleges.put(4, new College(0, "Vanbrugh", 0, Arrays.asList(18,19,20)));
-        this.colleges.put(5, new College(0, "Wentworth", 0, Arrays.asList(22,23)));
-        this.colleges.put(6, new College(0, "James", 0, Arrays.asList(24,25,26,27)));
-        this.colleges.put(7, new College(0, "Neutral", 0, Arrays.asList(15,16,17,28,29,30)));
+        String csvFile = "collegeProperties.csv";
+        String line = "";
+        Integer ID = 0;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+                College temp = collegeDataToCollege(line.split(","));
+                this.colleges.put(temp.getId(), temp);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -148,13 +186,25 @@ public class Map{
             throw new RuntimeException("Cannot allocate sectors to 0 players");
         }
 
+        PlayerType neutralAI = PlayerType.PLAYER_NEUTRAL_AI;
+
+        for (Integer i : players.keySet()) {
+            if (players.containsValue(neutralAI)){
+                for (Integer j : this.getSectorIds()){
+                    if (this.getSector(j).isNeutral()){
+                        this.getSector(j).setOwner(players.get(i));
+                    }
+                }
+            }
+        }
+
         HashMap<Integer, Integer> playerReinforcements = new HashMap<Integer, Integer>(); // mapping of player id to amount of reinforcements they will receive currently
         // set all players to currently be receiving 0 reinforcements
         for (Integer i : players.keySet()) {
             playerReinforcements.put(i, 0);
         }
 
-        int lowestReinforcementId = players.get(0).getId();; // id of player currently receiving the least reinforcements
+        int lowestReinforcementId = players.get(0).getId(); // id of player currently receiving the least reinforcements
         for (Integer i : this.getSectorIds()) {
             if (this.getSector(i).isDecor()) {
                 continue; // skip allocating sector if it is a decor sector
@@ -262,7 +312,7 @@ public class Map{
     }
 
     /**
-     *
+     * draws the map and the number of units in each sector and the units change particle effect
      * @param batch
      */
     public void draw(SpriteBatch batch) {

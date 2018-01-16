@@ -1,5 +1,6 @@
 package sepr.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,8 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import javafx.scene.control.Tab;
+import javafx.util.Pair;
 
 import javax.xml.soap.Text;
+import java.util.HashMap;
 
 /**
  * Created by Dom's Surface Mark 2 on 28/11/2017.
@@ -36,7 +40,6 @@ public class WidgetFactory {
     private static Texture offSwitchTexture;
   
     private static Texture gameHUDBottomBarRightPartTexture;
-    private static Texture gameHUDBottomBarLeftPartTexture;
     private static Texture gameHUDTopBarTexture;
     private static Texture endPhaseBtnTexture;
 
@@ -58,13 +61,12 @@ public class WidgetFactory {
     private static Texture vanbrughLogoTexture;
     private static Texture wentworthLogoTexture;
 
-    private static FileHandle alteDinBig;
-    private static FileHandle alteDinSmall;
+    private static BitmapFont fontBig;
+    private static BitmapFont fontSmall;
 
 
     public WidgetFactory() {
-        alteDinBig = new FileHandle("ui/Font/Alte-DIN-Big.fnt");
-        alteDinSmall = new FileHandle("ui/Font/Alte-DIN-Small.fnt");
+        setupFont();
 
         basicButtonTexture = new Texture("ui/HD-assets/Menu-Button-Full.png");
         mainMenuTopBarTexture = new Texture("ui/HD-assets/Main-Menu-Top-Bar.png");
@@ -98,11 +100,17 @@ public class WidgetFactory {
         wentworthLogoTexture = new Texture("ui/HD-assets/wentworth-logo.png");
 
         gameHUDBottomBarRightPartTexture = new Texture("ui/HD-assets/HUD-Bottom-Bar-Right-Part.png");
-        gameHUDBottomBarLeftPartTexture = new Texture("ui/HD-assets/HUD-Bottom-Bar-Left-Part.png");
         gameHUDTopBarTexture = new Texture("ui/HD-assets/HUD-Top-Bar.png");
         endPhaseBtnTexture = new Texture("ui/HD-assets/End-Phase-Button.png");
 
 
+    }
+
+    private void setupFont() {
+        FileHandle alteDinBig = new FileHandle("ui/Font/Alte-DIN-Big.fnt");
+        FileHandle alteDinSmall = new FileHandle("ui/Font/Alte-DIN-Small.fnt");
+        fontBig = new BitmapFont(alteDinBig);
+        fontSmall = new BitmapFont(alteDinSmall);
     }
 
     /**
@@ -128,7 +136,7 @@ public class WidgetFactory {
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); // create style for buttons to use
         style.up = new TextureRegionDrawable(new TextureRegion(basicButtonTexture, 0, 0, 857, 123)); // image for button to use in default state
         style.down = new TextureRegionDrawable(new TextureRegion(basicButtonTexture, 0, 123, 857, 123)); // image for button to use when pressed down
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
 
         return new TextButton(buttonText, style);
     }
@@ -138,7 +146,7 @@ public class WidgetFactory {
         Image leftPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Left-Part-Top-Bar.png"))));
         Image rightPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Right-Part-Top-Bar.png"))));
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont(alteDinBig);
+        style.font = fontBig;
         Label textLabel = new Label(text, style);
 
         Table topBar = new Table();
@@ -155,7 +163,7 @@ public class WidgetFactory {
 
         Image leftPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Left-Part-End-Bottom-Bar.png"))));
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = new BitmapFont(alteDinSmall);
+        buttonStyle.font = fontSmall;
         buttonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Esc-Button-Bottom-Bar.png")));
         buttonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Esc-Button-Bottom-Bar.png")));
         final TextButton escButton = new TextButton(buttonText, buttonStyle);
@@ -165,7 +173,7 @@ public class WidgetFactory {
 
 
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
         style.background = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Right-Part-Bottom-Bar.png")));
         String text = "BACHELORS OF" + "\n" + "DOMINATION";
         Label textLabel = new Label(text, style);
@@ -229,7 +237,7 @@ public class WidgetFactory {
 
     public static Label genPlayerLabel(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
         style.background = new TextureRegionDrawable(new TextureRegion(playerLabelTexture));
 
         Label label = new Label(labelText, style);
@@ -240,7 +248,7 @@ public class WidgetFactory {
 
     public static Label genMenuBtnLabel(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
         style.background = new TextureRegionDrawable(new TextureRegion(menuBtnLabelTexture));
 
         return new Label(labelText, style);
@@ -248,7 +256,7 @@ public class WidgetFactory {
 
     public static Label genNameBoxLabel(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
         Label label = new Label(labelText, style);
         label.setAlignment(Align.left);
 
@@ -257,7 +265,7 @@ public class WidgetFactory {
 
     public static TextField playerNameTextField(String name){
         TextField.TextFieldStyle  style = new TextField.TextFieldStyle();
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
         style.fontColor = new Color(Color.WHITE);
 
         return new TextField(name, style);
@@ -299,7 +307,7 @@ public class WidgetFactory {
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
         style.up = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture, 0, 0, 723, 123));
         style.down = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture, 0, 123, 723, 123));
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
 
         return new TextButton(buttonText,style);
     }
@@ -308,7 +316,7 @@ public class WidgetFactory {
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
         style.up = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,0, 348, 123));
         style.down = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,123, 348, 123));
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
 
         return new TextButton(buttonText, style);
     }
@@ -322,7 +330,7 @@ public class WidgetFactory {
      */
     public static Label genGameHUDBottomBarRightPart(String labelText) {
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
         style.background = new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarRightPartTexture));
 
         Label label = new Label(labelText, style);
@@ -331,49 +339,15 @@ public class WidgetFactory {
         return label;
     }
 
-    /**
-     * Generates the UI widget to be displayed at the bottom left of the HUD
-     * @param collegeName  name of college chosen by player
-     * @param playerName name of the player
-     * @param troopsNumber number of troops that can be placed
-     * @param turnTimer time for the turn
-     * @return table containing the information to display in the HUD
-     */
-    public static Table genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName collegeName, String playerName, String troopsNumber, String turnTimer){
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont(alteDinSmall);
-        Label playerNameLabel = new Label(playerName, style);
-        Label troopsNumberLabel = new Label(troopsNumber, style);
-        Label turnTimerLabel = new Label(turnTimer, style);
-        Image collegeLogo = new Image(genCollegeLogoDrawable(collegeName));
-
-        Table table = new Table();
-        table.background(new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarLeftPartTexture)));
-
-        Table subTable = new Table();
-        subTable.setDebug(true);
-        subTable.left().add(collegeLogo);
-        subTable.right().add(playerNameLabel);
-        subTable.row();
-        subTable.add(troopsNumberLabel).colspan(2);
-        subTable.row();
-        subTable.add(turnTimerLabel).colspan(2);
-
-        table.add(subTable);
-
-        return table;
-    }
-
-
     public static Table genGameHUDTopBar(TurnPhaseType turnPhase, ChangeListener changeListener) {
         TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
-        btnStyle.font = new BitmapFont(alteDinSmall);
+        btnStyle.font = fontSmall;
         TextButton exitButton = new TextButton("QUIT", btnStyle);
 
         exitButton.addListener(changeListener);
 
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = new BitmapFont(alteDinSmall);
+        style.font = fontSmall;
 
         String text = "";
         switch (turnPhase) {
@@ -407,8 +381,8 @@ public class WidgetFactory {
      */
     public static SelectBox<String> genStyledSelectBox(String[] items) {
         SelectBox.SelectBoxStyle style = new SelectBox.SelectBoxStyle();
-        style.font = new BitmapFont(alteDinSmall);
-        style.listStyle = new List.ListStyle(new BitmapFont(alteDinSmall), Color.BLACK, Color.BLACK, new TextureRegionDrawable(new TextureRegion(sliderBarTexture)));
+        style.font = fontSmall;
+        style.listStyle = new List.ListStyle(fontSmall, Color.BLACK, Color.BLACK, new TextureRegionDrawable(new TextureRegion(sliderBarTexture)));
         style.scrollStyle = new ScrollPane.ScrollPaneStyle(new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)), new TextureRegionDrawable(new TextureRegion(sliderKnobTexture)));
 
         SelectBox<String> selectBox = new SelectBox<String>(style);
@@ -441,5 +415,13 @@ public class WidgetFactory {
         style.knobOver = new TextureRegionDrawable(new TextureRegion(sliderKnobTexture));
 
         return new Slider(0f, 1f, 0.01f, false, style);
+    }
+
+    public static BitmapFont getFontBig() {
+        return fontBig;
+    }
+
+    public static BitmapFont getFontSmall() {
+        return fontSmall;
     }
 }

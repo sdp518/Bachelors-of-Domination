@@ -1,11 +1,10 @@
 package sepr.game;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 
 /**
- *
+ * stores the properties of a college
  */
 public class College {
 
@@ -15,11 +14,11 @@ public class College {
     private String displayName; // name of college shown to players
 
     /**
-     *
-     * @param id
-     * @param displayName
-     * @param reinforcementAmount
-     * @param sectorIds
+     * initalises a new college object with the specified id; display name; reinforcement bonus and sectors within the college
+     * @param id the college's unique id
+     * @param displayName the colleges name, that will be displayed
+     * @param reinforcementAmount the amount of troops provided to the player if they control all colleges in the sector
+     * @param sectorIds sector ids of the sectors that belong to this college
      */
     public College(int id, String displayName, int reinforcementAmount, List<Integer> sectorIds){
         this.id = id;
@@ -27,6 +26,12 @@ public class College {
         this.sectorIds = sectorIds;
         this.reinforcementAmount = reinforcementAmount;
     }
+
+    /**
+     *
+     * @return the unique id of this college
+     */
+    public int getId() { return id; }
 
     /**
      * @param reinforcementAmount the amount of reinforcements provided by the college each turn

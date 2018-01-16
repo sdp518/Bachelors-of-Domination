@@ -1,7 +1,7 @@
 package sepr.game;
 
 /**
- * Created by Dom's Surface Mark 2 on 22/12/2017.
+ * exception for when invalid player data is supplied
  */
 public class GameSetupException extends Exception {
     public enum GameSetupExceptionType {
