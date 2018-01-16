@@ -5,25 +5,19 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import javafx.util.Pair;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import java.util.HashMap;
 
 /**
  * screen for setting up the game
@@ -50,39 +44,6 @@ public class GameSetupScreen implements Screen{
     private CheckBox turnTimerSwitch; // switch for enabling the turn timer
 
     private Texture collegeTableBackground;
-
-    /**
-     * Possible types of player
-     */
-    public enum PlayerType {
-        NONE("NONE"),
-        HUMAN("HUMAN PLAYER"),
-        AI("A.I."),
-        NEUTRAL_AI("NEUTAL A.I.");
-
-        private final String shortCode;
-
-        PlayerType(String code){
-            this.shortCode = code;
-        }
-
-        public String getPlayerType(){
-            return this.shortCode;
-        }
-
-        /**
-         * converts the string representation of the enum to the enum value
-         * @throws IllegalArgumentException if the text does not match any of the enum's string values
-         * @param text string representation of the enum
-         * @return the enum value of the provided text
-         */
-        public static PlayerType fromString(String text) throws IllegalArgumentException {
-            for (PlayerType playerType : PlayerType.values()) {
-                if (playerType.getPlayerType().equals(text)) return playerType;
-            }
-            throw new IllegalArgumentException("Text parameter must match one of the enums");
-        }
-    }
 
     /**
      * The colleges available to play as
