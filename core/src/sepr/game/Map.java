@@ -62,9 +62,9 @@ public class Map{
     }
 
     /**
-     *
-     * @param sectorData
-     * @return
+     * converts an array of sector data to a sector object
+     * @param sectorData sector data taken from the sectorProperties csv file
+     * @return a sector with the properties fo the supplied data
      */
     private Sector sectorDataToSector(String[] sectorData) {
         int sectorId = Integer.parseInt(sectorData[0]);
@@ -86,7 +86,7 @@ public class Map{
     }
 
     /**
-     *
+     * load the sector properties from the sectorProperties csv file
      */
     private void loadSectors() {
         this.sectors = new HashMap<Integer, Sector>();
@@ -312,7 +312,7 @@ public class Map{
     }
 
     /**
-     *
+     * draws the map and the number of units in each sector and the units change particle effect
      * @param batch
      */
     public void draw(SpriteBatch batch) {

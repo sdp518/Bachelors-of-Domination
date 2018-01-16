@@ -22,58 +22,8 @@ public class Main extends Game implements ApplicationListener {
 	public void create () {
 		new WidgetFactory(); // setup widget factory for generating UI components
 
-		HashMap<Integer, Player> players = new HashMap<Integer, Player>();
-		players.put(0, new Player(0, GameSetupScreen.CollegeName.ALCUIN , Color.BLUE) {
-			@Override
-			protected void processAttackPhase() {
-
-			}
-
-			@Override
-			protected void processMovePhase() {
-
-			}
-
-			@Override
-			protected int processAllocationPhase(int amount) {
-				return 0;
-			}
-		});
-		players.put(1, new Player(1, GameSetupScreen.CollegeName.DERWENT, Color.RED) {
-			@Override
-			protected void processAttackPhase() {
-
-			}
-
-			@Override
-			protected void processMovePhase() {
-
-			}
-
-			@Override
-			protected int processAllocationPhase(int amount) {
-				return 0;
-			}
-		});
-		players.put(2, new Player(2, GameSetupScreen.CollegeName.VANBRUGH, Color.GREEN) {
-			@Override
-			protected void processAttackPhase() {
-
-			}
-
-			@Override
-			protected void processMovePhase() {
-
-			}
-
-			@Override
-			protected int processAllocationPhase(int amount) {
-				return 0;
-			}
-		});
-
 		this.menuScreen = new MenuScreen(this);
-		this.gameScreen = new GameScreen(this, players, false, 100);
+		this.gameScreen = new GameScreen(this);
 		this.optionsScreen = new OptionsScreen(this);
 		this.gameSetupScreen = new GameSetupScreen(this);
 

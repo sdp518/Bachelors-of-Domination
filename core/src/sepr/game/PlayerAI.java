@@ -12,8 +12,8 @@ public class PlayerAI extends Player {
      * @param collegeName  display name for this player
      * @param sectorColour
      */
-    public PlayerAI(int id, GameSetupScreen.CollegeName collegeName, Color sectorColour) {
-        super(id, collegeName, sectorColour);
+    public PlayerAI(int id, GameSetupScreen.CollegeName collegeName, Color sectorColour, String playerName) {
+        super(id, collegeName, sectorColour, GameSetupScreen.PlayerType.AI, playerName);
     }
 
     @Override
