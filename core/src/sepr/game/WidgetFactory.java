@@ -150,7 +150,7 @@ public class WidgetFactory {
         Label textLabel = new Label(text, style);
 
         Table topBar = new Table();
-        topBar.setDebug(true);
+        topBar.setDebug(false);
         topBar.left();
         topBar.add(leftPart).height(60);
         topBar.add(textLabel).padRight(20).padLeft(20);
@@ -179,15 +179,15 @@ public class WidgetFactory {
         Label textLabel = new Label(text, style);
         textLabel.setAlignment(0, 40);
 
-        Table topBar = new Table();
-        topBar.setDebug(true);
-        topBar.right();
-        topBar.add(leftPart).height(60).width(45).bottom();
-        topBar.add(escButton).height((float) 51.5).width(190).bottom();
-        topBar.add(centerPart).height(60).fillX().bottom();
-        topBar.add(textLabel).height(120).width(280);
+        Table bottomBar = new Table();
+        bottomBar.setDebug(false);
+        bottomBar.left();
+        bottomBar.add(leftPart).height(60).width(45).bottom();
+        bottomBar.add(escButton).height((float) 51.5).width(190).bottom();
+        bottomBar.add(centerPart).height(60).fillX().bottom();
+        bottomBar.add(textLabel).height(120).width(280);
 
-        return topBar;
+        return bottomBar;
     }
 
     public static Image genMapGraphic() {
