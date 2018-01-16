@@ -135,7 +135,8 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     public int getTurnTimeElapsed(){
-        return this.turnTimeElapsed;
+        //return this.turnTimeElapsed;
+        return 0;
     }
 
     /**

@@ -17,6 +17,12 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import javafx.util.Pair;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import java.util.HashMap;
 
 
@@ -458,7 +464,21 @@ public class GameSetupScreen implements Screen{
      * @throws GameSetupException if name conditions are not met
      */
     private void validatePlayerNames() throws GameSetupException{
-
+        Set<String> appeared = new HashSet();
+        for (int i = 0; i < playerNames.length; i++) {
+            Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+            Matcher m = p.matcher(playerNames[i].getText());
+            boolean b = m.find();
+            if (playerNames[i].getText().length() < 3){
+                throw new GameSetupException(GameSetupException.GameSetupExceptionType.INVALID_PLAYER_NAME);
+            }
+            else if (b){
+                throw new GameSetupException(GameSetupException.GameSetupExceptionType.INVALID_PLAYER_NAME);
+            }
+            else if (!appeared.add(playerNames[i].getText())) {
+                throw new GameSetupException(GameSetupException.GameSetupExceptionType.DUPLICATE_PLAYER_NAME);
+            }
+        }
     }
 
     /**
@@ -467,7 +487,12 @@ public class GameSetupScreen implements Screen{
      * @throws GameSetupException if college has been chosen more than once
      */
     private void validateCollegeSelection() throws GameSetupException{
-
+        Set<String> appeared = new HashSet();
+        for (int i = 0; i < playerNames.length; i++) {
+            if (!appeared.add(playerColleges[i].getKey().getText().toString())) {
+                throw new GameSetupException(GameSetupException.GameSetupExceptionType.DUPLICATE_COLLEGE_SELECTION);
+            }
+        }
     }
 
     /**
