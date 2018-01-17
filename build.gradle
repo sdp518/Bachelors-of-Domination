@@ -46,10 +46,19 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java"
 
+    sourceSets.test.java.srcDirs = ["/test", "src/"]
 
     dependencies {
+        compile 'org.junit.jupiter:junit-jupiter-api'
+        compile 'junit:junit:4.12'
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "org.mockito:mockito-all:2.2.7"
+
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
     }
 }
 
