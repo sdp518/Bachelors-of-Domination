@@ -196,7 +196,7 @@ public class WidgetFactory {
      * @param college String to be used to display the college
      * @param stage The stage to draw the box onto
      */
-    public static void dialogBox(String college, Stage stage) {
+    public static void collegeLostDialogBox(String college, Stage stage) {
         Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
         Dialog dialog = new Dialog("College Lost!", skin) {
             protected void result(Object object) {
@@ -206,6 +206,42 @@ public class WidgetFactory {
         dialog.text("Oh no! You lost " + college + "!");
         dialog.button("Ok", 1L);
         dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param bonusTroops Integer used to provide the bonus troops provided by conquered tile
+     * @param maxTroops Interger used to provide troops on attacking tile
+     * @param stage The stage to draw the box onto
+     *
+     * @return Integer of troops to be moved to conquered tile
+     */
+    public static int attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        final Slider slider = new Slider(0, (maxTroops - 1), 1, false, skin);
+        final Label sliderValue = new Label("0", skin);
+        final int[] movedTroops = new int[1];
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                sliderValue.setText(new StringBuilder((int)slider.getValue() + ""));
+            }
+        });
+
+        Dialog dialog = new Dialog("Success!", skin) {
+            protected void result(Object object) {
+                movedTroops[0] = (int)slider.getValue();
+            }
+        };
+        dialog.text("Congratulations! You have earned " + bonusTroops + " bonus troops!\nHow many troops would you like to move?");
+        dialog.getContentTable().add(slider).padLeft(20).padRight(20).align(Align.left).expandX();
+        dialog.getContentTable().add(sliderValue).padLeft(20).padRight(20).align(Align.right);
+        dialog.getContentTable().row();
+        dialog.button("Ok", 1L);
+        dialog.show(stage);
+
+        return movedTroops[0];
     }
 
     public static TextButton genBasicButton(String buttonText) {

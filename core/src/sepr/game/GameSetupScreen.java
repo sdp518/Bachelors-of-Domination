@@ -437,22 +437,22 @@ public class GameSetupScreen implements Screen{
     private void validatePlayerConfiguration() throws GameSetupException{
         int totalNumPlayers = 0;
         boolean humanPlayerPresent = false;
-        for (Label label : playerTypes) {
-            if (label.getText().equals(PlayerType.HUMAN.getPlayerType())) {
-                totalNumPlayers++;
+        for (int i = 0; i < playerNames.length; i++) {
+            if (playerTypes[i].getText().toString().equals("HUMAN PLAYER")) {
+                totalNumPlayers = totalNumPlayers + 1;
                 humanPlayerPresent = true;
-            } else if (label.getText().equals(PlayerType.AI.getPlayerType())) {
-                totalNumPlayers++;
+            } else if (playerTypes[i].getText().toString().equals("A.I.")) {
+                totalNumPlayers = totalNumPlayers + 1;
             }
         }
-        /*  TOTAL NUM PLAYERS not being added to for some reason so commented out as always throwing error
         if (totalNumPlayers < 2) { // must be at least two players
             throw new GameSetupException(GameSetupException.GameSetupExceptionType.MINIMUM_TWO_PLAYERS);
         } else if (!humanPlayerPresent) { // no human player present
             throw new GameSetupException(GameSetupException.GameSetupExceptionType.NO_HUMAN_PLAYER);
         } else if (totalNumPlayers == 2 && !neutralPlayerSwitch.isChecked()) { // only two players need neutral player
             throw new GameSetupException(GameSetupException.GameSetupExceptionType.NO_NEUTRAL_PLAYER);
-        }*/
+        }
+        humanPlayerPresent = false;
     }
 
     /**

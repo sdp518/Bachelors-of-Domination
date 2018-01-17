@@ -108,7 +108,7 @@ public class MenuScreen implements Screen {
         table.add(WidgetFactory.genBottomBar("QUIT", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();}
+                WidgetFactory.exitDialogBox(stage);}
 
         })).colspan(2);
     }
