@@ -130,7 +130,8 @@ public class WidgetFactory {
      * @param message String to be used as the content of the dialog
      * @param stage The stage to draw the box onto
      */
-    public static void dialogBox(String title, String message, Stage stage) {
+    public static void errorDialogBox(String title, String message, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
         Dialog dialog = new Dialog(title, skin) {
             protected void result(Object object) {
                 // object is the button pressed
@@ -142,6 +143,118 @@ public class WidgetFactory {
     }
 
     /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param nextPlayer String to be used to display the name of the next player
+     * @param troopsToAllocate Integer to be used to display number of troops
+     * @param stage The stage to draw the box onto
+     */
+    public static void nextTurnDialogBox(String nextPlayer, Integer troopsToAllocate, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        Dialog dialog = new Dialog("Next Turn", skin) {
+            protected void result(Object object) {
+                // object is the button pressed
+            }
+        };
+        dialog.text("Next Player: " + nextPlayer + "\nTroops to Allocate: " + troopsToAllocate);
+        dialog.button("Ok", 1L);
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param stage The stage to draw the box onto
+     */
+    public static void exitDialogBox(Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        Dialog dialog = new Dialog("Quit", skin) {
+            protected void result(Object object) {
+                if (object.toString() != "0"){
+                    System.exit(0);
+                    }
+            }
+        };
+        dialog.text("Are you sure you want to exit the game?");
+        dialog.button("Yes", "1");
+        dialog.button("No", "0");
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param college String to be used to display which college has been conquered
+     * @param troops Integer to be used to display the troop bonus
+     * @param stage The stage to draw the box onto
+     */
+    public static void collegeConqueredDialogBox(String college, Integer troops, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        Dialog dialog = new Dialog("College Conquered!", skin) {
+            protected void result(Object object) {
+                // object is the button pressed
+            }
+        };
+        dialog.text("Congratulations! You conquered " + college + "!\nThis college provides: " + troops + " troops");
+        dialog.button("Ok", 1L);
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param college String to be used to display the college
+     * @param stage The stage to draw the box onto
+     */
+    public static void collegeLostDialogBox(String college, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        Dialog dialog = new Dialog("College Lost!", skin) {
+            protected void result(Object object) {
+                // object is the button pressed
+            }
+        };
+        dialog.text("Oh no! You lost " + college + "!");
+        dialog.button("Ok", 1L);
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param bonusTroops Integer used to provide the bonus troops provided by conquered tile
+     * @param maxTroops Interger used to provide troops on attacking tile
+     * @param stage The stage to draw the box onto
+     *
+     * @return Integer of troops to be moved to conquered tile
+     */
+    public static int attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        final Slider slider = new Slider(0, (maxTroops - 1), 1, false, skin);
+        final Label sliderValue = new Label("0", skin);
+        final int[] movedTroops = new int[1];
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                sliderValue.setText(new StringBuilder((int)slider.getValue() + ""));
+            }
+        });
+      
+        Dialog dialog = new Dialog("Success!", skin) {
+          protected void result(Object object) {
+            movedTroops[0] = (int)slider.getValue();
+        }
+        };
+        dialog.text("Congratulations! You have earned " + bonusTroops + " bonus troops!\nHow many troops would you like to move?");
+        dialog.getContentTable().add(slider).padLeft(20).padRight(20).align(Align.left).expandX();
+        dialog.getContentTable().add(sliderValue).padLeft(20).padRight(20).align(Align.right);
+        dialog.getContentTable().row();
+        dialog.button("Ok", 1L);
+        dialog.show(stage);
+
+        return movedTroops[0];
+    }
+  
+    /**
      * @param stage to display the dialog on
      * @param maxAttackers max number of attackers the player chooses to attack with
      * @param defenders how many units are defending
@@ -150,14 +263,13 @@ public class WidgetFactory {
     public static int attackDialog(Stage stage, int maxAttackers, int defenders, final int[] attackers) {
         final Slider slider = new Slider(0, maxAttackers, 1, false, skin);
         final Label sliderValue = new Label("0", skin);
-
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 sliderValue.setText(new StringBuilder((int)slider.getValue() + ""));
             }
         });
-
+        
         Dialog dialog = new Dialog("Select number of troops to attack with", skin) {
             protected void result(Object object) {
                 // object is the button pressed
