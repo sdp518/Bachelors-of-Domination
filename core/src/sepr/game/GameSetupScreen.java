@@ -472,7 +472,7 @@ public class GameSetupScreen implements Screen{
             validateCollegeSelection();
             validatePlayerConfiguration();
         } catch (GameSetupException e) {
-            WidgetFactory.dialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
+            WidgetFactory.errorDialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
             return;
         }
 

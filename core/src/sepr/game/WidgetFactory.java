@@ -120,7 +120,7 @@ public class WidgetFactory {
      * @param message String to be used as the content of the dialog
      * @param stage The stage to draw the box onto
      */
-    public static void dialogBox(String title, String message, Stage stage) {
+    public static void errorDialogBox(String title, String message, Stage stage) {
         Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
         Dialog dialog = new Dialog(title, skin) {
             protected void result(Object object) {
@@ -128,6 +128,82 @@ public class WidgetFactory {
             }
         };
         dialog.text(message);
+        dialog.button("Ok", 1L);
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param nextPlayer String to be used to display the name of the next player
+     * @param troopsToAllocate Integer to be used to display number of troops
+     * @param stage The stage to draw the box onto
+     */
+    public static void nextTurnDialogBox(String nextPlayer, Integer troopsToAllocate, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        Dialog dialog = new Dialog("Next Turn", skin) {
+            protected void result(Object object) {
+                // object is the button pressed
+            }
+        };
+        dialog.text("Next Player: " + nextPlayer + "\nTroops to Allocate: " + troopsToAllocate);
+        dialog.button("Ok", 1L);
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param stage The stage to draw the box onto
+     */
+    public static void exitDialogBox(Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        Dialog dialog = new Dialog("Quit", skin) {
+            protected void result(Object object) {
+                if (object.toString() != "0"){
+                    System.exit(0);
+                    }
+            }
+        };
+        dialog.text("Are you sure you want to exit the game?");
+        dialog.button("Yes", "1");
+        dialog.button("No", "0");
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param college String to be used to display which college has been conquered
+     * @param troops Integer to be used to display the troop bonus
+     * @param stage The stage to draw the box onto
+     */
+    public static void collegeConqueredDialogBox(String college, Integer troops, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        Dialog dialog = new Dialog("College Conquered!", skin) {
+            protected void result(Object object) {
+                // object is the button pressed
+            }
+        };
+        dialog.text("Congratulations! You conquered " + college + "!\nThis college provides: " + troops + " troops");
+        dialog.button("Ok", 1L);
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param college String to be used to display the college
+     * @param stage The stage to draw the box onto
+     */
+    public static void dialogBox(String college, Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        Dialog dialog = new Dialog("College Lost!", skin) {
+            protected void result(Object object) {
+                // object is the button pressed
+            }
+        };
+        dialog.text("Oh no! You lost " + college + "!");
         dialog.button("Ok", 1L);
         dialog.show(stage);
     }
