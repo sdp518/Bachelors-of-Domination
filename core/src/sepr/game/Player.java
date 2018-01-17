@@ -1,6 +1,7 @@
 package sepr.game;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
@@ -14,9 +15,11 @@ public abstract class Player {
     protected PlayerType playerType;
 
     /**
-     *
      * @param id player's unique identifier
      * @param collegeName display name for this player
+     * @param sectorColour colour that the sectors owned by this player are coloured
+     * @param playerType is this player a Human, AI or Neutral AI
+     * @param playerName player's name to be displayed
      */
     public Player(int id, GameSetupScreen.CollegeName collegeName, Color sectorColour, PlayerType playerType, String playerName) {
         this.id = id;
@@ -45,9 +48,14 @@ public abstract class Player {
     }
 
     /**
-     * Let player attack enemy territories adjacent to its own
+     * abstract method for selecting the amount of troops to attack with for this player
+     * return 0 if the attack is cancelled
+     * @param stage stage to draw dialogs to for getting how many units a human player is attacking with
+     * @param maxAttackers number of troops on the sector used to attack with
+     * @param defenders number of troops on the defending sector
+     * @return number of troops to attack with or 0 if the attack is cancelled
      */
-    protected abstract void processAttackPhase();
+    protected abstract void processAttackPhase(Stage stage, int maxAttackers, int defenders, int[] numOfAttackers);
 
     /**
      * Let player move troops between adjacent friendly territories

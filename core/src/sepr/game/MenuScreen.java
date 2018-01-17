@@ -113,6 +113,8 @@ public class MenuScreen implements Screen {
         })).colspan(2);
     }
 
+    int[] x;
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);

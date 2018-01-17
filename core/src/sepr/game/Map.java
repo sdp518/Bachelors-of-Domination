@@ -252,7 +252,7 @@ public class Map{
     }
 
     public void addUnitsToSectorAnimated(int sectorId, int amount) {
-        //this.sectors.get(sectorId).addUnits(amount);
+        this.sectors.get(sectorId).addUnits(amount);
         this.particles.add(new UnitChangeParticle(amount, new Vector2(sectors.get(sectorId).getSectorCentreX(), sectors.get(sectorId).getSectorCentreY())));
     }
 
