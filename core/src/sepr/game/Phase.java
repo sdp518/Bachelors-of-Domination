@@ -41,7 +41,7 @@ public abstract class Phase extends Stage {
         this.table = new Table();
         this.table.setFillParent(true); // make ui table fill the entire screen
         this.addActor(table);
-        this.table.setDebug(true); // enable table drawing for ui debug
+        this.table.setDebug(false); // enable table drawing for ui debug
 
         gameHUDBottomBarLeftPartTexture = new Texture("ui/HD-assets/HUD-Bottom-Bar-Left-Part.png");
 
@@ -58,7 +58,7 @@ public abstract class Phase extends Stage {
             }
         });
         bottomBarRightPart = WidgetFactory.genGameHUDBottomBarRightPart("INIT");
-        Table bottomBarLeftPart = genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName.ALCUIN, "Player1", "Troops Available: 13", "Turn Timer: DISABLED");
+        Table bottomBarLeftPart = genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName.UNI_OF_YORK, "INIT", "INIT", "Turn Timer: DISABLED");
 
         table.top().center();
         table.add(WidgetFactory.genGameHUDTopBar(turnPhase, new ChangeListener() {
@@ -105,9 +105,9 @@ public abstract class Phase extends Stage {
         table.background(new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarLeftPartTexture)));
 
         Table subTable = new Table();
-        subTable.setDebug(true);
-        subTable.left().add(collegeLogo);
-        subTable.right().add(playerNameLabel);
+        subTable.setDebug(false);
+        subTable.left().add(collegeLogo).height(80).width(100).pad(0);
+        subTable.right().add(playerNameLabel).pad(0);
         subTable.row();
         subTable.add(troopsNumberLabel).colspan(2);
         subTable.row();
@@ -134,7 +134,7 @@ public abstract class Phase extends Stage {
     void enterPhase(Player player) {
         this.currentPlayer = player;
 
-        playerNameLabel.setText(new StringBuilder(currentPlayer.getCollegeName().getCollegeName()));
+        playerNameLabel.setText(new StringBuilder((CharSequence) currentPlayer.getPlayerName()));
         troopsNumberLabel.setText(new StringBuilder("xx"));
         collegeLogo.setDrawable(WidgetFactory.genCollegeLogoDrawable(player.getCollegeName()));
     }
