@@ -241,7 +241,7 @@ public class GameSetupScreen implements Screen{
 
         /* Add components to table */
         Table switchTable = new Table();
-        switchTable.setDebug(true);
+        switchTable.setDebug(false);
 
         switchTable.left();
         switchTable.add(neutralPlayerLabel).height(60).width(420);
@@ -317,7 +317,7 @@ public class GameSetupScreen implements Screen{
 
             Table temp = new Table();
             temp.background(new TextureRegionDrawable(new TextureRegion(collegeTableBackground)));
-            temp.setDebug(true);
+            temp.setDebug(false);
             temp.add(textTable).expand().left().padLeft(20);
             temp.add(logoTable).padRight(60);
 
