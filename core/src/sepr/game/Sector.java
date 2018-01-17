@@ -73,6 +73,10 @@ public class Sector {
         this.changeSectorColor(player.getSectorColour());
     }
 
+    public void setOwner(int playerId){
+        this.ownerId = playerId;
+    }
+
     public String getDisplayName() {
         return displayName;
     }

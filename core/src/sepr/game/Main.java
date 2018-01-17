@@ -137,5 +137,8 @@ public class Main extends Game implements ApplicationListener {
 		gameScreen.dispose();
 	}
 
+	public GameScreen getGameScreen() {
+		return gameScreen;
+	}
 
 }

@@ -349,4 +349,6 @@ public class GameScreen implements Screen, InputProcessor{
         }
         return true;
     }
+
+    public Map getMap() { return map; }
 }
