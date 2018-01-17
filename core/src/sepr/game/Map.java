@@ -1,7 +1,6 @@
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,15 +8,14 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.math.Vector2;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017.
@@ -25,6 +23,7 @@ import java.util.Set;
 public class Map{
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
     private HashMap<Integer, College> colleges; // mapping of a college ID to the college object
+    private List<UnitChangeParticle> particles; // graphics used to display the changes to the amount of units on a sector
 
     private BitmapFont font; // font for rendering sector unit data
     private GlyphLayout layout = new GlyphLayout();
@@ -37,10 +36,13 @@ public class Map{
      * Initialises the sectors as objects storing them in a HashMap
      * Initialises the sector colours storing them in a HashMap
      */
-    public Map() {
+    public Map(HashMap<Integer, Player> players) {
         this.loadSectors();
         this.loadColleges();
         this.setupFont();
+
+        particles = new ArrayList<UnitChangeParticle>();
+        this.allocateSectors(players);
     }
 
     /**
@@ -61,9 +63,9 @@ public class Map{
     }
 
     /**
-     *
-     * @param sectorData
-     * @return
+     * converts an array of sector data to a sector object
+     * @param sectorData sector data taken from the sectorProperties csv file
+     * @return a sector with the properties fo the supplied data
      */
     private Sector sectorDataToSector(String[] sectorData) {
         int sectorId = Integer.parseInt(sectorData[0]);
@@ -75,7 +77,7 @@ public class Map{
         int unitsInSector = Integer.parseInt(sectorData[3]);
         int reinforcementsProvided = Integer.parseInt(sectorData[4]);
         String college = sectorData[5];
-        boolean neutral = Boolean.getBoolean(sectorData[6]);
+        boolean neutral = Boolean.parseBoolean(sectorData[6]);
         int[] adjacentSectors = strToIntArray(sectorData[7]);
         int sectorX = Integer.parseInt(sectorData[8]);
         int sectorY = Integer.parseInt(sectorData[9]);
@@ -85,7 +87,7 @@ public class Map{
     }
 
     /**
-     *
+     * load the sector properties from the sectorProperties csv file
      */
     private void loadSectors() {
         this.sectors = new HashMap<Integer, Sector>();
@@ -107,19 +109,57 @@ public class Map{
     }
 
     /**
-     *
+     * conversion of String type to List<integer> for use in collegeDataToCollege
+     * @param stringData
+     * @return ListArray
      */
-    private void loadColleges() {
+    private List<Integer> strToListInt(String stringData){
+        String[] strArray = stringData.split(" ");
+        List<Integer> listArray = new ArrayList<Integer>(strArray.length);
+        for (int i = 0; i < listArray.size(); i++) {
+            if (strArray[i].equals("")) {
+                continue; //skip if sector not in college
+            }
+            listArray.set(i, Integer.parseInt(strArray[i]));
+        }
+        return listArray;
+    }
+
+    /**
+     *
+     * @param collegeData
+     * @return College(collegeId, displayName, reinforcementAmount, sectorIds)
+     */
+    private College collegeDataToCollege(String[] collegeData){
+        int collegeId = Integer.parseInt(collegeData[0]);
+        String displayName = collegeData[1];
+        int reinforcementAmount = Integer.parseInt(collegeData[2]);
+        List<Integer> sectorIds = strToListInt(collegeData[3]);
+
+        return new College(collegeId, displayName, reinforcementAmount, sectorIds);
+    }
+
+    /**
+     * Accesses collegeProperties.csv to load college data
+     */
+    private void loadColleges(){
         this.colleges = new HashMap<Integer, College>();
 
-        this.colleges.put(0, new College(0, "Hes East", 0, Arrays.asList(0, 1, 2, 3)));
-        this.colleges.put(1, new College(0, "Halifax", 0, Arrays.asList(4,5,6,7)));
-        this.colleges.put(2, new College(0, "Derwent", 0, Arrays.asList(8,9,10,11)));
-        this.colleges.put(3, new College(0, "Alcuin", 0, Arrays.asList(12,13,14)));
-        this.colleges.put(4, new College(0, "Vanbrugh", 0, Arrays.asList(18,19,20)));
-        this.colleges.put(5, new College(0, "Wentworth", 0, Arrays.asList(22,23)));
-        this.colleges.put(6, new College(0, "James", 0, Arrays.asList(24,25,26,27)));
-        this.colleges.put(7, new College(0, "Neutral", 0, Arrays.asList(15,16,17,28,29,30)));
+        String csvFile = "collegeProperties.csv";
+        String line = "";
+        Integer ID = 0;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+                College temp = collegeDataToCollege(line.split(","));
+                this.colleges.put(temp.getId(), temp);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -135,38 +175,56 @@ public class Map{
     }
 
     /**
-     * Allocate sectors to each player in a balanced manner.
-     * Just need the finished csv file so we can calculate Total reinforcements but apart from
-     * that the method is finished. The method also has an if statement to catch a divide by zero
-     * error in players.size(). This won't be needed as later on when more of the game implementation is
-     * introduced this method will only be called when all players have been declared after the intermediate
-     * setup menu.
+     *
      */
     public void allocateSectors(HashMap<Integer, Player> players) {
         if (players.size() == 0) {
             throw new RuntimeException("Cannot allocate sectors to 0 players");
         }
 
+        // search for neutral player
+        int neutralPlayerId = -1;
+        for (Player player : players.values()) {
+            if (player.playerType.equals(PlayerType.NEUTRAL_AI)) {
+                neutralPlayerId = player.getId();
+                break;
+            }
+        }
+
+        // set any default neutral sectors to the neutral player
+        if (neutralPlayerId != -1) {
+            for (Sector sector : sectors.values()) {
+                if (sector.isNeutral()  && !sector.isDecor()) {
+                    sector.setOwner(players.get(neutralPlayerId));
+                }
+            }
+        }
+
         HashMap<Integer, Integer> playerReinforcements = new HashMap<Integer, Integer>(); // mapping of player id to amount of reinforcements they will receive currently
         // set all players to currently be receiving 0 reinforcements
         for (Integer i : players.keySet()) {
-            playerReinforcements.put(i, 0);
+            if (i != neutralPlayerId) playerReinforcements.put(i, 0);
         }
 
-        int lowestReinforcementId = players.get(0).getId();; // id of player currently receiving the least reinforcements
-        for (Integer i : this.getSectorIds()) {
-            if (this.getSector(i).isDecor()) {
-                continue; // skip allocating sector if it is a decor sector
-            }
-            this.getSector(i).setOwner(players.get(lowestReinforcementId));
-            playerReinforcements.put(lowestReinforcementId, playerReinforcements.get(lowestReinforcementId) + this.getSector(i).getReinforcementsProvided()); // updates player reinforcements hashmap
+        int lowestReinforcementId = players.get(0).getId(); // id of player currently receiving the least reinforcements
+        List<Integer> sectorIdsRandOrder = new ArrayList<Integer>(getSectorIds());
+        Collections.shuffle(sectorIdsRandOrder);
 
-            // find the new player with lowest reinforcements
-            int minReinforcements = Collections.min(playerReinforcements.values()); // get lowest reinforcement amount
-            for (Integer j : playerReinforcements.keySet()) {
-                if (playerReinforcements.get(j) == minReinforcements) { // if this player has the reinforcements matching the min amount set them to the new lowest player
-                    lowestReinforcementId = j;
-                    break;
+        for (Integer i : sectorIdsRandOrder) {
+            if (!sectors.get(i).isAllocated()) {
+                if (this.getSector(i).isDecor()) {
+                    continue; // skip allocating sector if it is a decor sector
+                }
+                this.getSector(i).setOwner(players.get(lowestReinforcementId));
+                playerReinforcements.put(lowestReinforcementId, playerReinforcements.get(lowestReinforcementId) + this.getSector(i).getReinforcementsProvided()); // updates player reinforcements hashmap
+
+                // find the new player with lowest reinforcements
+                int minReinforcements = Collections.min(playerReinforcements.values()); // get lowest reinforcement amount
+                for (Integer j : playerReinforcements.keySet()) {
+                    if (playerReinforcements.get(j) == minReinforcements) { // if this player has the reinforcements matching the min amount set them to the new lowest player
+                        lowestReinforcementId = j;
+                        break;
+                    }
                 }
             }
         }
@@ -191,6 +249,11 @@ public class Map{
      */
     private void moveUnits(int sourceSectorId, int targetSectorId, int amount) {
 
+    }
+
+    public void addUnitsToSectorAnimated(int sectorId, int amount) {
+        //this.sectors.get(sectorId).addUnits(amount);
+        this.particles.add(new UnitChangeParticle(amount, new Vector2(sectors.get(sectorId).getSectorCentreX(), sectors.get(sectorId).getSectorCentreY())));
     }
 
     /**
@@ -256,7 +319,7 @@ public class Map{
     }
 
     /**
-     *
+     * draws the map and the number of units in each sector and the units change particle effect
      * @param batch
      */
     public void draw(SpriteBatch batch) {
@@ -269,5 +332,15 @@ public class Map{
                 font.draw(batch, layout, sector.getSectorCentreX() - layout.width / 2, sector.getSectorCentreY() + layout.height / 2);
             }
         }
+
+        // render particles
+        List<UnitChangeParticle> toDelete = new ArrayList<UnitChangeParticle>();
+        for (UnitChangeParticle particle : particles) {
+            particle.draw(batch);
+            if (particle.toDelete()) {
+                toDelete.add(particle);
+            }
+        }
+        particles.removeAll(toDelete);
     }
 }

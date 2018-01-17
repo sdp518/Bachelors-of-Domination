@@ -5,60 +5,45 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import javafx.util.Pair;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-
+/**
+ * screen for setting up the game
+ * configurable properties
+ *  - Number of players
+ *  - Players' names
+ *  - Players' college
+ *  - Neutral player enabled
+ *  - Turn timer enabled
+ */
 public class GameSetupScreen implements Screen{
 
-    private Main main;
-    private Stage stage;
-    private Table table;
+    private Main main; // main stored so that screen can be changed
+    private Stage stage; // stage for drawing the UI to
+    private Table table; // table for laying out the UI components
 
-    private Dialog errorDialog;
-    private Label errorMessageLabel;
-
-    private final int MAX_NUMBER_OF_PLAYERS = 4;
+    private final int MAX_NUMBER_OF_PLAYERS = 4; // maximum number of players that cna be in a game
+    private final int MAX_TURN_TIME = 120; // max time for a player's turn if the timer is enabled
 
     private Label[] playerTypes; // array of player types, index n -> player n's type
-    private TextField[] playerNames; // array of textfields for players to enter names, index n -> player n's name
+    private TextField[] playerNames; // array of TextFields for players to enter names, index n -> player n's name
     private Pair<Label, Image>[] playerColleges; // array of pairs of college name and college logo, index n -> player n's college
-    private CheckBox neutralPlayerSwitch;
-    private CheckBox turnTimerSwitch;
+    private CheckBox neutralPlayerSwitch; // switch for enabling the neutral player
+    private CheckBox turnTimerSwitch; // switch for enabling the turn timer
 
     private Texture collegeTableBackground;
-    private Texture errorMessageDialogTexture;
-
-    /**
-     * Possible types of player
-     */
-    public enum PlayerType {
-        NONE("NONE"),
-        HUMAN("HUMAN PLAYER"),
-        AI("A.I."),
-        NEUTRAL_AI("NEUTAL A.I.");
-
-        private final String shortCode;
-
-        PlayerType(String code){
-            this.shortCode = code;
-        }
-
-        public String getPlayerType(){
-            return this.shortCode;
-        }
-    }
 
     /**
      * The colleges available to play as
@@ -76,11 +61,24 @@ public class GameSetupScreen implements Screen{
         private final String shortCode;
 
         CollegeName(String code){
-            this.shortCode=code;
+            this.shortCode = code;
         }
 
         public String getCollegeName(){
             return this.shortCode;
+        }
+
+        /**
+         * converts the string representation of the enum to the enum value
+         * @throws IllegalArgumentException if the text does not match any of the enum's string values
+         * @param text string representation of the enum
+         * @return the enum value of the provided text
+         */
+        public static CollegeName fromString(String text) throws IllegalArgumentException {
+            for (CollegeName collegeName : CollegeName.values()) {
+                if (collegeName.getCollegeName().equals(text)) return collegeName;
+            }
+            throw new IllegalArgumentException("Text parameter must match one of the enums");
         }
     }
 
@@ -92,42 +90,19 @@ public class GameSetupScreen implements Screen{
         this.main = main;
 
         this.stage = new Stage();
-        this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
         this.table.setFillParent(true); // make ui table fill the entire screen
         this.stage.addActor(table);
         this.table.setDebug(false); // enable table drawing for ui debug
 
         this.collegeTableBackground = new Texture("ui/HD-assets/Game-Setup-Name-Box.png");
-        this.errorMessageDialogTexture = new Texture("ui/errorMessageDialog.png");
 
         this.setupUi();
     }
 
     /**
-     * WARNING THIS DOESNT WORK PROPERLY FOR SOME REASON
-     * @param errorMessage
-     */
-    private void initialiseErrorMessageDialogue(String errorMessage) {
-        Window.WindowStyle windowStyle = new Window.WindowStyle(new BitmapFont(), Color.BLACK, new TextureRegionDrawable(new TextureRegion(errorMessageDialogTexture)));
-        errorDialog = new Dialog("", windowStyle);
-        errorDialog.setPosition(Gdx.graphics.getWidth()/2 - errorDialog.getWidth()/2, Gdx.graphics.getHeight()/2 - errorDialog.getHeight()/2);
-        errorDialog.setSize(620, 80);
-
-        Label.LabelStyle labelStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
-        errorMessageLabel = new Label("", labelStyle);
-        errorDialog.text(errorMessage, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        errorDialog.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                errorDialog.hide();
-            }
-        });
-    }
-
-    /**
-     *
-     * @param playerLabel
+     * update the player type label when the left ui button is pressed
+     * @param playerLabel to update the contents of
      */
     private void leftPlayerTypeButtonPress(Label playerLabel){
         if (playerLabel.getText().toString().equals(PlayerType.NONE.getPlayerType())){
@@ -140,8 +115,8 @@ public class GameSetupScreen implements Screen{
     }
 
     /**
-     *
-     * @param playerLabel
+     * update the player type label when the right ui button is pressed
+     * @param playerLabel to update the contents of
      */
     private void rightPlayerTypeButtonPress(Label playerLabel){
         if (playerLabel.getText().toString().equals(PlayerType.NONE.getPlayerType())){
@@ -154,9 +129,9 @@ public class GameSetupScreen implements Screen{
     }
 
     /**
-     *
-     * @param collegeLabel
-     * @return
+     * finds the name of the next college when the left UI button is pressed
+     * @param collegeLabel the label to have its contents updated
+     * @return the name of the newly selected college
      */
     private CollegeName leftCollegeTypeButtonPress(Label collegeLabel){
         if (collegeLabel.getText().toString().equals(CollegeName.ALCUIN.getCollegeName())){
@@ -169,19 +144,17 @@ public class GameSetupScreen implements Screen{
             return CollegeName.HALIFAX;
         }else if(collegeLabel.getText().toString().equals(CollegeName.JAMES.getCollegeName())){
             return CollegeName.HES_EAST;
-        }else if(collegeLabel.getText().toString().equals(CollegeName.UNI_OF_YORK.getCollegeName())){
-            return CollegeName.JAMES;
         }else if(collegeLabel.getText().toString().equals(CollegeName.VANBRUGH.getCollegeName())){
-            return CollegeName.UNI_OF_YORK;
+            return CollegeName.JAMES;
         }else {
             return CollegeName.VANBRUGH;
         }
     }
 
     /**
-     *
-     * @param collegeLabel
-     * @return
+     * finds the name of the next college when the right UI button is pressed
+     * @param collegeLabel the label to have its contents updated
+     * @return the name of the newly selected college
      */
     private CollegeName rightCollegeTypeButtonPress(Label collegeLabel){
         if (collegeLabel.getText().toString().equals(CollegeName.ALCUIN.getCollegeName())){
@@ -193,8 +166,6 @@ public class GameSetupScreen implements Screen{
         }else if(collegeLabel.getText().toString().equals(CollegeName.HES_EAST.getCollegeName())){
             return CollegeName.JAMES;
         }else if(collegeLabel.getText().toString().equals(CollegeName.JAMES.getCollegeName())){
-            return CollegeName.UNI_OF_YORK;
-        }else if(collegeLabel.getText().toString().equals(CollegeName.UNI_OF_YORK.getCollegeName())){
             return CollegeName.VANBRUGH;
         }else if(collegeLabel.getText().toString().equals(CollegeName.VANBRUGH.getCollegeName())){
             return CollegeName.WENTWORTH;
@@ -204,25 +175,8 @@ public class GameSetupScreen implements Screen{
     }
 
     /**
-     *
-     * @param numberOfPlayers
-     * @return
-     */
-    private Label[] playerLabels(int numberOfPlayers){
-        Label[] labelList = new Label[numberOfPlayers];
-
-        for (int i = 0; i < numberOfPlayers; i++){
-            final Label playerLabel = WidgetFactory.genPlayerLabel(PlayerType.NONE.getPlayerType());
-            playerLabel.setAlignment(Align.center);
-           
-            labelList[i] = playerLabel;
-        }
-        return labelList;
-    }
-
-    /**
-     *
-     * @return
+     * generates the left hand sub table for setting the player types, i.e. selecting NONE, HUMAN or AI
+     * @return a table containing MAX_NUMBER_OF_PLAYERS rows each with a left arrow button a player type label and right arrow button
      */
     private Table setUpPlayerTypesTable() {
         playerTypes = new Label[MAX_NUMBER_OF_PLAYERS];
@@ -270,7 +224,7 @@ public class GameSetupScreen implements Screen{
     /**
      * Sets up the table for the switch based part of the game setup
      * Setup options for: neutral player and turn timer
-     * @return
+     * @return a table containing a switch for the the neutral player and switch for the turn timer
      */
     private Table setupSwitchTable(){
         // neutral player
@@ -307,7 +261,7 @@ public class GameSetupScreen implements Screen{
     /**
      * Generates the UI table for setting player's colleges and names
      * Populates the playerColleges and playerNames arrays to be accessed later
-     * @return the UI table to be added to the stage
+     * @return the right hand sub table containing the player name setup and college selector UI components
      */
     private Table setUpCollegeTable(){
         playerNames = new TextField[MAX_NUMBER_OF_PLAYERS];
@@ -380,32 +334,6 @@ public class GameSetupScreen implements Screen{
     }
 
     /**
-     * takes a string and returns the CollegeName of the CollegeName with the matching string value
-     * @param collegeName string to convert to a college
-     * @return CollegeName with matching string value to string passed
-     */
-    private static CollegeName stringToCollege(String collegeName) {
-        if (collegeName.equals(CollegeName.ALCUIN.getCollegeName())) {
-            return CollegeName.ALCUIN;
-        } else if (collegeName.equals(CollegeName.DERWENT.getCollegeName())) {
-            return CollegeName.DERWENT;
-        } else if (collegeName.equals(CollegeName.HALIFAX.getCollegeName())) {
-            return CollegeName.HALIFAX;
-        } else if (collegeName.equals(CollegeName.HES_EAST.getCollegeName())) {
-            return CollegeName.HES_EAST;
-        } else if (collegeName.equals(CollegeName.JAMES.getCollegeName())) {
-            return CollegeName.JAMES;
-        } else if (collegeName.equals(CollegeName.UNI_OF_YORK.getCollegeName())) {
-            return CollegeName.UNI_OF_YORK;
-        } else if (collegeName.equals(CollegeName.VANBRUGH.getCollegeName())) {
-            return CollegeName.VANBRUGH;
-        } else if (collegeName.equals(CollegeName.WENTWORTH.getCollegeName())) {
-            return CollegeName.WENTWORTH;
-        }
-        return null;
-    }
-
-    /**
      *
      * @param collegeName name of college to get colour for
      * @return Color corresponding to the given college
@@ -415,38 +343,44 @@ public class GameSetupScreen implements Screen{
             case ALCUIN:
                 return Color.RED;
             case DERWENT:
-                return Color.GREEN;
-            case HALIFAX:
                 return Color.BLUE;
+            case HALIFAX:
+                return Color.CYAN;
             case HES_EAST:
-                return Color.YELLOW;
+                return Color.GREEN;
             case JAMES:
-                return Color.MAGENTA;
+                return Color.GRAY;
             case UNI_OF_YORK:
                 return Color.WHITE;
             case VANBRUGH:
                 return Color.PURPLE;
             case WENTWORTH:
-                return Color.CYAN;
+                return Color.ORANGE;
         }
         return Color.BLACK;
     }
 
     /**
-     *
+     * using the information configured in the setup screen generate a hashmap of players to be used in the game
      * @return HashMap of Players derived from the Setup Screen
      */
     private HashMap<Integer, Player> generatePlayerHashmaps() {
         HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 
+        // setup Human and AI players
         for (int i = 0; i < MAX_NUMBER_OF_PLAYERS; i++) {
             if (playerTypes[i].getText().toString().equals(PlayerType.HUMAN.getPlayerType())) {
                 // create human player
-                players.put(i, new PlayerHuman(i, playerColleges[i].getKey().getText().toString(), getCollegeColor(stringToCollege(playerColleges[i].getKey().getText().toString()))));
+                players.put(i, new PlayerHuman(i, CollegeName.fromString(playerColleges[i].getKey().getText().toString()), getCollegeColor(CollegeName.fromString(playerColleges[i].getKey().getText().toString())), playerNames[i].getText()));
             } else if (playerTypes[i].getText().toString().equals(PlayerType.AI.getPlayerType())) {
                 // create AI player
-                players.put(i, new PlayerAI(i, playerColleges[i].getKey().getText().toString(), getCollegeColor(stringToCollege(playerColleges[i].getKey().getText().toString()))));
+                players.put(i, new PlayerAI(i, CollegeName.fromString(playerColleges[i].getKey().getText().toString()), getCollegeColor(CollegeName.fromString(playerColleges[i].getKey().getText().toString())), playerNames[i].getText()));
             }
+        }
+
+        // setup neutral player
+        if (neutralPlayerSwitch.isChecked()) {
+            players.put(MAX_NUMBER_OF_PLAYERS, new PlayerNeutralAI(MAX_NUMBER_OF_PLAYERS, CollegeName.UNI_OF_YORK, "THE NEUTRAL PLAYER"));
         }
         return players;
     }
@@ -459,7 +393,24 @@ public class GameSetupScreen implements Screen{
      * @throws GameSetupException if name conditions are not met
      */
     private void validatePlayerNames() throws GameSetupException{
-
+        Set<String> appeared = new HashSet();
+        for (int i = 0; i < playerNames.length; i++) {
+            if (PlayerType.fromString(playerTypes[i].getText().toString()) == PlayerType.NONE) {
+                continue;
+            }
+            Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+            Matcher m = p.matcher(playerNames[i].getText());
+            boolean b = m.find();
+            if (playerNames[i].getText().length() < 3){
+                throw new GameSetupException(GameSetupException.GameSetupExceptionType.INVALID_PLAYER_NAME);
+            }
+            else if (b){
+                throw new GameSetupException(GameSetupException.GameSetupExceptionType.INVALID_PLAYER_NAME);
+            }
+            else if (!appeared.add(playerNames[i].getText())) {
+                throw new GameSetupException(GameSetupException.GameSetupExceptionType.DUPLICATE_PLAYER_NAME);
+            }
+        }
     }
 
     /**
@@ -468,7 +419,12 @@ public class GameSetupScreen implements Screen{
      * @throws GameSetupException if college has been chosen more than once
      */
     private void validateCollegeSelection() throws GameSetupException{
-
+        Set<String> appeared = new HashSet();
+        for (int i = 0; i < playerNames.length; i++) {
+            if (PlayerType.fromString(playerTypes[i].getText().toString()) != PlayerType.NONE && !appeared.add(playerColleges[i].getKey().getText().toString())) {
+                throw new GameSetupException(GameSetupException.GameSetupExceptionType.DUPLICATE_COLLEGE_SELECTION);
+            }
+        }
     }
 
     /**
@@ -516,12 +472,11 @@ public class GameSetupScreen implements Screen{
             validateCollegeSelection();
             validatePlayerConfiguration();
         } catch (GameSetupException e) {
-            initialiseErrorMessageDialogue(e.getExceptionType().getErrorMessage());
-            errorDialog.show(stage);
+            WidgetFactory.dialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
             return;
         }
 
-        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), 120);
+        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), MAX_TURN_TIME);
     }
 
     private void setupUi() {
@@ -554,7 +509,8 @@ public class GameSetupScreen implements Screen{
         table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                main.setMenuScreen();}
+                main.setMenuScreen();
+            }
 
         })).colspan(2);
     }

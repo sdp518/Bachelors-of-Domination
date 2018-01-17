@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
- * Created by Dom's Surface Mark 2 on 16/11/2017.
+ * Created by Dom's Surface Mark 2 on 16/11/2017
  */
 public class Sector {
     private int id;
@@ -15,6 +15,8 @@ public class Sector {
     private String displayName;
     private int unitsInSector;
     private int reinforcementsProvided;
+    private String college;
+    private boolean neutral;
     private int[] adjacentSectorIds; // <-- May want to reconsider structure
     private Texture sectorTexture;
     private Pixmap sectorPixmap;
@@ -22,6 +24,7 @@ public class Sector {
     private int sectorCentreY;
     private boolean decor; // is this sector for visual purposes only, i.e. lakes are decor
     private String fileName;
+    private boolean allocated; // becomes true once the sector has been allocated
 
     /**
      * @param id sector id
@@ -45,6 +48,8 @@ public class Sector {
         this.displayName = displayName;
         this.unitsInSector = unitsInSector;
         this.reinforcementsProvided = reinforcementsProvided;
+        this.college = college;
+        this.neutral = neutral;
         this.adjacentSectorIds = adjacentSectorIds;
         this.sectorTexture = sectorTexture;
         this.sectorPixmap = sectorPixmap;
@@ -52,11 +57,10 @@ public class Sector {
         this.sectorCentreY = 1080 - sectorCentreY;
         this.decor = decor;
         this.fileName = fileName;
+        this.allocated = false;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
     public int getPrevOwnerId() { return prevOwnerId; }
 
@@ -71,6 +75,7 @@ public class Sector {
     public void setOwner(Player player) {
         this.ownerId = player.getId();
         this.changeSectorColor(player.getSectorColour());
+        this.allocated = true;
     }
 
     public void setOwner(int playerId){
@@ -129,6 +134,14 @@ public class Sector {
         return decor;
     }
 
+    public boolean isNeutral() { return neutral; }
+
+    public boolean isAllocated() {
+        return allocated;
+    }
+
+    public String getCollege() { return college; }
+
     public String getFileName() {
         return fileName;
     }
@@ -158,10 +171,13 @@ public class Sector {
      * @throws IllegalArgumentException if units in sector is below 0
      * @param amount number of units to change by, (can be negative to subtract units
      */
-    public void addUnits(int amount) {
+    public void addUnits(int amount) throws IllegalArgumentException {
         this.unitsInSector += amount;
+        if (this.unitsInSector < 0) {
+            this.unitsInSector = 0;
+            throw new IllegalArgumentException("Cannot have less than 0 units on a sector");
+        }
     }
-
 
     /**
      * The method takes a sectorId and recolors it to the specified color

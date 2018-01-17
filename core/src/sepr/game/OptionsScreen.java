@@ -60,6 +60,7 @@ public class OptionsScreen implements Screen {
         this.setupUi();
     }
 
+
     /**
      * Method generates a string array of possible resolutions the game could be displayed at on this monitor
      * Used to get selectable elements in the Resolution selector widget
