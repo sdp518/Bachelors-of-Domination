@@ -75,13 +75,14 @@ public class DialogFactory {
      * Creates a dialog modal in the given stage with an ok button
      *
      * @param bonusTroops Integer used to provide the bonus troops provided by conquered tile
-     * @param maxTroops Interger used to provide troops on attacking tile
+     * @param maxTroops Integer used to provide troops on attacking tile
      * @param troopsMoved 1 index final array for setting value of slider to
      * @param stage The stage to draw the box onto
      */
-    public static void attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, final int[] troopsMoved, Stage stage) {
-        final Slider slider = new Slider(0, (maxTroops - 1), 1, false, DialogFactory.skin);
-        final Label sliderValue = new Label("0", DialogFactory.skin);
+    public static void attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, final int[] troopsMoved, String prevOwner, String newOwner, String sectorName, Stage stage) {
+        final Slider slider = new Slider(1, (maxTroops - 1), 1, false, DialogFactory.skin);
+        slider.setValue(1);
+        final Label sliderValue = new Label("1", DialogFactory.skin);
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -94,10 +95,14 @@ public class DialogFactory {
             troopsMoved[0] = (int)slider.getValue();
         }
         };
-        dialog.text("Congratulations! You have earned " + bonusTroops + " bonus troops!\nHow many troops would you like to move?");
+        dialog.text(newOwner + " gained " + sectorName + " from " + prevOwner + "\nYou have earned " + bonusTroops + " bonus troops!\nHow many troops would you like to move to the new sector?");
+        dialog.getContentTable().row();
+
         dialog.getContentTable().add(slider).padLeft(20).padRight(20).align(Align.left).expandX();
         dialog.getContentTable().add(sliderValue).padLeft(20).padRight(20).align(Align.right);
+
         dialog.getContentTable().row();
+
         dialog.button("Ok", 1L);
         dialog.show(stage);
     }
@@ -121,7 +126,7 @@ public class DialogFactory {
         Dialog dialog = new Dialog("Select number of troops to attack with", DialogFactory.skin) {
             protected void result(Object object) {
                 // object is the button pressed
-                if (object.toString().equals("0")) {
+                if (object.equals("0")) {
                     attackers[0] = 0;
                 } else {
                     attackers[0] = (int)slider.getValue();
@@ -143,8 +148,8 @@ public class DialogFactory {
         dialog.getContentTable().row();
 
         // add buttons for accepting or canceling the selection
-        dialog.button("Cancel", 0L).padLeft(20).padRight(40).align(Align.center);
-        dialog.button("Ok", 1L).padLeft(40).padRight(20).align(Align.center);
+        dialog.button("Cancel", "0").padLeft(20).padRight(40).align(Align.center);
+        dialog.button("Ok", "1").padLeft(40).padRight(20).align(Align.center);
 
         dialog.show(stage);
     }

@@ -18,6 +18,8 @@ import java.util.List;
  * main class for controlling the game
  */
 public class GameScreen implements Screen, InputProcessor{
+    public static final int NEUTRAL_PLAYER_ID = 4;
+
     private Main main; // main stored for switching between screens
 
     private TurnPhaseType currentPhase = TurnPhaseType.REINFORCEMENT; // first phase of game is reinforcement
@@ -73,7 +75,7 @@ public class GameScreen implements Screen, InputProcessor{
      * @param turnTimerEnabled should players turns be limited
      * @param maxTurnTime time elapsed in current turn, irrelevant if turn timer not enabled
      */
-    public void setupGame(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
+    public void setupGame(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime, boolean allocateNeutralPlayer) {
         this.players = players;
         this.turnOrder = new ArrayList<Integer>();
         for (Integer i : players.keySet()) {
@@ -86,7 +88,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.maxTurnTime = maxTurnTime;
         this.turnTimeStart = System.currentTimeMillis();
 
-        this.map = new Map(this.players);
+        this.map = new Map(this.players, allocateNeutralPlayer);
 
         // create the game phases and add them to the phases hashmap
         this.phases = new HashMap<TurnPhaseType, Phase>();

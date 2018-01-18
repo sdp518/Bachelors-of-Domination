@@ -66,11 +66,11 @@ public class PhaseAttack extends Phase{
 
         float attackerDefenderDiff = Math.abs(defenders - attackers);
 
-        int attackersLost = (int)Math.min(attackers, attackerDefenderDiff - 2 + random.nextInt(5));
-        int defendersLost = (int)Math.min(defenders, attackerDefenderDiff - 2 + random.nextInt(5));
+        int attackersLost = Math.min(attackers, random.nextInt(10));
+        int defendersLost = Math.min(defenders, random.nextInt(10));
 
-        map.addUnitsToSectorAnimated(attackingSector.getId(), -attackersLost);
-        map.addUnitsToSectorAnimated(defendingSector.getId(), -defendersLost);
+        // apply the attack to the map
+        map.attackSector(attackingSector.getId(), defendingSector.getId(), attackersLost, defendersLost, gameScreen.getPlayerById(attackingSector.getOwnerId()), gameScreen.getPlayerById(defendingSector.getOwnerId()), gameScreen.getPlayerById(gameScreen.NEUTRAL_PLAYER_ID), this);
     }
 
     @Override

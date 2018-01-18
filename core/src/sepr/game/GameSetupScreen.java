@@ -370,9 +370,7 @@ public class GameSetupScreen implements Screen{
         }
 
         // setup neutral player
-        if (neutralPlayerSwitch.isChecked()) {
-            players.put(MAX_NUMBER_OF_PLAYERS, new PlayerNeutralAI(MAX_NUMBER_OF_PLAYERS, CollegeName.UNI_OF_YORK));
-        }
+        players.put(GameScreen.NEUTRAL_PLAYER_ID, new PlayerNeutralAI(GameScreen.NEUTRAL_PLAYER_ID, CollegeName.UNI_OF_YORK));
         return players;
     }
 
@@ -467,7 +465,7 @@ public class GameSetupScreen implements Screen{
             return;
         }
 
-        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), MAX_TURN_TIME);
+        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), MAX_TURN_TIME, neutralPlayerSwitch.isChecked());
     }
 
     private void setupUi() {

@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 public class Sector {
     private int id;
     private int ownerId;
-    private int prevOwnerId;
     private String displayName;
     private int unitsInSector;
     private int reinforcementsProvided;
@@ -44,7 +43,6 @@ public class Sector {
     public Sector(int id, int ownerId, String fileName, Texture sectorTexture, Pixmap sectorPixmap, String displayName, int unitsInSector, int reinforcementsProvided, String college, boolean neutral, int[] adjacentSectorIds, int sectorCentreX, int sectorCentreY, boolean decor) {
         this.id = id;
         this.ownerId = ownerId;
-        this.prevOwnerId = ownerId;
         this.displayName = displayName;
         this.unitsInSector = unitsInSector;
         this.reinforcementsProvided = reinforcementsProvided;
@@ -61,8 +59,6 @@ public class Sector {
     }
 
     public int getId() { return id; }
-
-    public int getPrevOwnerId() { return prevOwnerId; }
 
     public int getOwnerId() {
         return ownerId;
@@ -143,11 +139,6 @@ public class Sector {
     }
 
     /**
-     * Updates the ownerId in a sector
-     */
-    public void updateOwnerId() { prevOwnerId = ownerId; }
-
-    /**
      * Function to check if a given sector is adjacent
      * @param toCheck The sector object to check
      * @return True/False
@@ -199,7 +190,4 @@ public class Sector {
         this.setNewSectorTexture(newPix); // draw the generated pixmap to the new texture
         newPix.dispose();
     }
-
-    // Shortened way of checking if the player captured the tile that turn
-    public boolean justCapturedBy(int playerId){ return playerId == ownerId && playerId != prevOwnerId;  }
 }

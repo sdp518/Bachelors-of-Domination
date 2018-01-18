@@ -35,8 +35,8 @@ public class Main extends Game implements ApplicationListener {
 		this.setScreen(menuScreen);
 	}
 
-	public void setGameScreen(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
-		gameScreen.setupGame(players, turnTimerEnabled, maxTurnTime);
+	public void setGameScreen(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime, boolean allocateNeutralPlayer) {
+		gameScreen.setupGame(players, turnTimerEnabled, maxTurnTime, allocateNeutralPlayer);
 		this.setScreen(gameScreen);
 	}
 

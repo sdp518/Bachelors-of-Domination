@@ -9,6 +9,12 @@ public class PhaseReinforce extends Phase {
     }
 
     @Override
+    public void endPhase() {
+        currentPlayer.setTroopsToAllocate(0); // any unallocated units are ignored
+        super.endPhase();
+    }
+
+    @Override
     public void phaseAct() {
 
     }
