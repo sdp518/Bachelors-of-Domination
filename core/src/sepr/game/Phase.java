@@ -10,6 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * base class for handling phase specific input
+ */
 public abstract class Phase extends Stage {
 
     protected GameScreen gameScreen;
@@ -132,7 +135,6 @@ public abstract class Phase extends Stage {
         this.currentPlayer = player;
 
         playerNameLabel.setText(new StringBuilder((CharSequence) currentPlayer.getPlayerName()));
-        additionalInformationLabel.setText(new StringBuilder("xx"));
         collegeLogo.setDrawable(WidgetFactory.genCollegeLogoDrawable(player.getCollegeName()));
         setAdditionalInformation(additionalInformation);
     }

@@ -47,7 +47,7 @@ public class GameSetupScreen implements Screen{
     private Texture collegeTableBackground;
 
     /**
-     * The colleges available to play as
+     * the colleges available to play as
      */
     public enum CollegeName {
         ALCUIN("ALCUIN"),
@@ -85,7 +85,7 @@ public class GameSetupScreen implements Screen{
 
     /**
      *
-     * @param main
+     * @param main for changing to different screens
      */
     public GameSetupScreen (final Main main) {
         this.main = main;
@@ -441,7 +441,6 @@ public class GameSetupScreen implements Screen{
         } else if (totalNumPlayers == 2 && !neutralPlayerSwitch.isChecked()) { // only two players need neutral player
             throw new GameSetupException(GameSetupException.GameSetupExceptionType.NO_NEUTRAL_PLAYER);
         }
-        humanPlayerPresent = false;
     }
 
     /**

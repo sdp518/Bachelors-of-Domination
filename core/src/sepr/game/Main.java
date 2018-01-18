@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
 
+/**
+ * main game class used for controlling what screen is currently being displayed
+ */
 public class Main extends Game implements ApplicationListener {
 	private MenuScreen menuScreen;
 	private GameScreen gameScreen;

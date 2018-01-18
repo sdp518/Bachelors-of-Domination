@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.StringBuilder;
 
+/**
+ * class that produces reusable dialog windows
+ */
 public class DialogFactory {
 
     private static Skin skin;

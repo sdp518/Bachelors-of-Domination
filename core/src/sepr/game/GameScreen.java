@@ -182,9 +182,6 @@ public class GameScreen implements Screen, InputProcessor{
       
         resetCameraPosition();
 
-        // add the next player dialog box here
-        DialogFactory.nextTurnDialogBox(players.get(currentPlayer).getPlayerName(), players.get(currentPlayer).getTroopsToAllocate(), phases.get(currentPhase));
-
         if (this.turnTimerEnabled) {
             this.turnTimeStart = System.currentTimeMillis();
         }      

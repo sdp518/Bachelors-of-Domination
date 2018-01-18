@@ -313,7 +313,20 @@ public class Map{
      * @return returns the amount of reinforcements the player should be allocated
      */
     public int calculateCollegeReinforcements(int playerId) {
-        return 10;
+        int bonus = 0;
+        for (College college : colleges.values()) {
+            boolean collegeHeld = true;
+            for (int i : college.getSectorIds()) {
+                if (i != playerId) {
+                    collegeHeld = false; // owner that is not the player so college is not held
+                    break;
+                }
+            }
+            if (collegeHeld) {
+                bonus += college.getReinforcementAmount();
+            }
+        }
+        return bonus;
     }
 
   /**
