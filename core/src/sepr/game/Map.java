@@ -6,19 +6,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- * Created by Dom's Surface Mark 2 on 16/11/2017.
+ * stores the game map and the sectors within it
  */
 public class Map{
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
@@ -28,7 +26,7 @@ public class Map{
     private BitmapFont font; // font for rendering sector unit data
     private GlyphLayout layout = new GlyphLayout();
 
-    private Texture troopCountOverlay = new Texture("ui/troopCountOverlay.png");
+    private Texture troopCountOverlay = new Texture("uiComponents/troopCountOverlay.png");
     private float overlaySize = 40.0f;
 
     /**
@@ -39,7 +37,7 @@ public class Map{
     public Map(HashMap<Integer, Player> players) {
         this.loadSectors();
         this.loadColleges();
-        this.setupFont();
+        font = WidgetFactory.getFontSmall();
 
         particles = new ArrayList<UnitChangeParticle>();
         this.allocateSectors(players);
@@ -47,43 +45,19 @@ public class Map{
 
     /**
      *
-     * @param stringData
-     * @return
+     * @param stringData space separated integers e.g. '1 2 3 4 5'
+     * @return the integers in the data in an array
      */
     private int[] strToIntArray(String stringData) {
         String[] strArray = stringData.split(" ");
         int[] intArray = new int[strArray.length];
         for (int i = 0; i < intArray.length; i++) {
             if (strArray[i].equals("")) {
-                continue; // skip if no adjacent sectors
+                continue; // skip if no values in array
             }
             intArray[i] = Integer.parseInt(strArray[i]);
         }
         return intArray;
-    }
-
-    /**
-     * converts an array of sector data to a sector object
-     * @param sectorData sector data taken from the sectorProperties csv file
-     * @return a sector with the properties fo the supplied data
-     */
-    private Sector sectorDataToSector(String[] sectorData) {
-        int sectorId = Integer.parseInt(sectorData[0]);
-        int ownerId = -1;
-        String filename = sectorData[1];
-        Texture sectorTexture = new Texture(sectorData[1]);
-        Pixmap sectorPixmap = new Pixmap(Gdx.files.internal(sectorData[1]));
-        String displayName = sectorData[2];
-        int unitsInSector = Integer.parseInt(sectorData[3]);
-        int reinforcementsProvided = Integer.parseInt(sectorData[4]);
-        String college = sectorData[5];
-        boolean neutral = Boolean.parseBoolean(sectorData[6]);
-        int[] adjacentSectors = strToIntArray(sectorData[7]);
-        int sectorX = Integer.parseInt(sectorData[8]);
-        int sectorY = Integer.parseInt(sectorData[9]);
-        boolean decor = Boolean.parseBoolean(sectorData[10]);
-
-        return new Sector(sectorId, ownerId, filename, sectorTexture, sectorPixmap, displayName, unitsInSector, reinforcementsProvided, college, neutral, adjacentSectors, sectorX, sectorY, decor);
     }
 
     /**
@@ -92,7 +66,7 @@ public class Map{
     private void loadSectors() {
         this.sectors = new HashMap<Integer, Sector>();
 
-        String csvFile = "sectorProperties.csv";
+        String csvFile = "mapData/sectorProperties.csv";
         String line = "";
         Integer ID = 0;
         try {
@@ -109,34 +83,27 @@ public class Map{
     }
 
     /**
-     * conversion of String type to List<integer> for use in collegeDataToCollege
-     * @param stringData
-     * @return ListArray
+     * converts an array of sector data to a sector object
+     * @param sectorData sector data taken from the sectorProperties csv file
+     * @return a sector with the properties fo the supplied data
      */
-    private List<Integer> strToListInt(String stringData){
-        String[] strArray = stringData.split(" ");
-        List<Integer> listArray = new ArrayList<Integer>(strArray.length);
-        for (int i = 0; i < listArray.size(); i++) {
-            if (strArray[i].equals("")) {
-                continue; //skip if sector not in college
-            }
-            listArray.set(i, Integer.parseInt(strArray[i]));
-        }
-        return listArray;
-    }
+    private Sector sectorDataToSector(String[] sectorData) {
+        int sectorId = Integer.parseInt(sectorData[0]);
+        int ownerId = -1;
+        String filename = "mapData/" + sectorData[1];
+        Texture sectorTexture = new Texture("mapData/" + sectorData[1]);
+        Pixmap sectorPixmap = new Pixmap(Gdx.files.internal("mapData/" + sectorData[1]));
+        String displayName = sectorData[2];
+        int unitsInSector = Integer.parseInt(sectorData[3]);
+        int reinforcementsProvided = Integer.parseInt(sectorData[4]);
+        String college = sectorData[5];
+        boolean neutral = Boolean.parseBoolean(sectorData[6]);
+        int[] adjacentSectors = strToIntArray(sectorData[7]);
+        int sectorX = Integer.parseInt(sectorData[8]);
+        int sectorY = Integer.parseInt(sectorData[9]);
+        boolean decor = Boolean.parseBoolean(sectorData[10]);
 
-    /**
-     *
-     * @param collegeData
-     * @return College(collegeId, displayName, reinforcementAmount, sectorIds)
-     */
-    private College collegeDataToCollege(String[] collegeData){
-        int collegeId = Integer.parseInt(collegeData[0]);
-        String displayName = collegeData[1];
-        int reinforcementAmount = Integer.parseInt(collegeData[2]);
-        List<Integer> sectorIds = strToListInt(collegeData[3]);
-
-        return new College(collegeId, displayName, reinforcementAmount, sectorIds);
+        return new Sector(sectorId, ownerId, filename, sectorTexture, sectorPixmap, displayName, unitsInSector, reinforcementsProvided, college, neutral, adjacentSectors, sectorX, sectorY, decor);
     }
 
     /**
@@ -145,7 +112,7 @@ public class Map{
     private void loadColleges(){
         this.colleges = new HashMap<Integer, College>();
 
-        String csvFile = "collegeProperties.csv";
+        String csvFile = "mapData/collegeProperties.csv";
         String line = "";
         Integer ID = 0;
         try {
@@ -159,23 +126,27 @@ public class Map{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
      *
+     * @param collegeData a string array containing the properties of a college in the format <College name> <Bonus> <Sector IDs in college>
+     * @return College(collegeId, displayName, reinforcementAmount, sectorIds)
      */
-    private void setupFont() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 20;
-        font = generator.generateFont(parameter);
+    private College collegeDataToCollege(String[] collegeData){
+        int collegeId = Integer.parseInt(collegeData[0]);
+        String displayName = collegeData[1];
+        int reinforcementAmount = Integer.parseInt(collegeData[2]);
+        int[] sectorIds = strToIntArray(collegeData[3]);
 
-        generator.dispose();
+        return new College(collegeId, displayName, reinforcementAmount, sectorIds);
     }
 
     /**
-     *
+     * allocates sectors in the map to the players in a semi-random fashion
+     * if there is a neutral player then the default neutral sectors are allocated to them
+     * @param players the sectors are to be allocated to
+     * @throws RuntimeException if the players hashmap is empty
      */
     public void allocateSectors(HashMap<Integer, Player> players) {
         if (players.size() == 0) {
@@ -235,7 +206,19 @@ public class Map{
      * @return -1 if there is no winner or the ID of the player that controls all the sectors
      */
     public int checkForWinner() {
-        return -1;
+        Set<Integer> owners = new HashSet<Integer>();
+        int lastOwner = -1;
+        for (Sector sector : sectors.values()) {
+            if (!sector.isDecor()) { // ignore decor sectors
+                owners.add(sector.getOwnerId()); // add the owner of the sector to the set of owners
+                lastOwner = sector.getOwnerId(); // keep track of the last owner, will be returned if it is the only one
+            }
+        }
+        if (owners.size() > 1) {
+            return -1;
+        } else {
+            return lastOwner;
+        }
     }
 
     /**
@@ -251,7 +234,26 @@ public class Map{
 
     }
 
-    public void addUnitsToSectorAnimated(int sectorId, int amount) {
+    public void attackSector(int attackingSectorId, int defendingSectorId, int attackersLost, int defendersLost, Player attacker, Player defender, Player neutral, Stage stage) {
+        addUnitsToSectorAnimated(attackingSectorId, attackersLost);
+        addUnitsToSectorAnimated(defendingSectorId, defendersLost);
+
+        if (sectors.get(attackingSectorId).getUnitsInSector() == 0) { // attacker lost all troops
+            DialogFactory.sectorOwnerChangeDialog(attacker.getPlayerName(), neutral.getPlayerName(), sectors.get(attackingSectorId).getDisplayName(), stage);
+            if (sectors.get(defendingSectorId).getUnitsInSector() == 0) { // both players wiped each other out
+                DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(attackingSectorId).getDisplayName(), stage);
+            }
+        } else if (sectors.get(defendingSectorId).getUnitsInSector() == 0 && sectors.get(attackingSectorId).getUnitsInSector() > 1) { // territory conquered
+            DialogFactory.attackSuccessDialogBox(sectors.get(defendingSectorId).getReinforcementsProvided(), sectors.get(attackingSectorId).getUnitsInSector() - 1, stage);
+        } else if (sectors.get(defendingSectorId).getUnitsInSector() == 0 && sectors.get(attackingSectorId).getUnitsInSector() == 1) { // territory conquered but only one attacker remaining
+
+        }
+
+
+
+    }
+
+    private void addUnitsToSectorAnimated(int sectorId, int amount) {
         this.sectors.get(sectorId).addUnits(amount);
         this.particles.add(new UnitChangeParticle(amount, new Vector2(sectors.get(sectorId).getSectorCentreX(), sectors.get(sectorId).getSectorCentreY())));
     }

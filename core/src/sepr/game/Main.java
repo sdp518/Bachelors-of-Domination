@@ -21,6 +21,7 @@ public class Main extends Game implements ApplicationListener {
 	@Override
 	public void create () {
 		new WidgetFactory(); // setup widget factory for generating UI components
+		new DialogFactory(); // setup dialog factory for generating dialogs
 
 		this.menuScreen = new MenuScreen(this);
 		this.gameScreen = new GameScreen(this);

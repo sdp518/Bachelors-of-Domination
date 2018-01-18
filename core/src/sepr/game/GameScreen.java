@@ -57,7 +57,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.gameplayCamera = new OrthographicCamera();
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
 
-        this.mapBackground = new Texture("ui/HD-assets/Background.png");
+        this.mapBackground = new Texture("uiComponents/mapBackground.png");
 
         // setup hashmap to check which keys were previously pressed
         this.keysDown = new HashMap<Integer, Boolean>();
@@ -181,7 +181,7 @@ public class GameScreen implements Screen, InputProcessor{
         resetCameraPosition();
 
         // add the next player dialog box here
-        WidgetFactory.nextTurnDialogBox(players.get(currentPlayer).getPlayerName(), players.get(currentPlayer).getTroopsToAllocate(), phases.get(currentPhase));
+        DialogFactory.nextTurnDialogBox(players.get(currentPlayer).getPlayerName(), players.get(currentPlayer).getTroopsToAllocate(), phases.get(currentPhase));
 
         if (this.turnTimerEnabled) {
             this.turnTimeStart = System.currentTimeMillis();

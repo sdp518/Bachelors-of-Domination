@@ -5,11 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -31,7 +29,7 @@ public class MenuScreen implements Screen {
             @Override
             public boolean keyUp(int keyCode) {
                 if (keyCode == Input.Keys.ESCAPE) { // ask player if they would like to exit the game if they press escape
-                    WidgetFactory.exitDialogBox(stage);
+                    DialogFactory.exitDialogBox(stage);
                 }
                 return super.keyUp(keyCode);
             }
@@ -98,10 +96,10 @@ public class MenuScreen implements Screen {
     }
 
     private void setupUi() {
-        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Menu-Background.png"))));
+        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
 
         table.center();
-        table.add(WidgetFactory.genTopBar("MAIN MENU")).colspan(2);
+        table.add(WidgetFactory.genMenusTopBar("MAIN MENU")).colspan(2);
 
         table.row();
         table.left();
@@ -115,7 +113,7 @@ public class MenuScreen implements Screen {
         table.add(WidgetFactory.genBottomBar("QUIT", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                WidgetFactory.exitDialogBox(stage);}
+                DialogFactory.exitDialogBox(stage);}
 
         })).colspan(2);
     }

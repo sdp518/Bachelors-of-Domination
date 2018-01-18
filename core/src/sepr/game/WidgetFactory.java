@@ -61,6 +61,10 @@ public class WidgetFactory {
     private static Texture startGameBtnTexture;
     private static Texture nameBoxLabelTexture;
 
+
+    private static Texture menusTopBarLeftTexture;
+    private static Texture menusTopBarRightTexture;
+
     private static Texture alcuinLogoTexture;
     private static Texture derwentLogoTexture;
     private static Texture halifaxLogoTexture;
@@ -73,234 +77,55 @@ public class WidgetFactory {
     private static BitmapFont fontBig;
     private static BitmapFont fontSmall;
 
-    private static Skin skin;
-
     public WidgetFactory() {
         setupFont();
 
-        basicButtonTexture = new Texture("ui/HD-assets/Menu-Button-Full.png");
-        mainMenuTopBarTexture = new Texture("ui/HD-assets/Main-Menu-Top-Bar.png");
-        bottomBarTexture = new Texture("ui/HD-assets/Bottom-Bar.png");
-        mapGraphicTexture = new Texture("ui/HD-assets/Main-Menu-Map.png");
-        labelTexture = new Texture("ui/HD-assets/Menu-Button.png");
-        optionsGraphicTexture = new Texture("ui/HD-assets/General-Jack.png");
+        basicButtonTexture = new Texture("uiComponents/Menu-Button-Full.png");
+        mainMenuTopBarTexture = new Texture("uiComponents/Main-Menu-Top-Bar.png");
+        bottomBarTexture = new Texture("uiComponents/Bottom-Bar.png");
+        mapGraphicTexture = new Texture("uiComponents/Main-Menu-Map.png");
+        labelTexture = new Texture("uiComponents/Menu-Button.png");
+        optionsGraphicTexture = new Texture("uiComponents/General-Jack.png");
 
-        sliderBarTexture = new Texture("ui/sliderBar.png");
-        sliderKnobTexture = new Texture("ui/sliderKnob.png");
+        sliderBarTexture = new Texture("uiComponents/sliderBar.png");
+        sliderKnobTexture = new Texture("uiComponents/sliderKnob.png");
 
-        onSwitchTexture = new Texture("ui/HD-assets/On-Switch.png");
-        offSwitchTexture = new Texture("ui/HD-assets/Off-Switch.png");
+        onSwitchTexture = new Texture("uiComponents/On-Switch.png");
+        offSwitchTexture = new Texture("uiComponents/Off-Switch.png");
 
-        playerLabelTexture = new Texture("ui/HD-assets/Player-Label.png");
-        playerLeftBtnTexture = new Texture("ui/HD-assets/Player-Left-Button-Full.png");
-        playerRightBtnTexture = new Texture("ui/HD-assets/Player-Right-Button-Full.png");
-        menuBtnLabelTexture = new Texture("ui/HD-assets/Menu-Button.png");
-        collegeLeftBtnTexture = new Texture("ui/HD-assets/College-Left-Button.png");
-        collegeRightBtnTexture = new Texture("ui/HD-assets/College-Right-Button.png");
-        startGameBtnTexture = new Texture("ui/HD-assets/Start-Game-Button-Full.png");
-        nameBoxLabelTexture = new Texture("ui/HD-assets/Game-Setup-Name-Box.png");
+        playerLabelTexture = new Texture("uiComponents/Player-Label.png");
+        playerLeftBtnTexture = new Texture("uiComponents/Player-Left-Button-Full.png");
+        playerRightBtnTexture = new Texture("uiComponents/Player-Right-Button-Full.png");
+        menuBtnLabelTexture = new Texture("uiComponents/Menu-Button.png");
+        collegeLeftBtnTexture = new Texture("uiComponents/College-Left-Button.png");
+        collegeRightBtnTexture = new Texture("uiComponents/College-Right-Button.png");
+        startGameBtnTexture = new Texture("uiComponents/Start-Game-Button-Full.png");
+        nameBoxLabelTexture = new Texture("uiComponents/Game-Setup-Name-Box.png");
 
-        alcuinLogoTexture = new Texture("ui/HD-assets/alcuin-logo.png");
-        derwentLogoTexture = new Texture("ui/HD-assets/derwent-logo.png");
-        halifaxLogoTexture = new Texture("ui/HD-assets/halifax-logo.png");
-        hesEastLogoTexture = new Texture("ui/HD-assets/hes-east-logo.png");
-        jamesLogoTexture = new Texture("ui/HD-assets/james-logo.png");
-        uniOfYorkLogoTexture = new Texture("ui/HD-assets/uni-of-york-logo.png");
-        vanbrughLogoTexture = new Texture("ui/HD-assets/vanbrugh-logo.png");
-        wentworthLogoTexture = new Texture("ui/HD-assets/wentworth-logo.png");
+        menusTopBarLeftTexture = new Texture("uiComponents/MenusTopBarLeft.png");
+        menusTopBarRightTexture = new Texture("uiComponents/MenusTopBarRight.png");
 
-        gameHUDBottomBarRightPartTexture = new Texture("ui/HD-assets/HUD-Bottom-Bar-Right-Part.png");
-        gameHUDTopBarTexture = new Texture("ui/HD-assets/HUD-Top-Bar.png");
-        endPhaseBtnTexture = new Texture("ui/HD-assets/End-Phase-Button.png");
+        // load college logos
+        alcuinLogoTexture = new Texture("logos/alcuin-logo.png");
+        derwentLogoTexture = new Texture("logos/derwent-logo.png");
+        halifaxLogoTexture = new Texture("logos/halifax-logo.png");
+        hesEastLogoTexture = new Texture("logos/hes-east-logo.png");
+        jamesLogoTexture = new Texture("logos/james-logo.png");
+        uniOfYorkLogoTexture = new Texture("logos/uni-of-york-logo.png");
+        vanbrughLogoTexture = new Texture("logos/vanbrugh-logo.png");
+        wentworthLogoTexture = new Texture("logos/wentworth-logo.png");
 
-         skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
+        gameHUDBottomBarRightPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Right-Part.png");
+        gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
+        endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png");
+
     }
 
     private void setupFont() {
-        FileHandle alteDinBig = new FileHandle("ui/Font/Alte-DIN-Big.fnt");
-        FileHandle alteDinSmall = new FileHandle("ui/Font/Alte-DIN-Small.fnt");
+        FileHandle alteDinBig = new FileHandle("font/Alte-DIN-Big.fnt");
+        FileHandle alteDinSmall = new FileHandle("font/Alte-DIN-Small.fnt");
         fontBig = new BitmapFont(alteDinBig);
         fontSmall = new BitmapFont(alteDinSmall);
-    }
-
-    /**
-     * Creates a dialog modal in the given stage with an ok button
-     *
-     * @param title String to be used at the top of the dialog box
-     * @param message String to be used as the content of the dialog
-     * @param stage The stage to draw the box onto
-     */
-    public static void errorDialogBox(String title, String message, Stage stage) {
-        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
-        Dialog dialog = new Dialog(title, skin) {
-            protected void result(Object object) {
-                // object is the button pressed
-            }
-        };
-        dialog.text(message);
-        dialog.button("Ok", 1L);
-        dialog.show(stage);
-    }
-
-    /**
-     * Creates a dialog modal in the given stage with an ok button
-     *
-     * @param nextPlayer String to be used to display the name of the next player
-     * @param troopsToAllocate Integer to be used to display number of troops
-     * @param stage The stage to draw the box onto
-     */
-    public static void nextTurnDialogBox(String nextPlayer, Integer troopsToAllocate, Stage stage) {
-        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
-        Dialog dialog = new Dialog("Next Turn", skin) {
-            protected void result(Object object) {
-                // object is the button pressed
-            }
-        };
-        dialog.text("Next Player: " + nextPlayer + "\nTroops to Allocate: " + troopsToAllocate);
-        dialog.button("Ok", 1L);
-        dialog.show(stage);
-    }
-
-    /**
-     * Creates a dialog modal in the given stage with an ok button
-     *
-     * @param stage The stage to draw the box onto
-     */
-    public static void exitDialogBox(Stage stage) {
-        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
-        Dialog dialog = new Dialog("Quit", skin) {
-            protected void result(Object object) {
-                if (object.toString() != "0"){
-                    Gdx.app.exit();
-                }
-            }
-        };
-        dialog.text("Are you sure you want to exit the game?");
-        dialog.button("Yes", "1");
-        dialog.button("No", "0");
-        dialog.show(stage);
-    }
-
-    /**
-     * Creates a dialog modal in the given stage with an ok button
-     *
-     * @param college String to be used to display which college has been conquered
-     * @param troops Integer to be used to display the troop bonus
-     * @param stage The stage to draw the box onto
-     */
-    public static void collegeConqueredDialogBox(String college, Integer troops, Stage stage) {
-        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
-        Dialog dialog = new Dialog("College Conquered!", skin) {
-            protected void result(Object object) {
-                // object is the button pressed
-            }
-        };
-        dialog.text("Congratulations! You conquered " + college + "!\nThis college provides: " + troops + " troops");
-        dialog.button("Ok", 1L);
-        dialog.show(stage);
-    }
-
-    /**
-     * Creates a dialog modal in the given stage with an ok button
-     *
-     * @param college String to be used to display the college
-     * @param stage The stage to draw the box onto
-     */
-    public static void collegeLostDialogBox(String college, Stage stage) {
-        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
-        Dialog dialog = new Dialog("College Lost!", skin) {
-            protected void result(Object object) {
-                // object is the button pressed
-            }
-        };
-        dialog.text("Oh no! You lost " + college + "!");
-        dialog.button("Ok", 1L);
-        dialog.show(stage);
-    }
-
-    /**
-     * Creates a dialog modal in the given stage with an ok button
-     *
-     * @param bonusTroops Integer used to provide the bonus troops provided by conquered tile
-     * @param maxTroops Interger used to provide troops on attacking tile
-     * @param stage The stage to draw the box onto
-     *
-     * @return Integer of troops to be moved to conquered tile
-     */
-    public static int attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, Stage stage) {
-        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
-        final Slider slider = new Slider(0, (maxTroops - 1), 1, false, skin);
-        final Label sliderValue = new Label("0", skin);
-        final int[] movedTroops = new int[1];
-        slider.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                sliderValue.setText(new StringBuilder((int)slider.getValue() + ""));
-            }
-        });
-      
-        Dialog dialog = new Dialog("Success!", skin) {
-          protected void result(Object object) {
-            movedTroops[0] = (int)slider.getValue();
-        }
-        };
-        dialog.text("Congratulations! You have earned " + bonusTroops + " bonus troops!\nHow many troops would you like to move?");
-        dialog.getContentTable().add(slider).padLeft(20).padRight(20).align(Align.left).expandX();
-        dialog.getContentTable().add(sliderValue).padLeft(20).padRight(20).align(Align.right);
-        dialog.getContentTable().row();
-        dialog.button("Ok", 1L);
-        dialog.show(stage);
-
-        return movedTroops[0];
-    }
-  
-    /**
-     * @param stage to display the dialog on
-     * @param maxAttackers max number of attackers the player chooses to attack with
-     * @param defenders how many units are defending
-     * @return the number of troops chosen to attack with or 0 if the attack is canceled
-     */
-    public static int attackDialog(Stage stage, int maxAttackers, int defenders, final int[] attackers) {
-        final Slider slider = new Slider(0, maxAttackers, 1, false, skin);
-        final Label sliderValue = new Label("0", skin);
-        slider.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                sliderValue.setText(new StringBuilder((int)slider.getValue() + ""));
-            }
-        });
-        
-        Dialog dialog = new Dialog("Select number of troops to attack with", skin) {
-            protected void result(Object object) {
-                // object is the button pressed
-                if (object.toString().equals("0")) {
-                    attackers[0] = 0;
-                } else {
-                    attackers[0] = (int)slider.getValue();
-                }
-                System.out.println(attackers[0]);
-            }
-        };;
-
-        // add labels saying the max number of attackers and how many defenders there are
-        dialog.text(new Label("Max attackers: " + maxAttackers, skin)).padLeft(20).padRight(20).align(Align.left);
-        dialog.text(new Label("Defenders: " + defenders, skin)).padLeft(20).padRight(20).align(Align.right);
-
-        dialog.getContentTable().row();
-
-        // add slider and label showing number of units selected
-        dialog.getContentTable().add(slider).padLeft(20).padRight(20).align(Align.left).expandX();
-        dialog.getContentTable().add(sliderValue).padLeft(20).padRight(20).align(Align.right);
-
-        dialog.getContentTable().row();
-
-        // add buttons for accepting or canceling the selection
-        dialog.button("Cancel", 0L).padLeft(20).padRight(40).align(Align.center);
-        dialog.button("Ok", 1L).padLeft(40).padRight(20).align(Align.center);
-
-        dialog.show(stage);
-
-        return 82;
     }
 
     public static TextButton genBasicButton(String buttonText) {
@@ -312,10 +137,10 @@ public class WidgetFactory {
         return new TextButton(buttonText, style);
     }
 
-    public static Table genTopBar(String text){
+    public static Table genMenusTopBar(String text){
+        Image menusTopBarLeft = new Image(new TextureRegionDrawable(new TextureRegion(menusTopBarLeftTexture)));
+        Image menusTopBarRight = new Image(new TextureRegionDrawable(new TextureRegion(menusTopBarRightTexture)));
 
-        Image leftPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Left-Part-Top-Bar.png"))));
-        Image rightPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Right-Part-Top-Bar.png"))));
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = fontBig;
         Label textLabel = new Label(text, style);
@@ -323,29 +148,29 @@ public class WidgetFactory {
         Table topBar = new Table();
         topBar.setDebug(false);
         topBar.left();
-        topBar.add(leftPart).height(60);
+        topBar.add(menusTopBarLeft).height(60);
         topBar.add(textLabel).padRight(20).padLeft(20);
-        topBar.add(rightPart).fillX().height(60);
+        topBar.add(menusTopBarRight).fillX().height(60);
 
         return topBar;
     }
 
     public static Table genBottomBar(String buttonText, ChangeListener changeListener){
 
-        Image leftPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Left-Part-End-Bottom-Bar.png"))));
+        Image leftPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/Left-Part-End-Bottom-Bar.png"))));
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.font = fontSmall;
-        buttonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Esc-Button-Bottom-Bar.png")));
-        buttonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Esc-Button-Bottom-Bar.png")));
+        buttonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/Esc-Button-Bottom-Bar.png")));
+        buttonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/Esc-Button-Bottom-Bar.png")));
         final TextButton escButton = new TextButton(buttonText, buttonStyle);
         escButton.addListener(changeListener);
 
-        Image centerPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Center-Part-Bottom-Bar.png"))));
+        Image centerPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/Center-Part-Bottom-Bar.png"))));
 
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = fontSmall;
-        style.background = new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Right-Part-Bottom-Bar.png")));
+        style.background = new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/Right-Part-Bottom-Bar.png")));
         String text = "BACHELORS OF" + "\n" + "DOMINATION";
         Label textLabel = new Label(text, style);
         textLabel.setAlignment(0, 40);
@@ -492,8 +317,6 @@ public class WidgetFactory {
         return new TextButton(buttonText, style);
     }
 
-
-
     /**
      * Generates the UI widget to be displayed at the bottom of the HUD
      * @param labelText what the bar should say
@@ -589,10 +412,12 @@ public class WidgetFactory {
     }
 
     public static BitmapFont getFontBig() {
-        return fontBig;
+        FileHandle alteDinBig = new FileHandle("font/Alte-DIN-Big.fnt");
+        return new BitmapFont(alteDinBig);
     }
 
     public static BitmapFont getFontSmall() {
-        return fontSmall;
+        FileHandle alteDinSmall = new FileHandle("font/Alte-DIN-Small.fnt");
+        return new BitmapFont(alteDinSmall);
     }
 }

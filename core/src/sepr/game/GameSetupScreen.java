@@ -104,7 +104,7 @@ public class GameSetupScreen implements Screen{
         this.stage.addActor(table);
         this.table.setDebug(false); // enable table drawing for ui debug
 
-        this.collegeTableBackground = new Texture("ui/HD-assets/Game-Setup-Name-Box.png");
+        this.collegeTableBackground = new Texture("uiComponents/Game-Setup-Name-Box.png");
 
         this.setupUi();
     }
@@ -463,7 +463,7 @@ public class GameSetupScreen implements Screen{
             validateCollegeSelection();
             validatePlayerConfiguration();
         } catch (GameSetupException e) {
-            WidgetFactory.errorDialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
+            DialogFactory.basicDialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
             return;
         }
 
@@ -480,10 +480,10 @@ public class GameSetupScreen implements Screen{
         });
 
         // add the menu background
-        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Menu-Background.png"))));
+        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
 
         table.center();
-        table.add(WidgetFactory.genTopBar("GAME SETUP")).colspan(2);
+        table.add(WidgetFactory.genMenusTopBar("GAME SETUP")).colspan(2);
 
         table.row();
         table.left();

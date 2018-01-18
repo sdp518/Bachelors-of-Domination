@@ -20,7 +20,7 @@ public class PlayerHuman extends Player {
 
     @Override
     protected void processAttackPhase(Stage stage, int maxAttackers, int defenders, int[] numOfAttackers) {
-        WidgetFactory.attackDialog(stage, maxAttackers, defenders, numOfAttackers);
+        DialogFactory.attackDialog(stage, maxAttackers, defenders, numOfAttackers);
     }
 
     @Override

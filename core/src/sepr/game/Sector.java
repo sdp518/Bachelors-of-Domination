@@ -105,7 +105,7 @@ public class Sector {
      * Sets the new texture for a sector
      * @param newPixmap the memory representation of the textures pixels
      */
-    public void setNewSectorTexture(Pixmap newPixmap) {
+    private void setNewSectorTexture(Pixmap newPixmap) {
         this.sectorTexture.dispose();
         Texture temp = new Texture(newPixmap);
         this.sectorTexture = temp;
@@ -180,7 +180,7 @@ public class Sector {
      * @param newColor what color the sector be changed to
      * @throws RuntimeException if attempt to recolor a decor sector
      */
-    public void changeSectorColor(Color newColor){
+    private void changeSectorColor(Color newColor){
         if (this.isDecor()) {
             throw new RuntimeException("Should not recolour decor sector");
         }
@@ -196,10 +196,10 @@ public class Sector {
                 }
             }
         }
-        //Texture t = new Texture(sector.getSectorPixmap().getWidth(), sector.getSectorPixmap().getHeight(), Pixmap.Format.RGBA8888); // create new texture to represent the sector
         this.setNewSectorTexture(newPix); // draw the generated pixmap to the new texture
         newPix.dispose();
     }
+
     // Shortened way of checking if the player captured the tile that turn
     public boolean justCapturedBy(int playerId){ return playerId == ownerId && playerId != prevOwnerId;  }
 }

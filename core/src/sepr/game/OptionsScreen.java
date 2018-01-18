@@ -150,10 +150,10 @@ public class OptionsScreen implements Screen {
     }
 
     private void setupUi() {
-        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Menu-Background.png"))));
+        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
 
         table.center();
-        table.add(WidgetFactory.genTopBar("OPTIONS")).colspan(2);
+        table.add(WidgetFactory.genMenusTopBar("OPTIONS")).colspan(2);
 
         table.row();
         table.add(setupOptionsTable()).expand();
