@@ -27,7 +27,15 @@ public class MenuScreen implements Screen {
     public MenuScreen(final Main main) {
         this.main = main;
 
-        this.stage = new Stage();
+        this.stage = new Stage() {
+            @Override
+            public boolean keyUp(int keyCode) {
+                if (keyCode == Input.Keys.ESCAPE) { // ask player if they would like to exit the game if they press escape
+                    WidgetFactory.exitDialogBox(stage);
+                }
+                return super.keyUp(keyCode);
+            }
+        };
         this.stage.setViewport(new ScreenViewport());
 
         this.table = new Table();
@@ -56,7 +64,6 @@ public class MenuScreen implements Screen {
         btnTable.row();
         btnTable.left();
         btnTable.add(optionsBtn).height(60).width(420).pad(30);
-
 
         startGameBtn.addListener(new ChangeListener() {
             @Override
@@ -112,8 +119,6 @@ public class MenuScreen implements Screen {
 
         })).colspan(2);
     }
-
-    int[] x;
 
     @Override
     public void show() {

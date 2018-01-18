@@ -171,8 +171,8 @@ public class WidgetFactory {
         Dialog dialog = new Dialog("Quit", skin) {
             protected void result(Object object) {
                 if (object.toString() != "0"){
-                    System.exit(0);
-                    }
+                    Gdx.app.exit();
+                }
             }
         };
         dialog.text("Are you sure you want to exit the game?");

@@ -1,6 +1,7 @@
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -86,10 +87,18 @@ public class GameSetupScreen implements Screen{
      *
      * @param main
      */
-    public GameSetupScreen (Main main) {
+    public GameSetupScreen (final Main main) {
         this.main = main;
 
-        this.stage = new Stage();
+        this.stage = new Stage(){
+            @Override
+            public boolean keyUp(int keyCode) {
+                if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                    main.setMenuScreen();
+                }
+                return super.keyUp(keyCode);
+            }
+        };
         this.table = new Table();
         this.table.setFillParent(true); // make ui table fill the entire screen
         this.stage.addActor(table);

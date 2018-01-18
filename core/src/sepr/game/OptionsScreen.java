@@ -1,10 +1,7 @@
 package sepr.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.Graphics.DisplayMode;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -47,10 +44,18 @@ public class OptionsScreen implements Screen {
     private CheckBox fullscreenSwitch;
     private CheckBox colourblindModeSwitch;
 
-    public OptionsScreen(Main main) {
+    public OptionsScreen(final Main main) {
         this.main = main;
 
-        this.stage = new Stage();
+        this.stage = new Stage(){
+            @Override
+            public boolean keyUp(int keyCode) {
+                if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                    main.setMenuScreen();
+                }
+                return super.keyUp(keyCode);
+            }
+        };
         this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
 
