@@ -12,7 +12,7 @@ public abstract class Player {
     private String playerName;
     private int troopsToAllocate; // how many troops the player has to allocate at the start of their next reinforcement phase
     private Color sectorColour; // what colour to shade sectors owned by the player
-    protected PlayerType playerType;
+    private PlayerType playerType;
 
     /**
      * @param id player's unique identifier
@@ -43,8 +43,28 @@ public abstract class Player {
         return sectorColour;
     }
 
+    /**
+     * sets the number of troops this player has to allocate to this value
+     * @param troopsToAllocate number of troops to allocate
+     */
     public void setTroopsToAllocate(int troopsToAllocate) {
         this.troopsToAllocate = troopsToAllocate;
+    }
+
+    /**
+     * increases the number of troops to allocate by the the given amount
+     * @param troopsToAllocate amount to increase allocation by
+     */
+    public void addTroopsToAllocate(int troopsToAllocate) {
+        this.troopsToAllocate += troopsToAllocate;
+    }
+
+    /**
+     * fetches number of troops this player can allocate in their next turn
+     * @return amount troops to allocate
+     */
+    public int getTroopsToAllocate() {
+        return troopsToAllocate;
     }
 
     /**
@@ -58,31 +78,17 @@ public abstract class Player {
     protected abstract void processAttackPhase(Stage stage, int maxAttackers, int defenders, int[] numOfAttackers);
 
     /**
-     * Let player move troops between adjacent friendly territories
-     */
-    protected abstract void processMovePhase();
-
-    /**
      * Let the player choose where to allocate their additional reinforcements
      * @param amount thr amount of toops available to allocate
      * @return how many troops remaining they may allocate in a future turn
      */
-    protected abstract int processAllocationPhase(int amount);
-
-    /**
-     * resolves a conflict between two territories
-     *
-     * @param attackingSectorId       id of sector carrying out the attack
-     * @param defendingSectorId       id of sector being attacked
-     * @param amountOfTroopsAttacking number of troops that are being used to attack with
-     * @throws IllegalArgumentException if a player is attacking a sector it owns
-     * @throws IllegalArgumentException if sectors are not connected
-     */
-    private static void resolveCombat(int attackingSectorId, int defendingSectorId, int amountOfTroopsAttacking) {
-
-    }
+    protected abstract void processAllocationPhase(int amount);
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public PlayerType getPlayerType() {
+        return playerType;
     }
 }

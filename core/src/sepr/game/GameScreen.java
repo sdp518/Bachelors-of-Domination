@@ -75,7 +75,13 @@ public class GameScreen implements Screen, InputProcessor{
      */
     public void setupGame(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
         this.players = players;
-        this.turnOrder = new ArrayList<Integer>(players.keySet());
+        this.turnOrder = new ArrayList<Integer>();
+        for (Integer i : players.keySet()) {
+            if (players.get(i).getPlayerType() != PlayerType.NEUTRAL_AI) { // don't add the neutral player to the turn order
+                this.turnOrder.add(i);
+            }
+        }
+
         this.turnTimerEnabled = turnTimerEnabled;
         this.maxTurnTime = maxTurnTime;
         this.turnTimeStart = System.currentTimeMillis();
@@ -87,6 +93,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, map));
         this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, map));
         this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this, map));
+        initiateNewPhase();
 
         gameSetup = true;
     }
@@ -122,7 +129,24 @@ public class GameScreen implements Screen, InputProcessor{
                 break;
         }
         this.updateInputProcessor();
-        this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
+        initiateNewPhase();
+    }
+
+    /**
+     * loads the next phase and applies the correct additional information
+     */
+    private void initiateNewPhase() {
+        switch (currentPhase) {
+            case REINFORCEMENT:
+                this.phases.get(currentPhase).enterPhase(players.get(currentPlayer), "Troop Allocation: " + players.get(currentPlayer).getTroopsToAllocate());
+                break;
+            case ATTACK:
+                this.phases.get(currentPhase).enterPhase(players.get(currentPlayer), "");
+                break;
+            case MOVEMENT:
+                this.phases.get(currentPhase).enterPhase(players.get(currentPlayer), "");
+                break;
+        }
     }
 
     /**
@@ -144,8 +168,6 @@ public class GameScreen implements Screen, InputProcessor{
         return players.get(id);
     }
 
-
-
     /**
      * Called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
      */
@@ -159,6 +181,7 @@ public class GameScreen implements Screen, InputProcessor{
         resetCameraPosition();
 
         // add the next player dialog box here
+        WidgetFactory.nextTurnDialogBox(players.get(currentPlayer).getPlayerName(), players.get(currentPlayer).getTroopsToAllocate(), phases.get(currentPhase));
 
         if (this.turnTimerEnabled) {
             this.turnTimeStart = System.currentTimeMillis();

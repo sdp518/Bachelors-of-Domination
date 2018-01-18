@@ -24,12 +24,7 @@ public class PlayerHuman extends Player {
     }
 
     @Override
-    protected void processMovePhase() {
+    protected void processAllocationPhase(int amount) {
 
-    }
-
-    @Override
-    protected int processAllocationPhase(int amount) {
-        return 0;
     }
 }

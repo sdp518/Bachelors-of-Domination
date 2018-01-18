@@ -110,32 +110,17 @@ public class GameSetupScreen implements Screen{
     }
 
     /**
-     * update the player type label when the left ui button is pressed
+     * update the player type label when the left or right ui button is pressed
      * @param playerLabel to update the contents of
      */
-    private void leftPlayerTypeButtonPress(Label playerLabel){
+    private void togglePlayerType(Label playerLabel){
         if (playerLabel.getText().toString().equals(PlayerType.NONE.getPlayerType())){
-            playerLabel.setText(PlayerType.AI.getPlayerType());
-        }else if (playerLabel.getText().toString().equals(PlayerType.HUMAN.getPlayerType())){
-            playerLabel.setText(PlayerType.NONE.getPlayerType());
-        }else {
             playerLabel.setText(PlayerType.HUMAN.getPlayerType());
+        }else if (playerLabel.getText().toString().equals(PlayerType.HUMAN.getPlayerType())) {
+            playerLabel.setText(PlayerType.NONE.getPlayerType());
         }
     }
 
-    /**
-     * update the player type label when the right ui button is pressed
-     * @param playerLabel to update the contents of
-     */
-    private void rightPlayerTypeButtonPress(Label playerLabel){
-        if (playerLabel.getText().toString().equals(PlayerType.NONE.getPlayerType())){
-            playerLabel.setText(PlayerType.HUMAN.getPlayerType());
-        }else if (playerLabel.getText().toString().equals(PlayerType.HUMAN.getPlayerType())){
-            playerLabel.setText(PlayerType.AI.getPlayerType());
-        }else {
-            playerLabel.setText(PlayerType.NONE.getPlayerType());
-        }
-    }
 
     /**
      * finds the name of the next college when the left UI button is pressed
@@ -200,14 +185,14 @@ public class GameSetupScreen implements Screen{
             leftButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    leftPlayerTypeButtonPress(playerTypes[finalI]);
+                    togglePlayerType(playerTypes[finalI]);
                 }
             });
 
             rightButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    rightPlayerTypeButtonPress(playerTypes[finalI]);
+                    togglePlayerType(playerTypes[finalI]);
                 }
             });
 
@@ -381,15 +366,12 @@ public class GameSetupScreen implements Screen{
             if (playerTypes[i].getText().toString().equals(PlayerType.HUMAN.getPlayerType())) {
                 // create human player
                 players.put(i, new PlayerHuman(i, CollegeName.fromString(playerColleges[i].getKey().getText().toString()), getCollegeColor(CollegeName.fromString(playerColleges[i].getKey().getText().toString())), playerNames[i].getText()));
-            } else if (playerTypes[i].getText().toString().equals(PlayerType.AI.getPlayerType())) {
-                // create AI player
-                players.put(i, new PlayerAI(i, CollegeName.fromString(playerColleges[i].getKey().getText().toString()), getCollegeColor(CollegeName.fromString(playerColleges[i].getKey().getText().toString())), playerNames[i].getText()));
             }
         }
 
         // setup neutral player
         if (neutralPlayerSwitch.isChecked()) {
-            players.put(MAX_NUMBER_OF_PLAYERS, new PlayerNeutralAI(MAX_NUMBER_OF_PLAYERS, CollegeName.UNI_OF_YORK, "THE NEUTRAL PLAYER"));
+            players.put(MAX_NUMBER_OF_PLAYERS, new PlayerNeutralAI(MAX_NUMBER_OF_PLAYERS, CollegeName.UNI_OF_YORK));
         }
         return players;
     }

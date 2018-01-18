@@ -185,7 +185,7 @@ public class Map{
         // search for neutral player
         int neutralPlayerId = -1;
         for (Player player : players.values()) {
-            if (player.playerType.equals(PlayerType.NEUTRAL_AI)) {
+            if (player.getPlayerType().equals(PlayerType.NEUTRAL_AI)) {
                 neutralPlayerId = player.getId();
                 break;
             }

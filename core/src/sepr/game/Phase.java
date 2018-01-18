@@ -21,7 +21,7 @@ public abstract class Phase extends Stage {
     private TurnPhaseType turnPhase;
 
     private Label playerNameLabel;
-    private Label troopsNumberLabel;
+    private Label additionalInformationLabel; // label for writing extra phase specific information, i.e. troops to allocate in the turn phase
     private Label turnTimerLabel;
     private Image collegeLogo;
 
@@ -86,15 +86,15 @@ public abstract class Phase extends Stage {
      * Generates the UI widget to be displayed at the bottom left of the HUD
      * @param collegeName  name of college chosen by player
      * @param playerName name of the player
-     * @param troopsNumber number of troops that can be placed
+     * @param additionalInformation text for writing extra phase specific information, i.e. troops to allocate in the turn phase
      * @param turnTimer time for the turn
      * @return table containing the information to display in the HUD
      */
-    private Table genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName collegeName, String playerName, String troopsNumber, String turnTimer){
+    private Table genGameHUDBottomBarLeftPart(GameSetupScreen.CollegeName collegeName, String playerName, String additionalInformation, String turnTimer){
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = WidgetFactory.getFontSmall();
         playerNameLabel = new Label(playerName, style);
-        troopsNumberLabel = new Label(troopsNumber, style);
+        additionalInformationLabel = new Label(additionalInformation, style);
         turnTimerLabel = new Label(turnTimer, style);
         collegeLogo = new Image(WidgetFactory.genCollegeLogoDrawable(collegeName));
 
@@ -106,7 +106,7 @@ public abstract class Phase extends Stage {
         subTable.left().add(collegeLogo).height(80).width(100).pad(0);
         subTable.right().add(playerNameLabel).pad(0);
         subTable.row();
-        subTable.add(troopsNumberLabel).colspan(2);
+        subTable.add(additionalInformationLabel).colspan(2);
         subTable.row();
         subTable.add(turnTimerLabel).colspan(2);
 
@@ -128,17 +128,26 @@ public abstract class Phase extends Stage {
         }
     }
 
-    void enterPhase(Player player) {
+    void enterPhase(Player player, String additionalInformation) {
         this.currentPlayer = player;
 
         playerNameLabel.setText(new StringBuilder((CharSequence) currentPlayer.getPlayerName()));
-        troopsNumberLabel.setText(new StringBuilder("xx"));
+        additionalInformationLabel.setText(new StringBuilder("xx"));
         collegeLogo.setDrawable(WidgetFactory.genCollegeLogoDrawable(player.getCollegeName()));
+        setAdditionalInformation(additionalInformation);
     }
 
 
     void setTimerValue(int timeRemaining) {
         turnTimerLabel.setText(new StringBuilder("Turn Timer: " + timeRemaining));
+    }
+
+    /**
+     * sets the text displayed on the additional information label
+     * @param additionalInformation
+     */
+    void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformationLabel.setText(additionalInformation);
     }
 
     /**
