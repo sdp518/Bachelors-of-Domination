@@ -56,7 +56,7 @@ public class DialogFactory {
     public static void exitDialogBox(Stage stage) {
         Dialog dialog = new Dialog("Quit", DialogFactory.skin) {
             protected void result(Object object) {
-                if (object.toString().equals("0")){
+                if (object.toString().equals("1")){
                     Gdx.app.exit();
                 }
             }
@@ -104,6 +104,47 @@ public class DialogFactory {
         dialog.getContentTable().row();
 
         dialog.button("Ok", 1L);
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog modal in the given stage with an ok button
+     *
+     * @param maxAllocation maximum amount of troops that can be assigned to this tile
+     * @param allocation 2 index array storing : [0] number of troops to allocate ; [1] id of sector to allocate to
+     * @param sectorName name of sector being allocated to
+     * @param stage The stage to draw the box onto
+     */
+    public static void allocateUnitsDialog(Integer maxAllocation, final int[] allocation, String sectorName, Stage stage) {
+        final Slider slider = new Slider(0, maxAllocation, 1, false, DialogFactory.skin);
+        final Label sliderValue = new Label("0", DialogFactory.skin);
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                sliderValue.setText(new StringBuilder((int)slider.getValue() + ""));
+            }
+        });
+
+        Dialog dialog = new Dialog("Select amount of troops to allocate", DialogFactory.skin) {
+            protected void result(Object object) {
+                if (object.equals("0")) {
+                    allocation[0] = -1;
+                    allocation[1] = -1;
+                } else if (object.equals("1")) {
+                    allocation[0] = (int)slider.getValue();
+                }
+            }
+        };
+        dialog.text("You can allocate up to " + maxAllocation + " troops to " + sectorName);
+        dialog.getContentTable().row();
+
+        dialog.getContentTable().add(slider).padLeft(20).padRight(20).align(Align.left).expandX();
+        dialog.getContentTable().add(sliderValue).padLeft(20).padRight(20).align(Align.right);
+
+        dialog.getContentTable().row();
+
+        dialog.button("Cancel", "0");
+        dialog.button("Ok", "1");
         dialog.show(stage);
     }
 

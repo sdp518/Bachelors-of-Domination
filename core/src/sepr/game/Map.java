@@ -297,7 +297,12 @@ public class Map{
         }
     }
 
-    private void addUnitsToSectorAnimated(int sectorId, int amount) {
+    /**
+     * adds the specified number of units to this sector and sets up drawing a particle effect showing the addition
+     * @param sectorId id of sector to add the units to
+     * @param amount of units to add
+     */
+    public void addUnitsToSectorAnimated(int sectorId, int amount) {
         this.sectors.get(sectorId).addUnits(amount);
         this.particles.add(new UnitChangeParticle(amount, new Vector2(sectors.get(sectorId).getSectorCentreX(), sectors.get(sectorId).getSectorCentreY())));
     }
