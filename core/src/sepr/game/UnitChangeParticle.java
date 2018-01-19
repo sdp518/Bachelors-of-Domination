@@ -1,61 +1,59 @@
 package sepr.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * class for rendering a particle effect showing the change in number of troops on a sector
+ */
 public class UnitChangeParticle {
-    private final long DISPLAY_DURATION = 1000000000;
+    private final long DISPLAY_DURATION = 1000; // display particle for 1000ms i.e. 1 second
 
-    private String amount;
-    private GlyphLayout glyphLayout;
-    private Vector2 centrePosition;
-    private long startTime;
-    private BitmapFont font;
-    private float overlaySize = 40.0f;
+    private GlyphLayout glyphLayout; // layout for calculating text rendering position
+    private Vector2 centrePosition; // where the particle is to be initially drawn
+    private long startTime; // time when particle created
+    private BitmapFont font; // font for rendering the amount
+    private final float overlaySize = 40.0f; // size of the background overlay
     private Texture overlay;
 
     public UnitChangeParticle(int amount, Vector2 centrePosition) {
         this.centrePosition = centrePosition;
-        this.startTime = System.nanoTime();
-        overlay = new Texture("ui/troopCountOverlay.png");
+        this.startTime = System.currentTimeMillis();
+        overlay = new Texture("uiComponents/troopCountOverlay.png");
 
-        setupFont();
-        if (amount > 0) {
+        font = WidgetFactory.getFontSmall();
+
+        String signedAmount;
+        if (amount > 0) { // if increase make text green and add a plus sign
             this.font.setColor(Color.GREEN);
-            this.amount = "+" + amount;
-        } else {
+            signedAmount = "+" + amount;
+        } else { // if decrease make text red and add a minus sign
             this.font.setColor(Color.RED);
-            this.amount = "" + amount;
+            signedAmount = "" + amount;
         }
-        this.glyphLayout = new GlyphLayout(font, this.amount);
+        this.glyphLayout = new GlyphLayout(font, signedAmount);
     }
 
-    private void setupFont() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 20;
-        font = generator.generateFont(parameter);
-
-        generator.dispose();
-    }
 
     /**
      * returns true if this particle has existed for too long and should be deleted
      * @return if this particle should be deleted
      */
     public boolean toDelete() {
-        return System.nanoTime() - startTime > DISPLAY_DURATION;
+        return System.currentTimeMillis() - startTime > DISPLAY_DURATION;
     }
 
+    /**
+     * draws the particle to the passed spritebatch
+     * @param batch sprite batch to draw the particle to
+     */
     public void draw(SpriteBatch batch) {
-        int yOffset = (int)Math.pow((double)((System.nanoTime() - startTime) / 8000000), 0.75);
-        batch.draw(overlay, centrePosition.x - overlaySize / 2 , centrePosition.y - overlaySize / 2 + yOffset, overlaySize, overlaySize);
-        font.draw(batch, glyphLayout, centrePosition.x - glyphLayout.width / 2, centrePosition.y + glyphLayout.height / 2 + yOffset);
+        int yOffset = (int)Math.pow((double)((System.currentTimeMillis() - startTime) / 8), 0.75); // calculate how far to offset the Y-Coord of the particle
+        batch.draw(overlay, centrePosition.x - overlaySize / 2 , centrePosition.y - overlaySize / 2 + yOffset, overlaySize, overlaySize); // draw overlay
+        font.draw(batch, glyphLayout, centrePosition.x - glyphLayout.width / 2, centrePosition.y + glyphLayout.height / 2 + yOffset); // draw text
     }
 }

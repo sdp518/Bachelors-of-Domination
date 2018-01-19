@@ -6,19 +6,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- * Created by Dom's Surface Mark 2 on 16/11/2017.
+ * stores the game map and the sectors within it
  */
 public class Map{
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
@@ -28,62 +26,40 @@ public class Map{
     private BitmapFont font; // font for rendering sector unit data
     private GlyphLayout layout = new GlyphLayout();
 
-    private Texture troopCountOverlay = new Texture("ui/troopCountOverlay.png");
+    private Texture troopCountOverlay = new Texture("uiComponents/troopCountOverlay.png");
     private float overlaySize = 40.0f;
+
+    private int[] unitsToMove; // units to move from an attacking to conquered sector, 3 index array : [0] amount to move; [1] source sector id ; [2] target sector id
 
     /**
      * Performs the maps initial setup
      * Initialises the sectors as objects storing them in a HashMap
      * Initialises the sector colours storing them in a HashMap
      */
-    public Map(HashMap<Integer, Player> players) {
+    public Map(HashMap<Integer, Player> players, boolean allocateNeutralPlayer) {
         this.loadSectors();
         this.loadColleges();
-        this.setupFont();
+        font = WidgetFactory.getFontSmall();
 
         particles = new ArrayList<UnitChangeParticle>();
-        this.allocateSectors(players);
+        this.allocateSectors(players, allocateNeutralPlayer);
     }
 
     /**
      *
-     * @param stringData
-     * @return
+     * @param stringData space separated integers e.g. '1 2 3 4 5'
+     * @return the integers in the data in an array
      */
     private int[] strToIntArray(String stringData) {
         String[] strArray = stringData.split(" ");
         int[] intArray = new int[strArray.length];
         for (int i = 0; i < intArray.length; i++) {
             if (strArray[i].equals("")) {
-                continue; // skip if no adjacent sectors
+                continue; // skip if no values in array
             }
             intArray[i] = Integer.parseInt(strArray[i]);
         }
         return intArray;
-    }
-
-    /**
-     * converts an array of sector data to a sector object
-     * @param sectorData sector data taken from the sectorProperties csv file
-     * @return a sector with the properties fo the supplied data
-     */
-    private Sector sectorDataToSector(String[] sectorData) {
-        int sectorId = Integer.parseInt(sectorData[0]);
-        int ownerId = -1;
-        String filename = sectorData[1];
-        Texture sectorTexture = new Texture(sectorData[1]);
-        Pixmap sectorPixmap = new Pixmap(Gdx.files.internal(sectorData[1]));
-        String displayName = sectorData[2];
-        int unitsInSector = Integer.parseInt(sectorData[3]);
-        int reinforcementsProvided = Integer.parseInt(sectorData[4]);
-        String college = sectorData[5];
-        boolean neutral = Boolean.parseBoolean(sectorData[6]);
-        int[] adjacentSectors = strToIntArray(sectorData[7]);
-        int sectorX = Integer.parseInt(sectorData[8]);
-        int sectorY = Integer.parseInt(sectorData[9]);
-        boolean decor = Boolean.parseBoolean(sectorData[10]);
-
-        return new Sector(sectorId, ownerId, filename, sectorTexture, sectorPixmap, displayName, unitsInSector, reinforcementsProvided, college, neutral, adjacentSectors, sectorX, sectorY, decor);
     }
 
     /**
@@ -92,7 +68,7 @@ public class Map{
     private void loadSectors() {
         this.sectors = new HashMap<Integer, Sector>();
 
-        String csvFile = "sectorProperties.csv";
+        String csvFile = "mapData/sectorProperties.csv";
         String line = "";
         Integer ID = 0;
         try {
@@ -109,34 +85,27 @@ public class Map{
     }
 
     /**
-     * conversion of String type to List<integer> for use in collegeDataToCollege
-     * @param stringData
-     * @return ListArray
+     * converts an array of sector data to a sector object
+     * @param sectorData sector data taken from the sectorProperties csv file
+     * @return a sector with the properties fo the supplied data
      */
-    private List<Integer> strToListInt(String stringData){
-        String[] strArray = stringData.split(" ");
-        List<Integer> listArray = new ArrayList<Integer>(strArray.length);
-        for (int i = 0; i < listArray.size(); i++) {
-            if (strArray[i].equals("")) {
-                continue; //skip if sector not in college
-            }
-            listArray.set(i, Integer.parseInt(strArray[i]));
-        }
-        return listArray;
-    }
+    private Sector sectorDataToSector(String[] sectorData) {
+        int sectorId = Integer.parseInt(sectorData[0]);
+        int ownerId = -1;
+        String filename = "mapData/" + sectorData[1];
+        Texture sectorTexture = new Texture("mapData/" + sectorData[1]);
+        Pixmap sectorPixmap = new Pixmap(Gdx.files.internal("mapData/" + sectorData[1]));
+        String displayName = sectorData[2];
+        int unitsInSector = Integer.parseInt(sectorData[3]);
+        int reinforcementsProvided = Integer.parseInt(sectorData[4]);
+        int collegeId = Integer.parseInt(sectorData[5]);
+        boolean neutral = Boolean.parseBoolean(sectorData[6]);
+        int[] adjacentSectors = strToIntArray(sectorData[7]);
+        int sectorX = Integer.parseInt(sectorData[8]);
+        int sectorY = Integer.parseInt(sectorData[9]);
+        boolean decor = Boolean.parseBoolean(sectorData[10]);
 
-    /**
-     *
-     * @param collegeData
-     * @return College(collegeId, displayName, reinforcementAmount, sectorIds)
-     */
-    private College collegeDataToCollege(String[] collegeData){
-        int collegeId = Integer.parseInt(collegeData[0]);
-        String displayName = collegeData[1];
-        int reinforcementAmount = Integer.parseInt(collegeData[2]);
-        List<Integer> sectorIds = strToListInt(collegeData[3]);
-
-        return new College(collegeId, displayName, reinforcementAmount, sectorIds);
+        return new Sector(sectorId, ownerId, filename, sectorTexture, sectorPixmap, displayName, unitsInSector, reinforcementsProvided, collegeId, neutral, adjacentSectors, sectorX, sectorY, decor);
     }
 
     /**
@@ -145,7 +114,7 @@ public class Map{
     private void loadColleges(){
         this.colleges = new HashMap<Integer, College>();
 
-        String csvFile = "collegeProperties.csv";
+        String csvFile = "mapData/collegeProperties.csv";
         String line = "";
         Integer ID = 0;
         try {
@@ -159,43 +128,39 @@ public class Map{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
      *
+     * @param collegeData a string array containing the properties of a college in the format <College name> <Bonus> <Sector IDs in college>
+     * @return College(collegeId, displayName, reinforcementAmount, sectorIds)
      */
-    private void setupFont() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 20;
-        font = generator.generateFont(parameter);
+    private College collegeDataToCollege(String[] collegeData){
+        int collegeId = Integer.parseInt(collegeData[0]);
+        String displayName = collegeData[1];
+        int reinforcementAmount = Integer.parseInt(collegeData[2]);
+        int[] sectorIds = strToIntArray(collegeData[3]);
 
-        generator.dispose();
+        return new College(collegeId, displayName, reinforcementAmount, sectorIds);
     }
 
     /**
-     *
+     * allocates sectors in the map to the players in a semi-random fashion
+     * if there is a neutral player then the default neutral sectors are allocated to them
+     * @param players the sectors are to be allocated to
+     * @param allocateNeutralPlayer
+     * @throws RuntimeException if the players hashmap is empty
      */
-    public void allocateSectors(HashMap<Integer, Player> players) {
+    public void allocateSectors(HashMap<Integer, Player> players, boolean allocateNeutralPlayer) {
         if (players.size() == 0) {
             throw new RuntimeException("Cannot allocate sectors to 0 players");
         }
 
-        // search for neutral player
-        int neutralPlayerId = -1;
-        for (Player player : players.values()) {
-            if (player.playerType.equals(PlayerType.NEUTRAL_AI)) {
-                neutralPlayerId = player.getId();
-                break;
-            }
-        }
-
         // set any default neutral sectors to the neutral player
-        if (neutralPlayerId != -1) {
+        if (allocateNeutralPlayer) {
             for (Sector sector : sectors.values()) {
                 if (sector.isNeutral()  && !sector.isDecor()) {
-                    sector.setOwner(players.get(neutralPlayerId));
+                    sector.setOwner(players.get(GameScreen.NEUTRAL_PLAYER_ID));
                 }
             }
         }
@@ -203,20 +168,20 @@ public class Map{
         HashMap<Integer, Integer> playerReinforcements = new HashMap<Integer, Integer>(); // mapping of player id to amount of reinforcements they will receive currently
         // set all players to currently be receiving 0 reinforcements
         for (Integer i : players.keySet()) {
-            if (i != neutralPlayerId) playerReinforcements.put(i, 0);
+            if (i != GameScreen.NEUTRAL_PLAYER_ID) playerReinforcements.put(i, 0);
         }
 
         int lowestReinforcementId = players.get(0).getId(); // id of player currently receiving the least reinforcements
         List<Integer> sectorIdsRandOrder = new ArrayList<Integer>(getSectorIds());
-        Collections.shuffle(sectorIdsRandOrder);
+        Collections.shuffle(sectorIdsRandOrder); // randomise the order sectors are allocated
 
         for (Integer i : sectorIdsRandOrder) {
             if (!sectors.get(i).isAllocated()) {
-                if (this.getSector(i).isDecor()) {
+                if (this.getSectorById(i).isDecor()) {
                     continue; // skip allocating sector if it is a decor sector
                 }
-                this.getSector(i).setOwner(players.get(lowestReinforcementId));
-                playerReinforcements.put(lowestReinforcementId, playerReinforcements.get(lowestReinforcementId) + this.getSector(i).getReinforcementsProvided()); // updates player reinforcements hashmap
+                this.getSectorById(i).setOwner(players.get(lowestReinforcementId));
+                playerReinforcements.put(lowestReinforcementId, playerReinforcements.get(lowestReinforcementId) + this.getSectorById(i).getReinforcementsProvided()); // updates player reinforcements hashmap
 
                 // find the new player with lowest reinforcements
                 int minReinforcements = Collections.min(playerReinforcements.values()); // get lowest reinforcement amount
@@ -235,59 +200,148 @@ public class Map{
      * @return -1 if there is no winner or the ID of the player that controls all the sectors
      */
     public int checkForWinner() {
-        return -1;
+        Set<Integer> owners = new HashSet<Integer>();
+        int lastOwner = -1;
+        for (Sector sector : sectors.values()) {
+            if (!sector.isDecor()) { // ignore decor sectors
+                owners.add(sector.getOwnerId()); // add the owner of the sector to the set of owners
+                lastOwner = sector.getOwnerId(); // keep track of the last owner, will be returned if it is the only one
+            }
+        }
+        if (owners.size() > 1) {
+            return -1;
+        } else {
+            return lastOwner;
+        }
     }
 
     /**
-     * Tranfers units from one sector to another
+     * carries out the unit movement specified by unitsToMove array
+     *  - unitsToMove[0] : number of units to move
+     *  - unitsToMove[1] : source sector id
+     *  - unitsToMove[2] : target sector id
      * @throws IllegalArgumentException if the sector are not both owned by the same player
-     * @throws IllegalArgumentException if the amount exceeds the number of units on the source sector
+     * @throws IllegalArgumentException if the amount exceeds the (number of units - 1) on the source sector
      * @throws IllegalArgumentException if the sectors are not connected
-     * @param sourceSectorId where to move the units from
-     * @param targetSectorId where to move the units to
-     * @param amount how many units to move
      */
-    private void moveUnits(int sourceSectorId, int targetSectorId, int amount) {
-
+    private void moveUnits() throws IllegalArgumentException {
+        if (sectors.get(unitsToMove[1]).getOwnerId() != sectors.get(unitsToMove[2]).getOwnerId()) {
+            throw new IllegalArgumentException("Source and target sectors must have the same owners");
+        }
+        if (sectors.get(unitsToMove[1]).getUnitsInSector() <= unitsToMove[0]) {
+            throw new IllegalArgumentException("Must leave at least one unit on source sector and can't move more units than are on source sector");
+        }
+        if (!sectors.get(unitsToMove[1]).isAdjacentTo(sectors.get(unitsToMove[2]))) {
+            throw new IllegalArgumentException("Sectors must be adjacent in order to move units");
+        }
+        addUnitsToSectorAnimated(unitsToMove[1], -unitsToMove[0]); // remove units from source
+        addUnitsToSectorAnimated(unitsToMove[2], unitsToMove[0]); // add units to target
     }
 
+    /**
+     * processes an attack from one sector to another
+     * triggers specific dialogs dependent on the outcome of the attack
+     * controls reassigning owners dependent on the outcome of the attack
+     * sets up drawing particle effects showing changes in amount of units in a sector
+     * sets up movement of units after conquering a sector
+     *
+     * @param attackingSectorId id of the sector the attack is coming from
+     * @param defendingSectorId id of the defending sector
+     * @param attackersLost amount of units lost on the attacking sector
+     * @param defendersLost amount of units lost on the defenfing sector
+     * @param attacker the player who is carrying out the attack
+     * @param defender the player who is being attacked
+     * @param neutral the neutral player
+     * @param stage the stage to draw any dialogs to
+     * @throws IllegalArgumentException if the amount of attackers lost exceeds the amount of attackers
+     * @throws IllegalArgumentException if the amount of defenders lost exceeds the amount of attackers
+     */
+    public void attackSector(int attackingSectorId, int defendingSectorId, int attackersLost, int defendersLost, Player attacker, Player defender, Player neutral, Stage stage) {
+        if (sectors.get(attackingSectorId).getUnitsInSector() < attackersLost) {
+            throw new IllegalArgumentException("Cannot loose more attackers than are on the sector: Attackers " + sectors.get(attackingSectorId).getUnitsInSector() + "     Attackers Lost " + attackersLost);
+        }
+        if (sectors.get(defendingSectorId).getUnitsInSector() < defendersLost) {
+            throw new IllegalArgumentException("Cannot loose more defenders than are on the sector: Defenders " + sectors.get(attackingSectorId).getUnitsInSector() + "     Defenders Lost " + attackersLost);
+        }
+
+        addUnitsToSectorAnimated(attackingSectorId, -attackersLost); // apply amount of attacking units lost
+        addUnitsToSectorAnimated(defendingSectorId, -defendersLost); // apply amount of defending units lost
+
+        /* explain outcome to player using dialog box, possible outcomes
+         * - All defenders killed, more than one attacker left      -->     successfully conquered sector, player is asked how many units they want to move onto it
+         * - All defenders killed, one attacker left                -->     sector attacked becomes neutral as player can't move units onto it
+         * - Not all defenders killed, all attackers killed         -->     attacking sector becomes neutral
+         * - Not all defenders killed, not all attackers killed     -->     both sides loose troops, no dialog to display
+         * */
+        if (sectors.get(attackingSectorId).getUnitsInSector() == 0) { // attacker lost all troops
+            DialogFactory.sectorOwnerChangeDialog(attacker.getPlayerName(), neutral.getPlayerName(), sectors.get(attackingSectorId).getDisplayName(), stage);
+            sectors.get(attackingSectorId).setOwner(neutral);
+            if (sectors.get(defendingSectorId).getUnitsInSector() == 0) { // both players wiped each other out
+                DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(attackingSectorId).getDisplayName(), stage);
+                sectors.get(defendingSectorId).setOwner(neutral);
+            }
+        } else if (sectors.get(defendingSectorId).getUnitsInSector() == 0 && sectors.get(attackingSectorId).getUnitsInSector() > 1) { // territory conquered
+            unitsToMove = new int[3];
+            unitsToMove[0] = -1;
+            unitsToMove[1] = attackingSectorId;
+            unitsToMove[2] = defendingSectorId;
+
+            attacker.addTroopsToAllocate(sectors.get(defendingSectorId).getReinforcementsProvided());
+            DialogFactory.attackSuccessDialogBox(sectors.get(defendingSectorId).getReinforcementsProvided(), sectors.get(attackingSectorId).getUnitsInSector(), unitsToMove, defender.getPlayerName(), attacker.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage);
+            sectors.get(defendingSectorId).setOwner(attacker);
+        } else if (sectors.get(defendingSectorId).getUnitsInSector() == 0 && sectors.get(attackingSectorId).getUnitsInSector() == 1) { // territory conquered but only one attacker remaining so can't move troops onto it
+            DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage);
+            sectors.get(defendingSectorId).setOwner(neutral);
+        }
+    }
+
+    /**
+     * adds the specified number of units to this sector and sets up drawing a particle effect showing the addition
+     * @param sectorId id of sector to add the units to
+     * @param amount of units to add
+     */
     public void addUnitsToSectorAnimated(int sectorId, int amount) {
         this.sectors.get(sectorId).addUnits(amount);
         this.particles.add(new UnitChangeParticle(amount, new Vector2(sectors.get(sectorId).getSectorCentreX(), sectors.get(sectorId).getSectorCentreY())));
     }
 
     /**
-     * calculates how many reinforcements the given player should receive based on the sectors they control by summing reinforcementsProvided for each Sector they control
+     * calculates how many reinforcements the given player should receive based which colleges they own
      * @param playerId player who calculation is for
      * @return returns the amount of reinforcements the player should be allocated
      */
-    public int calculateReinforcementAmount(int playerId) {
-        int count = 0;
-        for (Sector s : sectors.values()){
-            // Checks whether the tile is able to be captured and just captured that turn
-            if (!s.isDecor() && s.justCapturedBy(playerId)) {
-                count += s.getReinforcementsProvided();
-                s.updateOwnerId();
+    public int calculateCollegeReinforcements(int playerId) {
+        int bonus = 0;
+        for (College college : colleges.values()) {
+            boolean collegeHeld = true;
+            for (int i : college.getSectorIds()) {
+                if (i != playerId) {
+                    collegeHeld = false; // owner that is not the player so college is not held
+                    break;
+                }
+            }
+            if (collegeHeld) {
+                bonus += college.getReinforcementAmount();
             }
         }
-        // Checks all the colleges to see if the player owns any
-        for (College c : colleges.values())
-            if (c.playerOwnsCollege(playerId, sectors))
-                count += c.getReinforcementAmount();
-        return count;
+        return bonus;
     }
 
-  /**
+    /**
      *
      * @param sectorId id of the desired sector
      * @return Sector object with the corresponding id in hashmap sectors if no sector matches with the supplied id then null is returned
      */
-    public Sector getSector(int sectorId) {
+    public Sector getSectorById(int sectorId) {
         if (sectors.containsKey(sectorId)) {
             return sectors.get(sectorId);
         } else {
             return null;
         }
+    }
+
+    public College getCollegeById(int collegeId) {
+        return colleges.get(collegeId);
     }
 
     /**
@@ -319,10 +373,24 @@ public class Map{
     }
 
     /**
+     * once unitsToMove has had the amount of units to move and the ids of the source and target sector set, perform the move
+     */
+    private void detectUnitsMove() {
+        if (unitsToMove != null) {
+            if (unitsToMove[0] != -1) {
+                moveUnits();
+                unitsToMove = null;
+            }
+        }
+    }
+
+    /**
      * draws the map and the number of units in each sector and the units change particle effect
      * @param batch
      */
     public void draw(SpriteBatch batch) {
+        detectUnitsMove(); // check if units need to be moved, and carry the movement out if required
+
         for (Sector sector : sectors.values()) {
             String text = sector.getUnitsInSector() + "";
             batch.draw(sector.getSectorTexture(), 0, 0);

@@ -5,20 +5,12 @@ import com.badlogic.gdx.graphics.Color;
 /**
  * Created by Dom's Surface Mark 2 on 20/12/2017.
  */
-public class PlayerNeutralAI extends PlayerAI{
+public class PlayerNeutralAI extends Player{
 
     /**
      * @param id player's unique identifier
-     * @param collegeName display name for this player
-     * @param playerName player's name to be displayed
      */
-    public PlayerNeutralAI(int id, GameSetupScreen.CollegeName collegeName, String playerName) {
-        super(id, collegeName, Color.WHITE, playerName);
-        playerType = PlayerType.NEUTRAL_AI;
-    }
-
-    @Override
-    protected void processAttackPhase(com.badlogic.gdx.scenes.scene2d.Stage stage, int maxAttackers, int defenders, int[] numOfAttackers) {
-
+    public PlayerNeutralAI(int id) {
+        super(id, GameSetupScreen.CollegeName.UNI_OF_YORK, Color.WHITE, PlayerType.NEUTRAL_AI, "THE NEUTRAL PLAYER");
     }
 }

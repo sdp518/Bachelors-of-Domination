@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +18,8 @@ import java.util.List;
  * main class for controlling the game
  */
 public class GameScreen implements Screen, InputProcessor{
+    public static final int NEUTRAL_PLAYER_ID = 4;
+
     private Main main; // main stored for switching between screens
 
     private TurnPhaseType currentPhase = TurnPhaseType.REINFORCEMENT; // first phase of game is reinforcement
@@ -57,7 +59,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.gameplayCamera = new OrthographicCamera();
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
 
-        this.mapBackground = new Texture("ui/HD-assets/Background.png");
+        this.mapBackground = new Texture("uiComponents/mapBackground.png");
 
         // setup hashmap to check which keys were previously pressed
         this.keysDown = new HashMap<Integer, Boolean>();
@@ -73,20 +75,27 @@ public class GameScreen implements Screen, InputProcessor{
      * @param turnTimerEnabled should players turns be limited
      * @param maxTurnTime time elapsed in current turn, irrelevant if turn timer not enabled
      */
-    public void setupGame(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
+    public void setupGame(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime, boolean allocateNeutralPlayer) {
         this.players = players;
-        this.turnOrder = new ArrayList<Integer>(players.keySet());
+        this.turnOrder = new ArrayList<Integer>();
+        for (Integer i : players.keySet()) {
+            if (players.get(i).getPlayerType() != PlayerType.NEUTRAL_AI) { // don't add the neutral player to the turn order
+                this.turnOrder.add(i);
+            }
+        }
+
         this.turnTimerEnabled = turnTimerEnabled;
         this.maxTurnTime = maxTurnTime;
         this.turnTimeStart = System.currentTimeMillis();
 
-        this.map = new Map(this.players);
+        this.map = new Map(this.players, allocateNeutralPlayer);
 
         // create the game phases and add them to the phases hashmap
         this.phases = new HashMap<TurnPhaseType, Phase>();
         this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, map));
         this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, map));
         this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this, map));
+        initiateNewPhase();
 
         gameSetup = true;
     }
@@ -122,7 +131,24 @@ public class GameScreen implements Screen, InputProcessor{
                 break;
         }
         this.updateInputProcessor();
-        this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
+        initiateNewPhase();
+    }
+
+    /**
+     * loads the next phase and applies the correct additional information
+     */
+    private void initiateNewPhase() {
+        switch (currentPhase) {
+            case REINFORCEMENT:
+                this.phases.get(currentPhase).enterPhase(players.get(currentPlayer), "Troop Allocation: " + players.get(currentPlayer).getTroopsToAllocate());
+                break;
+            case ATTACK:
+                this.phases.get(currentPhase).enterPhase(players.get(currentPlayer), "");
+                break;
+            case MOVEMENT:
+                this.phases.get(currentPhase).enterPhase(players.get(currentPlayer), "");
+                break;
+        }
     }
 
     /**
@@ -144,8 +170,6 @@ public class GameScreen implements Screen, InputProcessor{
         return players.get(id);
     }
 
-
-
     /**
      * Called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
      */
@@ -157,8 +181,6 @@ public class GameScreen implements Screen, InputProcessor{
         }
       
         resetCameraPosition();
-
-        // add the next player dialog box here
 
         if (this.turnTimerEnabled) {
             this.turnTimeStart = System.currentTimeMillis();
@@ -372,7 +394,7 @@ public class GameScreen implements Screen, InputProcessor{
     public boolean mouseMoved(int screenX, int screenY) {
         Vector2 worldCoords = screenToWorldCoord(screenX, screenY);
 
-        Sector hoveredSector = map.getSector(map.detectSectorContainsPoint((int)worldCoords.x, (int)worldCoords.y));
+        Sector hoveredSector = map.getSectorById(map.detectSectorContainsPoint((int)worldCoords.x, (int)worldCoords.y));
         phases.get(currentPhase).setBottomBarText(hoveredSector); // update the bottom bar of the UI with the details of the sector currently hovered over by the mouse
         return false;
     }

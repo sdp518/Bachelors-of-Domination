@@ -4,11 +4,13 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
 
+/**
+ * main game class used for controlling what screen is currently being displayed
+ */
 public class Main extends Game implements ApplicationListener {
 	private MenuScreen menuScreen;
 	private GameScreen gameScreen;
@@ -21,6 +23,7 @@ public class Main extends Game implements ApplicationListener {
 	@Override
 	public void create () {
 		new WidgetFactory(); // setup widget factory for generating UI components
+		new DialogFactory(); // setup dialog factory for generating dialogs
 
 		this.menuScreen = new MenuScreen(this);
 		this.gameScreen = new GameScreen(this);
@@ -34,8 +37,8 @@ public class Main extends Game implements ApplicationListener {
 		this.setScreen(menuScreen);
 	}
 
-	public void setGameScreen(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime) {
-		gameScreen.setupGame(players, turnTimerEnabled, maxTurnTime);
+	public void setGameScreen(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime, boolean allocateNeutralPlayer) {
+		gameScreen.setupGame(players, turnTimerEnabled, maxTurnTime, allocateNeutralPlayer);
 		this.setScreen(gameScreen);
 	}
 

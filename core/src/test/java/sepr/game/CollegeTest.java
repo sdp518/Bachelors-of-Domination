@@ -12,7 +12,7 @@ import sepr.game.*;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class CollegeTest extends GameTest{
+public class CollegeTest extends test.java.sepr.game.GameTest {
 
     @Test
     public void doesCollegeCaptureWork() throws Exception {

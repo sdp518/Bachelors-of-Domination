@@ -1,6 +1,7 @@
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -46,7 +47,7 @@ public class GameSetupScreen implements Screen{
     private Texture collegeTableBackground;
 
     /**
-     * The colleges available to play as
+     * the colleges available to play as
      */
     public enum CollegeName {
         ALCUIN("ALCUIN"),
@@ -84,49 +85,42 @@ public class GameSetupScreen implements Screen{
 
     /**
      *
-     * @param main
+     * @param main for changing to different screens
      */
-    public GameSetupScreen (Main main) {
+    public GameSetupScreen (final Main main) {
         this.main = main;
 
-        this.stage = new Stage();
+        this.stage = new Stage(){
+            @Override
+            public boolean keyUp(int keyCode) {
+                if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                    main.setMenuScreen();
+                }
+                return super.keyUp(keyCode);
+            }
+        };
         this.table = new Table();
         this.table.setFillParent(true); // make ui table fill the entire screen
         this.stage.addActor(table);
         this.table.setDebug(false); // enable table drawing for ui debug
 
-        this.collegeTableBackground = new Texture("ui/HD-assets/Game-Setup-Name-Box.png");
+        this.collegeTableBackground = new Texture("uiComponents/Game-Setup-Name-Box.png");
 
         this.setupUi();
     }
 
     /**
-     * update the player type label when the left ui button is pressed
+     * update the player type label when the left or right ui button is pressed
      * @param playerLabel to update the contents of
      */
-    private void leftPlayerTypeButtonPress(Label playerLabel){
+    private void togglePlayerType(Label playerLabel){
         if (playerLabel.getText().toString().equals(PlayerType.NONE.getPlayerType())){
-            playerLabel.setText(PlayerType.AI.getPlayerType());
-        }else if (playerLabel.getText().toString().equals(PlayerType.HUMAN.getPlayerType())){
-            playerLabel.setText(PlayerType.NONE.getPlayerType());
-        }else {
             playerLabel.setText(PlayerType.HUMAN.getPlayerType());
+        }else if (playerLabel.getText().toString().equals(PlayerType.HUMAN.getPlayerType())) {
+            playerLabel.setText(PlayerType.NONE.getPlayerType());
         }
     }
 
-    /**
-     * update the player type label when the right ui button is pressed
-     * @param playerLabel to update the contents of
-     */
-    private void rightPlayerTypeButtonPress(Label playerLabel){
-        if (playerLabel.getText().toString().equals(PlayerType.NONE.getPlayerType())){
-            playerLabel.setText(PlayerType.HUMAN.getPlayerType());
-        }else if (playerLabel.getText().toString().equals(PlayerType.HUMAN.getPlayerType())){
-            playerLabel.setText(PlayerType.AI.getPlayerType());
-        }else {
-            playerLabel.setText(PlayerType.NONE.getPlayerType());
-        }
-    }
 
     /**
      * finds the name of the next college when the left UI button is pressed
@@ -191,14 +185,14 @@ public class GameSetupScreen implements Screen{
             leftButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    leftPlayerTypeButtonPress(playerTypes[finalI]);
+                    togglePlayerType(playerTypes[finalI]);
                 }
             });
 
             rightButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    rightPlayerTypeButtonPress(playerTypes[finalI]);
+                    togglePlayerType(playerTypes[finalI]);
                 }
             });
 
@@ -372,16 +366,11 @@ public class GameSetupScreen implements Screen{
             if (playerTypes[i].getText().toString().equals(PlayerType.HUMAN.getPlayerType())) {
                 // create human player
                 players.put(i, new PlayerHuman(i, CollegeName.fromString(playerColleges[i].getKey().getText().toString()), getCollegeColor(CollegeName.fromString(playerColleges[i].getKey().getText().toString())), playerNames[i].getText()));
-            } else if (playerTypes[i].getText().toString().equals(PlayerType.AI.getPlayerType())) {
-                // create AI player
-                players.put(i, new PlayerAI(i, CollegeName.fromString(playerColleges[i].getKey().getText().toString()), getCollegeColor(CollegeName.fromString(playerColleges[i].getKey().getText().toString())), playerNames[i].getText()));
             }
         }
 
         // setup neutral player
-        if (neutralPlayerSwitch.isChecked()) {
-            players.put(MAX_NUMBER_OF_PLAYERS, new PlayerNeutralAI(MAX_NUMBER_OF_PLAYERS, CollegeName.UNI_OF_YORK, "THE NEUTRAL PLAYER"));
-        }
+        players.put(GameScreen.NEUTRAL_PLAYER_ID, new PlayerNeutralAI(GameScreen.NEUTRAL_PLAYER_ID));
         return players;
     }
 
@@ -452,7 +441,6 @@ public class GameSetupScreen implements Screen{
         } else if (totalNumPlayers == 2 && !neutralPlayerSwitch.isChecked()) { // only two players need neutral player
             throw new GameSetupException(GameSetupException.GameSetupExceptionType.NO_NEUTRAL_PLAYER);
         }
-        humanPlayerPresent = false;
     }
 
     /**
@@ -472,11 +460,11 @@ public class GameSetupScreen implements Screen{
             validateCollegeSelection();
             validatePlayerConfiguration();
         } catch (GameSetupException e) {
-            WidgetFactory.errorDialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
+            DialogFactory.basicDialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
             return;
         }
 
-        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), MAX_TURN_TIME);
+        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), MAX_TURN_TIME, neutralPlayerSwitch.isChecked());
     }
 
     private void setupUi() {
@@ -489,10 +477,10 @@ public class GameSetupScreen implements Screen{
         });
 
         // add the menu background
-        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("ui/HD-assets/Menu-Background.png"))));
+        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
 
         table.center();
-        table.add(WidgetFactory.genTopBar("GAME SETUP")).colspan(2);
+        table.add(WidgetFactory.genMenusTopBar("GAME SETUP")).colspan(2);
 
         table.row();
         table.left();

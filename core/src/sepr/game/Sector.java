@@ -11,11 +11,10 @@ import com.badlogic.gdx.graphics.Texture;
 public class Sector {
     private int id;
     private int ownerId;
-    private int prevOwnerId;
     private String displayName;
     private int unitsInSector;
     private int reinforcementsProvided;
-    private String college;
+    private int collegeId;
     private boolean neutral;
     private int[] adjacentSectorIds; // <-- May want to reconsider structure
     private Texture sectorTexture;
@@ -32,7 +31,7 @@ public class Sector {
      * @param displayName sector display name
      * @param unitsInSector number of units in sector
      * @param reinforcementsProvided number of reinforcements the sector provides
-     * @param college the college this sector belongs to
+     * @param collegeId unique id of the college this sector belongs to
      * @param adjacentSectorIds ids of adjacent sectors
      * @param sectorTexture sector texture from assets
      * @param sectorPixmap pixmap of sector texture
@@ -41,14 +40,13 @@ public class Sector {
      * @param sectorCentreY ycoord of sector centre
      * @param decor false if a sector is accessible to a player and true if sector is decorative
      */
-    public Sector(int id, int ownerId, String fileName, Texture sectorTexture, Pixmap sectorPixmap, String displayName, int unitsInSector, int reinforcementsProvided, String college, boolean neutral, int[] adjacentSectorIds, int sectorCentreX, int sectorCentreY, boolean decor) {
+    public Sector(int id, int ownerId, String fileName, Texture sectorTexture, Pixmap sectorPixmap, String displayName, int unitsInSector, int reinforcementsProvided, int collegeId, boolean neutral, int[] adjacentSectorIds, int sectorCentreX, int sectorCentreY, boolean decor) {
         this.id = id;
         this.ownerId = ownerId;
-        this.prevOwnerId = ownerId;
         this.displayName = displayName;
         this.unitsInSector = unitsInSector;
         this.reinforcementsProvided = reinforcementsProvided;
-        this.college = college;
+        this.collegeId = collegeId;
         this.neutral = neutral;
         this.adjacentSectorIds = adjacentSectorIds;
         this.sectorTexture = sectorTexture;
@@ -61,8 +59,6 @@ public class Sector {
     }
 
     public int getId() { return id; }
-
-    public int getPrevOwnerId() { return prevOwnerId; }
 
     public int getOwnerId() {
         return ownerId;
@@ -90,13 +86,6 @@ public class Sector {
         return unitsInSector;
     }
 
-    /**
-     * @return array of adjacent sector ids
-     */
-    public int[] getAdjacentSectorIds() {
-        return adjacentSectorIds;
-    }
-
     public Texture getSectorTexture() {
         return sectorTexture;
     }
@@ -105,7 +94,7 @@ public class Sector {
      * Sets the new texture for a sector
      * @param newPixmap the memory representation of the textures pixels
      */
-    public void setNewSectorTexture(Pixmap newPixmap) {
+    private void setNewSectorTexture(Pixmap newPixmap) {
         this.sectorTexture.dispose();
         Texture temp = new Texture(newPixmap);
         this.sectorTexture = temp;
@@ -136,16 +125,11 @@ public class Sector {
         return allocated;
     }
 
-    public String getCollege() { return college; }
+    public int getCollegeId() { return collegeId; }
 
     public String getFileName() {
         return fileName;
     }
-
-    /**
-     * Updates the ownerId in a sector
-     */
-    public void updateOwnerId() { prevOwnerId = ownerId; }
 
     /**
      * Function to check if a given sector is adjacent
@@ -180,7 +164,7 @@ public class Sector {
      * @param newColor what color the sector be changed to
      * @throws RuntimeException if attempt to recolor a decor sector
      */
-    public void changeSectorColor(Color newColor){
+    private void changeSectorColor(Color newColor){
         if (this.isDecor()) {
             throw new RuntimeException("Should not recolour decor sector");
         }
@@ -196,10 +180,7 @@ public class Sector {
                 }
             }
         }
-        //Texture t = new Texture(sector.getSectorPixmap().getWidth(), sector.getSectorPixmap().getHeight(), Pixmap.Format.RGBA8888); // create new texture to represent the sector
         this.setNewSectorTexture(newPix); // draw the generated pixmap to the new texture
         newPix.dispose();
     }
-    // Shortened way of checking if the player captured the tile that turn
-    public boolean justCapturedBy(int playerId){ return playerId == ownerId && playerId != prevOwnerId;  }
 }
