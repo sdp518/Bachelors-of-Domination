@@ -9,6 +9,11 @@ public class PhaseMovement extends Phase {
     }
 
     @Override
+    public void phaseAct() {
+
+    }
+
+    @Override
     public void visualisePhase(SpriteBatch batch) {
 
     }

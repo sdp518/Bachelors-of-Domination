@@ -45,7 +45,7 @@ public class MenuScreen implements Screen {
 
         /* Create sub-table for all the menu buttons */
         Table btnTable = new Table();
-        btnTable.setDebug(true);
+        btnTable.setDebug(false);
         btnTable.left();
         btnTable.add(startGameBtn).height(60).width(420).pad(30);
 
@@ -112,6 +112,8 @@ public class MenuScreen implements Screen {
 
         })).colspan(2);
     }
+
+    int[] x;
 
     @Override
     public void show() {

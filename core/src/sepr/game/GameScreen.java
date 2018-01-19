@@ -57,12 +57,6 @@ public class GameScreen implements Screen, InputProcessor{
         this.gameplayCamera = new OrthographicCamera();
         this.gameplayViewport = new ScreenViewport(gameplayCamera);
 
-        // create the game phases and add them to the phases hashmap
-        this.phases = new HashMap<TurnPhaseType, Phase>();
-        this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, map));
-        this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, map));
-        this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this, map));
-
         this.mapBackground = new Texture("ui/HD-assets/Background.png");
 
         // setup hashmap to check which keys were previously pressed
@@ -87,6 +81,12 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimeStart = System.currentTimeMillis();
 
         this.map = new Map(this.players);
+
+        // create the game phases and add them to the phases hashmap
+        this.phases = new HashMap<TurnPhaseType, Phase>();
+        this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, map));
+        this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, map));
+        this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this, map));
 
         gameSetup = true;
     }
@@ -143,6 +143,8 @@ public class GameScreen implements Screen, InputProcessor{
         if (!players.containsKey(id)) throw new IllegalArgumentException("Cannot fetch player as id: " + id + " does not exist");
         return players.get(id);
     }
+
+
 
     /**
      * Called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
@@ -312,7 +314,6 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /* Input Processor */
-
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.UP) {
@@ -384,5 +385,7 @@ public class GameScreen implements Screen, InputProcessor{
         return true;
     }
 
-    public Map getMap() { return map; }
+    public Player getCurrentPlayer() {
+        return players.get(currentPlayer);
+    }
 }

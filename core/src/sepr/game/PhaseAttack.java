@@ -12,6 +12,7 @@ public class PhaseAttack extends Phase{
     private TextureRegion arrow; // TextureRegion for rendering attack visualisation
     private Sector attackingSector; // Stores the sector being used to attack in the attack phase (could store as ID and lookup object each time to save memory)
     private Sector defendingSector; // Stores the sector being attacked in the attack phase (could store as ID and lookup object each time to save memory)
+    private int[] numOfAttackers;
 
     private Vector2 mousePos;
     private Vector2 arrowTailPosition; // Vector x,y for the base of the arrow
@@ -42,6 +43,41 @@ public class PhaseAttack extends Phase{
         double angle = Math.toDegrees(Math.atan((endY - startY) / (endX - startX)));
         double height = (endY - startY) /  Math.sin(Math.toRadians(angle));
         gameplayBatch.draw(arrow, startX, (startY - thickness/2), 0, thickness/2, (float)height, thickness,1, 1, (float)angle);
+    }
+
+    private void getNumberOfAttackers() throws RuntimeException{
+        if (attackingSector == null || defendingSector == null) {
+            throw new RuntimeException("Cannot execute attack unless both an attacking and defending sector have been selected");
+        }
+        numOfAttackers = new int[1];
+        numOfAttackers[0] = -1;
+        gameScreen.getCurrentPlayer().processAttackPhase(this, attackingSector.getUnitsInSector(), defendingSector.getUnitsInSector(), numOfAttackers);
+    }
+
+    private void executeAttack() {
+        int attackers = numOfAttackers[0];
+        int defenders = defendingSector.getUnitsInSector();
+
+        int attackersLost = 2;
+        int defendersLost = 2;
+
+        map.addUnitsToSectorAnimated(attackingSector.getId(), -attackersLost);
+        map.addUnitsToSectorAnimated(defendingSector.getId(), -defendersLost);
+    }
+
+    @Override
+    public void phaseAct() {
+        if (attackingSector != null && defendingSector != null && numOfAttackers[0] != -1) {
+            if (numOfAttackers[0] == 0) {
+                // cancel attack
+            } else {
+                executeAttack();
+            }
+            // reset attack
+            attackingSector = null;
+            defendingSector = null;
+            numOfAttackers = null;
+        }
     }
 
     @Override
@@ -106,10 +142,10 @@ public class PhaseAttack extends Phase{
 
         Vector2 worldCoord = gameScreen.screenToWorldCoord(screenX, screenY);
 
-        int sectorid = map.detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
-        if (sectorid != -1) { // If selected a sector
+        int sectorId = map.detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
+        if (sectorId != -1) { // If selected a sector
 
-            Sector selected = map.getSector(sectorid); // Current sector
+            Sector selected = map.getSector(sectorId); // Current sector
             boolean notAlreadySelected = this.attackingSector == null && this.defendingSector == null; // T/F if the attack sequence is complete
 
             if (this.attackingSector != null && this.defendingSector == null) { // If its the second selection in the attack phase
@@ -117,9 +153,8 @@ public class PhaseAttack extends Phase{
                 if (this.attackingSector.isAdjacentTo(selected) && selected.getOwnerId() != this.currentPlayer.getId()) { // If not own sector and its adjacent
                     this.arrowHeadPosition.set(mousePos.x, mousePos.y); // Finalise the end position of the arrow
                     this.defendingSector = selected;
-                    // Call to initiate attack + advance phase
-                    //this.attackingSector = null; // Add back once ^ is complete
-                    //this.defendingSector = null;
+
+                    getNumberOfAttackers();
                 } else { // Cancel attack as not attackable
                     this.attackingSector = null;
                 }

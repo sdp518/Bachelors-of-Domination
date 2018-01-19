@@ -9,13 +9,22 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.util.Pair;
 
 import javax.xml.soap.Text;
@@ -64,6 +73,7 @@ public class WidgetFactory {
     private static BitmapFont fontBig;
     private static BitmapFont fontSmall;
 
+    private static Skin skin;
 
     public WidgetFactory() {
         setupFont();
@@ -103,7 +113,7 @@ public class WidgetFactory {
         gameHUDTopBarTexture = new Texture("ui/HD-assets/HUD-Top-Bar.png");
         endPhaseBtnTexture = new Texture("ui/HD-assets/End-Phase-Button.png");
 
-
+         skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
     }
 
     private void setupFont() {
@@ -121,7 +131,6 @@ public class WidgetFactory {
      * @param stage The stage to draw the box onto
      */
     public static void dialogBox(String title, String message, Stage stage) {
-        Skin skin = new Skin(Gdx.files.internal("ui/dialogBox/skin/uiskin.json"));
         Dialog dialog = new Dialog(title, skin) {
             protected void result(Object object) {
                 // object is the button pressed
@@ -130,6 +139,56 @@ public class WidgetFactory {
         dialog.text(message);
         dialog.button("Ok", 1L);
         dialog.show(stage);
+    }
+
+    /**
+     * @param stage to display the dialog on
+     * @param maxAttackers max number of attackers the player chooses to attack with
+     * @param defenders how many units are defending
+     * @return the number of troops chosen to attack with or 0 if the attack is canceled
+     */
+    public static int attackDialog(Stage stage, int maxAttackers, int defenders, final int[] attackers) {
+        final Slider slider = new Slider(0, maxAttackers, 1, false, skin);
+        final Label sliderValue = new Label("0", skin);
+
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                sliderValue.setText(new StringBuilder((int)slider.getValue() + ""));
+            }
+        });
+
+        Dialog dialog = new Dialog("Select number of troops to attack with", skin) {
+            protected void result(Object object) {
+                // object is the button pressed
+                if (object.toString().equals("0")) {
+                    attackers[0] = 0;
+                } else {
+                    attackers[0] = (int)slider.getValue();
+                }
+                System.out.println(attackers[0]);
+            }
+        };;
+
+        // add labels saying the max number of attackers and how many defenders there are
+        dialog.text(new Label("Max attackers: " + maxAttackers, skin)).padLeft(20).padRight(20).align(Align.left);
+        dialog.text(new Label("Defenders: " + defenders, skin)).padLeft(20).padRight(20).align(Align.right);
+
+        dialog.getContentTable().row();
+
+        // add slider and label showing number of units selected
+        dialog.getContentTable().add(slider).padLeft(20).padRight(20).align(Align.left).expandX();
+        dialog.getContentTable().add(sliderValue).padLeft(20).padRight(20).align(Align.right);
+
+        dialog.getContentTable().row();
+
+        // add buttons for accepting or canceling the selection
+        dialog.button("Cancel", 0L).padLeft(20).padRight(40).align(Align.center);
+        dialog.button("Ok", 1L).padLeft(40).padRight(20).align(Align.center);
+
+        dialog.show(stage);
+
+        return 82;
     }
 
     public static TextButton genBasicButton(String buttonText) {
@@ -150,7 +209,7 @@ public class WidgetFactory {
         Label textLabel = new Label(text, style);
 
         Table topBar = new Table();
-        topBar.setDebug(true);
+        topBar.setDebug(false);
         topBar.left();
         topBar.add(leftPart).height(60);
         topBar.add(textLabel).padRight(20).padLeft(20);
@@ -179,15 +238,15 @@ public class WidgetFactory {
         Label textLabel = new Label(text, style);
         textLabel.setAlignment(0, 40);
 
-        Table topBar = new Table();
-        topBar.setDebug(true);
-        topBar.right();
-        topBar.add(leftPart).height(60).width(45).bottom();
-        topBar.add(escButton).height((float) 51.5).width(190).bottom();
-        topBar.add(centerPart).height(60).fillX().bottom();
-        topBar.add(textLabel).height(120).width(280);
+        Table bottomBar = new Table();
+        bottomBar.setDebug(false);
+        bottomBar.left();
+        bottomBar.add(leftPart).height(60).width(45).bottom();
+        bottomBar.add(escButton).height((float) 51.5).width(190).bottom();
+        bottomBar.add(centerPart).height(60).fillX().bottom();
+        bottomBar.add(textLabel).height(120).width(280);
 
-        return topBar;
+        return bottomBar;
     }
 
     public static Image genMapGraphic() {

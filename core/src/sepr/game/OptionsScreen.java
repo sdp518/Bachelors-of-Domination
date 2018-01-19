@@ -56,7 +56,7 @@ public class OptionsScreen implements Screen {
 
         this.stage.addActor(table);
         this.table.setFillParent(true);
-        this.table.setDebug(true);
+        this.table.setDebug(false);
         this.setupUi();
     }
 
@@ -97,7 +97,7 @@ public class OptionsScreen implements Screen {
         colourblindModeSwitchLabel.setAlignment(Align.center);
 
         Table table = new Table();
-        table.setDebug(true);
+        table.setDebug(false);
         table.left();
         table.add(musicVolumeLabel).height(60).width(420).pad(20);
         table.right();

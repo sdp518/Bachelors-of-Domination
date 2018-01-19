@@ -9,10 +9,16 @@ public class PlayerNeutralAI extends PlayerAI{
 
     /**
      * @param id player's unique identifier
-     * @param collegeName  display name for this player
+     * @param collegeName display name for this player
+     * @param playerName player's name to be displayed
      */
     public PlayerNeutralAI(int id, GameSetupScreen.CollegeName collegeName, String playerName) {
         super(id, collegeName, Color.WHITE, playerName);
         playerType = PlayerType.NEUTRAL_AI;
+    }
+
+    @Override
+    protected void processAttackPhase(com.badlogic.gdx.scenes.scene2d.Stage stage, int maxAttackers, int defenders, int[] numOfAttackers) {
+
     }
 }
