@@ -74,6 +74,10 @@ public class Sector {
         this.allocated = true;
     }
 
+    public void setOwner(int playerId){
+        this.ownerId = playerId;
+    }
+
     public String getDisplayName() {
         return displayName;
     }

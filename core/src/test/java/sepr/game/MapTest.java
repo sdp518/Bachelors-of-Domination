@@ -1,35 +1,39 @@
-package sepr.game;
+package test.java.sepr.game;
 
-import org.junit.jupiter.api.Test;
+import com.badlogic.gdx.graphics.Color;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import sepr.game.*;
 
-public class MapTest {
-    @Test
-    public void calculateReinforcementAmount() throws Exception {
+import java.util.HashMap;
+
+/**
+ * Created by jackr on 17/01/2018.
+ */
+public class MapTest extends GameTest{
+
+    private HashMap<Integer, Player> players;
+    private Map map;
+
+    @Before
+    public void setupMap(){
+        Player p1 = new PlayerHuman(0, GameSetupScreen.CollegeName.ALCUIN, Color.BLACK, "Player 1");
+        Player p2 = new PlayerHuman(1, GameSetupScreen.CollegeName.WENTWORTH, Color.RED, "Player 2");
+        players = new HashMap<Integer, Player>();
+        players.put(0, p1);
+        players.put(1, p2);
+        map = new Map(players);
     }
 
     @Test
-    public void getNumOfSectors() throws Exception {
-
+    public void areAllSectorsAllocated() throws Exception {
+        map.allocateSectors(players);
+        for (Integer i : map.getSectorIds()){
+            Sector s = map.getSector(i);
+            Assert.assertTrue("Sector " + s.getDisplayName() + " is not allocated and should be", s.isAllocated() || s.isDecor());
+        }
     }
 
-    @Test
-    public void getSectorIds() throws Exception {
-    }
-
-    @Test
-    public void setSectorOwner() throws Exception {
-    }
-
-    @Test
-    public void detectSectorClick() throws Exception {
-    }
-
-    @Test
-    public void draw() throws Exception {
-    }
-
-    @Test
-    public void changeSectorColor() throws Exception {
-    }
 
 }
