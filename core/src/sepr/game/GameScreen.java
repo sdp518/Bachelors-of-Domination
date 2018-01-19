@@ -95,7 +95,6 @@ public class GameScreen implements Screen, InputProcessor{
         this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, map));
         this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, map));
         this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this, map));
-        initiateNewPhase();
 
         gameSetup = true;
     }
@@ -111,44 +110,35 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * checks if game is over by checking how many players are in the turn order, if 1 then player has won
+     * @return true if game is over else false
+     */
+    private boolean isGameOver() {
+        return turnOrder.size() <= 1; // game is over if only one player is in the turn order
+    }
+
+    /**
      * This method is used for progression through the phases of a turn evaluating the currentPhase case label
      */
-    protected void advancePhase() {
+    protected void nextPhase() {
+        removeEliminatedPlayers();
+
         this.phases.get(currentPhase).endPhase();
+
         switch (currentPhase) {
             case REINFORCEMENT:
                 currentPhase = TurnPhaseType.ATTACK;
                 break;
             case ATTACK:
-                if (map.checkForWinner() != -1) {
-                    // gameover a player has won
-                    gameOver(map.checkForWinner());
-                }
                 currentPhase = TurnPhaseType.MOVEMENT;
                 break;
             case MOVEMENT:
+                currentPhase = TurnPhaseType.REINFORCEMENT;
                 nextPlayer();
                 break;
         }
         this.updateInputProcessor();
-        initiateNewPhase();
-    }
-
-    /**
-     * loads the next phase and applies the correct additional information
-     */
-    private void initiateNewPhase() {
-        switch (currentPhase) {
-            case REINFORCEMENT:
-                this.phases.get(currentPhase).enterPhase(players.get(currentPlayer), "Troop Allocation: " + players.get(currentPlayer).getTroopsToAllocate());
-                break;
-            case ATTACK:
-                this.phases.get(currentPhase).enterPhase(players.get(currentPlayer), "");
-                break;
-            case MOVEMENT:
-                this.phases.get(currentPhase).enterPhase(players.get(currentPlayer), "");
-                break;
-        }
+        this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
     }
 
     /**
@@ -171,15 +161,47 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * removes all players who have 0 sectors from the turn order
+     */
+    private void removeEliminatedPlayers() {
+        List<Integer> playerIdsToRemove = new ArrayList<Integer>();
+        for (Integer i : turnOrder) {
+            boolean hasSector = false;
+            for (Integer j : map.getSectorIds()) {
+                if (map.getSectorById(i).getOwnerId() == j) {
+                    hasSector = true; // sector owned by player i found
+                    break; // only need one sector to remain in turn order so can break once one found
+                }
+            }
+            if (!hasSector) { // player has no sectors so remove them from the game
+                playerIdsToRemove.add(i);
+            }
+        }
+
+        if (playerIdsToRemove.size() > 0) {
+            turnOrder.removeAll(playerIdsToRemove);
+            String[] playerNames = new String[playerIdsToRemove.size()];
+            for (int i = 0; i < playerIdsToRemove.size(); i++) {
+                playerNames[i] = players.get(playerIdsToRemove.get(i)).getPlayerName();
+            }
+
+            DialogFactory.playersOutDialog(playerNames, phases.get(currentPhase)); // display which players have been eliminated
+            if (isGameOver()) {
+                gameOver();
+            }
+        }
+    }
+
+    /**
      * Called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
      */
     private void nextPlayer() {
-        currentPhase = TurnPhaseType.REINFORCEMENT;
+        removeEliminatedPlayers();
         currentPlayer++;
         if (currentPlayer == turnOrder.size()) {
             currentPlayer = 0;
         }
-      
+
         resetCameraPosition();
 
         if (this.turnTimerEnabled) {
@@ -192,28 +214,22 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * Method called when map class returns a winner when checkForWinner called
-     * @param winnerId id of the winning player
+     * method called when one player owns all the sectors in the map
+     * @throws RuntimeException if there is more than one player in the turn order when gameOver is called
      */
-    private void gameOver(int winnerId) {
-
+    private void gameOver() throws RuntimeException {
+        if (turnOrder.size() == 0) { // neutral player has won
+            DialogFactory.basicDialogBox("Game Over!", "The Neutral Player has won.", phases.get(currentPhase));
+        } else if (turnOrder.size() != 1) {
+            throw new RuntimeException("Game Over called but more than one player in turn order");
+        }
+        int winnerId = turnOrder.get(0); // winner will be the only player in the turn order list
+        DialogFactory.gameOverDialog(players.get(winnerId).getPlayerName(), players.get(winnerId).getCollegeName().getCollegeName(), main, phases.get(currentPhase));
     }
 
     /**
-     * Writes the game state to a file
+     * moves the camera in the appropriate direction if the corresponding arrow key is down
      */
-    private void saveGameState() {
-        // not part of this assessment
-    }
-
-    /**
-     * Reads the given string and setsup the game state from this
-     * @param gameState
-     */
-    private void loadGameState(String gameState) {
-        // not part of this assessment
-    }
-
     private void controlCamera() {
         if (this.keysDown.get(Input.Keys.UP)) {
             this.gameplayCamera.translate(0, 4, 0);
@@ -230,6 +246,9 @@ public class GameScreen implements Screen, InputProcessor{
 
     }
 
+    /**
+     * draws a background image behind the map and UI
+     */
     private void renderBackground() {
         Vector3 mapDrawPos = gameplayCamera.unproject(new Vector3(0, Gdx.graphics.getHeight(), 0));
         gameplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
@@ -242,10 +261,21 @@ public class GameScreen implements Screen, InputProcessor{
         main.setMenuScreen();
     }
 
+    /**
+     * re-centres the camera and sets the zoom level back to default
+     */
     private void resetCameraPosition() {
         this.gameplayCamera.position.x = 1920/2;
         this.gameplayCamera.position.y = 1080/2;
         this.gameplayCamera.zoom = 1;
+    }
+
+    /**
+     * called once screen is setup to initialise the first phase of the game
+     */
+    public void startGame() {
+        this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
+        resetCameraPosition();
     }
 
     @Override
