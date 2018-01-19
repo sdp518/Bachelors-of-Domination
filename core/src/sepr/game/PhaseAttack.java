@@ -16,7 +16,6 @@ public class PhaseAttack extends Phase{
     private Sector defendingSector; // Stores the sector being attacked in the attack phase (could store as ID and lookup object each time to save memory)
     private int[] numOfAttackers;
 
-    private Vector2 mousePos;
     private Vector2 arrowTailPosition; // Vector x,y for the base of the arrow
     private Vector2 arrowHeadPosition; // Vector x,y for the point of the arrow
 
@@ -29,7 +28,6 @@ public class PhaseAttack extends Phase{
         this.attackingSector = null;
         this.defendingSector = null;
 
-        this.mousePos = new Vector2();
         this.arrowHeadPosition = new Vector2();
         this.arrowTailPosition = new Vector2();
 
@@ -57,7 +55,7 @@ public class PhaseAttack extends Phase{
         }
         numOfAttackers = new int[1];
         numOfAttackers[0] = -1;
-        gameScreen.getCurrentPlayer().processAttackPhase(this, attackingSector.getUnitsInSector(), defendingSector.getUnitsInSector(), numOfAttackers);
+        DialogFactory.attackDialog(this, attackingSector.getUnitsInSector(), defendingSector.getUnitsInSector(), numOfAttackers);
     }
 
     private void executeAttack() {
@@ -71,6 +69,12 @@ public class PhaseAttack extends Phase{
 
         // apply the attack to the map
         map.attackSector(attackingSector.getId(), defendingSector.getId(), attackersLost, defendersLost, gameScreen.getPlayerById(attackingSector.getOwnerId()), gameScreen.getPlayerById(defendingSector.getOwnerId()), gameScreen.getPlayerById(gameScreen.NEUTRAL_PLAYER_ID), this);
+    }
+
+    private Vector2 convertScreenCoords(float screenX, float screenY) {
+        float x = (gameScreen.gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x);
+        float y = (gameScreen.gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y);
+        return new Vector2(x, y);
     }
 
     @Override
@@ -91,8 +95,9 @@ public class PhaseAttack extends Phase{
     @Override
     public void visualisePhase(SpriteBatch batch) {
         if (this.attackingSector != null) { // If attacking
+            Vector2 screenCoords = convertScreenCoords(Gdx.input.getX(), Gdx.input.getY());
             if (this.defendingSector == null) { // In mid attack
-                generateArrow(batch, this.arrowTailPosition.x, this.arrowTailPosition.y, mousePos.x, mousePos.y);
+                generateArrow(batch, this.arrowTailPosition.x, this.arrowTailPosition.y, screenCoords.x, screenCoords.y);
             } else if (this.defendingSector != null) { // Attack confirmed
                 generateArrow(batch, this.arrowTailPosition.x, this.arrowTailPosition.y, this.arrowHeadPosition.x, this.arrowHeadPosition.y);
             }
@@ -104,34 +109,6 @@ public class PhaseAttack extends Phase{
         super.endPhase();
         attackingSector = null;
         defendingSector = null;
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        if (super.keyDown(keycode)) {
-            return true;
-        }
-
-
-
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        if (super.keyUp(keycode)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        if (super.keyTyped(character)) {
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -149,6 +126,7 @@ public class PhaseAttack extends Phase{
         }
 
         Vector2 worldCoord = gameScreen.screenToWorldCoord(screenX, screenY);
+        Vector2 screenCoords = convertScreenCoords(screenX, screenY);
 
         int sectorId = map.detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
         if (sectorId != -1) { // If selected a sector
@@ -158,54 +136,27 @@ public class PhaseAttack extends Phase{
 
             if (this.attackingSector != null && this.defendingSector == null) { // If its the second selection in the attack phase
 
-                if (this.attackingSector.isAdjacentTo(selected) && selected.getOwnerId() != this.currentPlayer.getId()) { // If not own sector and its adjacent
-                    this.arrowHeadPosition.set(mousePos.x, mousePos.y); // Finalise the end position of the arrow
+                if (this.attackingSector.isAdjacentTo(selected) && selected.getOwnerId() != this.currentPlayer.getId()) { // check the player does not own the defending sector and that it is adjacent
+                    this.arrowHeadPosition.set(screenCoords.x, screenCoords.y); // Finalise the end position of the arrow
                     this.defendingSector = selected;
 
-                    getNumberOfAttackers();
-                } else { // Cancel attack as not attackable
+                    getNumberOfAttackers(); // attacking and defending sector selected so find out how many units the player wants to attack with
+                } else { // cancel attack as selected defending sector cannot be attack: may not be adjacent or may be owned by the attacker
                     this.attackingSector = null;
                 }
 
             } else if (selected.getOwnerId() == this.currentPlayer.getId() && selected.getUnitsInSector() > 1 && notAlreadySelected) { // First selection, is owned by the player and has enough troops
                 this.attackingSector = selected;
-                this.arrowTailPosition.set(mousePos.x, mousePos.y); // Finalise start position of arrow
+                this.arrowTailPosition.set(screenCoords.x, screenCoords.y); // set arrow tail position
             } else {
                 this.attackingSector = null;
                 this.defendingSector = null;
             }
-
-        } else {
+        } else { // mouse pressed and not hovered over a sector to attack therefore cancel any attack in progress
             this.attackingSector = null;
             this.defendingSector = null;
         }
 
         return true;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (super.touchDragged(screenX, screenY, pointer)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        if (super.mouseMoved(screenX, screenY)) {
-            return true;
-        }
-        this.mousePos.x = (gameScreen.gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x);
-        this.mousePos.y = (gameScreen.gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y);
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        if (super.scrolled(amount)) {
-            return true;
-        }
-        return false;
     }
 }

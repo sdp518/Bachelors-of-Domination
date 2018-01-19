@@ -1,14 +1,13 @@
 package sepr.game;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * stores the properties of a college
  */
 public class College {
 
-    private int id;
+    private int id; // unique identifier for this college
     private int[] sectorIds; // ids of sectors contained within this college
     private int reinforcementAmount; // amount of bonus troops provided per round if all college sectors are held
     private String displayName; // name of college shown to players

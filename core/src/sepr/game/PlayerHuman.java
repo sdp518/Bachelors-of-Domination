@@ -1,7 +1,6 @@
 package sepr.game;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * Created by Dom's Surface Mark 2 on 20/12/2017.
@@ -16,15 +15,5 @@ public class PlayerHuman extends Player {
      */
     public PlayerHuman(int id, GameSetupScreen.CollegeName collegeName, Color sectorColour, String playerName) {
         super(id, collegeName, sectorColour, PlayerType.HUMAN, playerName);
-    }
-
-    @Override
-    protected void processAttackPhase(Stage stage, int maxAttackers, int defenders, int[] numOfAttackers) {
-        DialogFactory.attackDialog(stage, maxAttackers, defenders, numOfAttackers);
-    }
-
-    @Override
-    protected void processAllocationPhase(int amount) {
-
     }
 }

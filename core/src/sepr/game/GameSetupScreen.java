@@ -370,7 +370,7 @@ public class GameSetupScreen implements Screen{
         }
 
         // setup neutral player
-        players.put(GameScreen.NEUTRAL_PLAYER_ID, new PlayerNeutralAI(GameScreen.NEUTRAL_PLAYER_ID, CollegeName.UNI_OF_YORK));
+        players.put(GameScreen.NEUTRAL_PLAYER_ID, new PlayerNeutralAI(GameScreen.NEUTRAL_PLAYER_ID));
         return players;
     }
 
