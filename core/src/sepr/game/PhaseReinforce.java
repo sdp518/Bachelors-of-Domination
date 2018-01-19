@@ -65,14 +65,14 @@ public class PhaseReinforce extends Phase {
         if (sectorId != -1) { // If selected a sector
             if (currentPlayer.getTroopsToAllocate() <= 0) { // check the player still has units to allocate
                 DialogFactory.basicDialogBox("Allocation Problem", "You have no more troops to allocate", this);
-            } else if (map.getSector(sectorId).getOwnerId() != currentPlayer.getId()) { // check the player has chosen to add units to their own sector
+            } else if (map.getSectorById(sectorId).getOwnerId() != currentPlayer.getId()) { // check the player has chosen to add units to their own sector
                 DialogFactory.basicDialogBox("Allocation Problem", "Cannot allocate units to a sector you do not own", this);
             } else {
                 // setup allocation form
                 allocateUnits = new int[2];
                 allocateUnits[0] = -1;
                 allocateUnits[1] = sectorId;
-                DialogFactory.allocateUnitsDialog(currentPlayer.getTroopsToAllocate(), allocateUnits, map.getSector(sectorId).getDisplayName(), this);
+                DialogFactory.allocateUnitsDialog(currentPlayer.getTroopsToAllocate(), allocateUnits, map.getSectorById(sectorId).getDisplayName(), this);
             }
         }
         return false;

@@ -131,7 +131,7 @@ public class PhaseAttack extends Phase{
         int sectorId = map.detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
         if (sectorId != -1) { // If selected a sector
 
-            Sector selected = map.getSector(sectorId); // Current sector
+            Sector selected = map.getSectorById(sectorId); // Current sector
             boolean notAlreadySelected = this.attackingSector == null && this.defendingSector == null; // T/F if the attack sequence is complete
 
             if (this.attackingSector != null && this.defendingSector == null) { // If its the second selection in the attack phase

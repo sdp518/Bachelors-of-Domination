@@ -98,14 +98,14 @@ public class Map{
         String displayName = sectorData[2];
         int unitsInSector = Integer.parseInt(sectorData[3]);
         int reinforcementsProvided = Integer.parseInt(sectorData[4]);
-        String college = sectorData[5];
+        int collegeId = Integer.parseInt(sectorData[5]);
         boolean neutral = Boolean.parseBoolean(sectorData[6]);
         int[] adjacentSectors = strToIntArray(sectorData[7]);
         int sectorX = Integer.parseInt(sectorData[8]);
         int sectorY = Integer.parseInt(sectorData[9]);
         boolean decor = Boolean.parseBoolean(sectorData[10]);
 
-        return new Sector(sectorId, ownerId, filename, sectorTexture, sectorPixmap, displayName, unitsInSector, reinforcementsProvided, college, neutral, adjacentSectors, sectorX, sectorY, decor);
+        return new Sector(sectorId, ownerId, filename, sectorTexture, sectorPixmap, displayName, unitsInSector, reinforcementsProvided, collegeId, neutral, adjacentSectors, sectorX, sectorY, decor);
     }
 
     /**
@@ -177,11 +177,11 @@ public class Map{
 
         for (Integer i : sectorIdsRandOrder) {
             if (!sectors.get(i).isAllocated()) {
-                if (this.getSector(i).isDecor()) {
+                if (this.getSectorById(i).isDecor()) {
                     continue; // skip allocating sector if it is a decor sector
                 }
-                this.getSector(i).setOwner(players.get(lowestReinforcementId));
-                playerReinforcements.put(lowestReinforcementId, playerReinforcements.get(lowestReinforcementId) + this.getSector(i).getReinforcementsProvided()); // updates player reinforcements hashmap
+                this.getSectorById(i).setOwner(players.get(lowestReinforcementId));
+                playerReinforcements.put(lowestReinforcementId, playerReinforcements.get(lowestReinforcementId) + this.getSectorById(i).getReinforcementsProvided()); // updates player reinforcements hashmap
 
                 // find the new player with lowest reinforcements
                 int minReinforcements = Collections.min(playerReinforcements.values()); // get lowest reinforcement amount
@@ -327,17 +327,21 @@ public class Map{
         return bonus;
     }
 
-  /**
+    /**
      *
      * @param sectorId id of the desired sector
      * @return Sector object with the corresponding id in hashmap sectors if no sector matches with the supplied id then null is returned
      */
-    public Sector getSector(int sectorId) {
+    public Sector getSectorById(int sectorId) {
         if (sectors.containsKey(sectorId)) {
             return sectors.get(sectorId);
         } else {
             return null;
         }
+    }
+
+    public College getCollegeById(int collegeId) {
+        return colleges.get(collegeId);
     }
 
     /**

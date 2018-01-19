@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -79,7 +80,9 @@ public class OptionsScreen implements Screen {
         Set<String> resolutions = new HashSet<String>();
 
         for (DisplayMode displayMode : displayModes) {
-            resolutions.add(displayMode.width + " x " + displayMode.height);
+            if (displayMode.width > 1000 && displayMode.height > 1000) { // window must be more than 1000 x 1000 resolution
+                resolutions.add(displayMode.width + " x " + displayMode.height);
+            }
         }
         String[] resStrings = new String[resolutions.size()];
         resolutions.toArray(resStrings);
@@ -182,6 +185,7 @@ public class OptionsScreen implements Screen {
         prefs.putFloat(MUSIC_VOL_PREF, musicSlider.getPercent());
         prefs.putFloat(FX_VOL_PREF, fxSlider.getPercent());
 
+        // split the selected resolution into width and height values
         int screenWidth = Integer.parseInt(resolutionSelector.getSelected().split(" x ")[0]);
         int screenHeight = Integer.parseInt(resolutionSelector.getSelected().split(" x ")[1]);
 
@@ -191,8 +195,8 @@ public class OptionsScreen implements Screen {
         prefs.putBoolean(FULLSCREEN_PREF, fullscreenSwitch.isChecked());
         prefs.putBoolean(COLOURBLIND_PREF, colourblindModeSwitch.isChecked());
 
-        prefs.flush();
-        main.applyPreferences();
+        prefs.flush(); // save the updated preferences to file
+        main.applyPreferences(); // apply the changes to the game
     }
 
     /**

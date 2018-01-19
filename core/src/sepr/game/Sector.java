@@ -14,7 +14,7 @@ public class Sector {
     private String displayName;
     private int unitsInSector;
     private int reinforcementsProvided;
-    private String college;
+    private int collegeId;
     private boolean neutral;
     private int[] adjacentSectorIds; // <-- May want to reconsider structure
     private Texture sectorTexture;
@@ -31,7 +31,7 @@ public class Sector {
      * @param displayName sector display name
      * @param unitsInSector number of units in sector
      * @param reinforcementsProvided number of reinforcements the sector provides
-     * @param college the college this sector belongs to
+     * @param collegeId unique id of the college this sector belongs to
      * @param adjacentSectorIds ids of adjacent sectors
      * @param sectorTexture sector texture from assets
      * @param sectorPixmap pixmap of sector texture
@@ -40,13 +40,13 @@ public class Sector {
      * @param sectorCentreY ycoord of sector centre
      * @param decor false if a sector is accessible to a player and true if sector is decorative
      */
-    public Sector(int id, int ownerId, String fileName, Texture sectorTexture, Pixmap sectorPixmap, String displayName, int unitsInSector, int reinforcementsProvided, String college, boolean neutral, int[] adjacentSectorIds, int sectorCentreX, int sectorCentreY, boolean decor) {
+    public Sector(int id, int ownerId, String fileName, Texture sectorTexture, Pixmap sectorPixmap, String displayName, int unitsInSector, int reinforcementsProvided, int collegeId, boolean neutral, int[] adjacentSectorIds, int sectorCentreX, int sectorCentreY, boolean decor) {
         this.id = id;
         this.ownerId = ownerId;
         this.displayName = displayName;
         this.unitsInSector = unitsInSector;
         this.reinforcementsProvided = reinforcementsProvided;
-        this.college = college;
+        this.collegeId = collegeId;
         this.neutral = neutral;
         this.adjacentSectorIds = adjacentSectorIds;
         this.sectorTexture = sectorTexture;
@@ -84,13 +84,6 @@ public class Sector {
 
     public int getUnitsInSector() {
         return unitsInSector;
-    }
-
-    /**
-     * @return array of adjacent sector ids
-     */
-    public int[] getAdjacentSectorIds() {
-        return adjacentSectorIds;
     }
 
     public Texture getSectorTexture() {
@@ -132,7 +125,7 @@ public class Sector {
         return allocated;
     }
 
-    public String getCollege() { return college; }
+    public int getCollegeId() { return collegeId; }
 
     public String getFileName() {
         return fileName;
