@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 import java.util.Random;
 
@@ -82,12 +81,6 @@ public class PhaseAttack extends Phase{
         }
     }
 
-    private Vector2 convertScreenCoords(float screenX, float screenY) {
-        float x = (gameScreen.gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x);
-        float y = (gameScreen.gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y);
-        return new Vector2(x, y);
-    }
-
     @Override
     public void phaseAct() {
         if (attackingSector != null && defendingSector != null && numOfAttackers[0] != -1) {
@@ -106,7 +99,7 @@ public class PhaseAttack extends Phase{
     @Override
     public void visualisePhase(SpriteBatch batch) {
         if (this.attackingSector != null) { // If attacking
-            Vector2 screenCoords = convertScreenCoords(Gdx.input.getX(), Gdx.input.getY());
+            Vector2 screenCoords = gameScreen.screenToWorldCoords(Gdx.input.getX(), Gdx.input.getY());
             if (this.defendingSector == null) { // In mid attack
                 generateArrow(batch, this.arrowTailPosition.x, this.arrowTailPosition.y, screenCoords.x, screenCoords.y);
             } else if (this.defendingSector != null) { // Attack confirmed
@@ -138,8 +131,7 @@ public class PhaseAttack extends Phase{
             return true;
         }
 
-        Vector2 worldCoord = gameScreen.screenToWorldCoord(screenX, screenY);
-        Vector2 screenCoords = convertScreenCoords(screenX, screenY);
+        Vector2 worldCoord = gameScreen.screenToWorldCoords(screenX, screenY);
 
         int sectorId = map.detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
         if (sectorId != -1) { // If selected a sector
@@ -150,7 +142,7 @@ public class PhaseAttack extends Phase{
             if (this.attackingSector != null && this.defendingSector == null) { // If its the second selection in the attack phase
 
                 if (this.attackingSector.isAdjacentTo(selected) && selected.getOwnerId() != this.currentPlayer.getId()) { // check the player does not own the defending sector and that it is adjacent
-                    this.arrowHeadPosition.set(screenCoords.x, screenCoords.y); // Finalise the end position of the arrow
+                    this.arrowHeadPosition.set(worldCoord.x, worldCoord.y); // Finalise the end position of the arrow
                     this.defendingSector = selected;
 
                     getNumberOfAttackers(); // attacking and defending sector selected so find out how many units the player wants to attack with
@@ -160,7 +152,7 @@ public class PhaseAttack extends Phase{
 
             } else if (selected.getOwnerId() == this.currentPlayer.getId() && selected.getUnitsInSector() > 1 && notAlreadySelected) { // First selection, is owned by the player and has enough troops
                 this.attackingSector = selected;
-                this.arrowTailPosition.set(screenCoords.x, screenCoords.y); // set arrow tail position
+                this.arrowTailPosition.set(worldCoord.x, worldCoord.y); // set arrow tail position
             } else {
                 this.attackingSector = null;
                 this.defendingSector = null;

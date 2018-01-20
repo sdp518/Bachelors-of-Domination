@@ -59,7 +59,7 @@ public class PhaseReinforce extends Phase {
             return true;
         }
 
-        Vector2 worldCoord = gameScreen.screenToWorldCoord(screenX, screenY);
+        Vector2 worldCoord = gameScreen.screenToWorldCoords(screenX, screenY);
 
         int sectorId = map.detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
         if (sectorId != -1) { // If selected a sector

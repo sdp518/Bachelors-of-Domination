@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import javafx.util.Pair;
 
 import java.util.HashMap;
@@ -99,6 +100,8 @@ public class GameSetupScreen implements Screen{
                 return super.keyUp(keyCode);
             }
         };
+        this.stage.setViewport(new ScreenViewport());
+
         this.table = new Table();
         this.table.setFillParent(true); // make ui table fill the entire screen
         this.stage.addActor(table);

@@ -1,5 +1,5 @@
 package test.java.sepr.game;
-
+/*
 import com.badlogic.gdx.graphics.Color;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 /**
  * Created by jackr on 17/01/2018.
- */
+ *//*
 public class MapTest extends GameTest{
 
     private HashMap<Integer, Player> players;
@@ -36,4 +36,4 @@ public class MapTest extends GameTest{
     }
 
 
-}
+}*/

@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  * base class for handling phase specific input
  */
 public abstract class Phase extends Stage {
-
     GameScreen gameScreen;
     Map map;
     Player currentPlayer;

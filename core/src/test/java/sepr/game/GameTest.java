@@ -1,5 +1,5 @@
 package test.java.sepr.game;
-
+/*
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 
 /**
  * Created by jackr on 15/01/2018.
- */
+ *//*
 public class GameTest {
 
     private static Application application;
@@ -41,3 +41,4 @@ public class GameTest {
     }
 
 }
+*/
