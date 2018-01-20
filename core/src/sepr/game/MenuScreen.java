@@ -29,7 +29,7 @@ public class MenuScreen implements Screen {
             @Override
             public boolean keyUp(int keyCode) {
                 if (keyCode == Input.Keys.ESCAPE) { // ask player if they would like to exit the game if they press escape
-                    DialogFactory.exitDialogBox(stage);
+                    DialogFactory.exitProgramDialogBox(stage);
                 }
                 return super.keyUp(keyCode);
             }
@@ -113,7 +113,7 @@ public class MenuScreen implements Screen {
         table.add(WidgetFactory.genBottomBar("QUIT", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                DialogFactory.exitDialogBox(stage);}
+                DialogFactory.exitProgramDialogBox(stage);}
 
         })).colspan(2);
     }
@@ -121,7 +121,6 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        main.applyPreferences();
     }
 
     @Override

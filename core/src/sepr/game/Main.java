@@ -30,6 +30,8 @@ public class Main extends Game implements ApplicationListener {
 		this.optionsScreen = new OptionsScreen(this);
 		this.gameSetupScreen = new GameSetupScreen(this);
 
+		applyPreferences();
+
 		this.setMenuScreen();
 	}
 
@@ -63,8 +65,6 @@ public class Main extends Game implements ApplicationListener {
 	 */
 	public void applyPreferences() {
 		Preferences prefs = Gdx.app.getPreferences(OptionsScreen.PREFERENCES_NAME);
-		AudioHandler.setMusicPercentage(prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF));
-		AudioHandler.setFxPercentage(prefs.getFloat(OptionsScreen.FX_VOL_PREF));
 
 		int screenWidth = prefs.getInteger(OptionsScreen.RESOLUTION_WIDTH_PREF, 1920);
 		int screenHeight = prefs.getInteger(OptionsScreen.RESOLUTION_HEIGHT_PREF, 1080);
