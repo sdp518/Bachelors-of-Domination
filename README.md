@@ -1,7 +1,7 @@
 # Bachelors of Domination
 ## A strategy game by Risky Developments
 
-[Risky Developments Website link](http://www.riskydevelpments.co.uk)
+[Risky Developments Website link](http://www.riskydevelpments.co.uk) <br>
 [Jira link](http://www.riskydevelpments.co.uk/jira)
 
 ### Git Setup
@@ -10,7 +10,12 @@ To initialise the git repo `git init`, and to clone
 
 ### IDE Setup
 We recommend using JetBrain's IntelliJ IDEA [www.jetbrains.com/idea/download/](https://www.jetbrains.com/idea/download/)
+<br>To setup the project gradle must be refreshed to build all the libraries. To do this inside IntelliJ go to 
+`View -> Tool Windows -> Gradle` then in the Gradle projects window hit the refresh symbol.
+You are then ready to run the game.
 
 ### Run game
-First time - right click DesktopLauncher and select Run DesktopLauncher.Main()
-After that the most recent run config is bound to the green play button in the top right
+In the top right of IntelliJ under `Select Run/Debug Configurations` select `Edit Configurations`. 
+Then inside Application create a new configuration as so: <br>
+![Run Config](runConfig.png)<br>
+Then you should be able to run the game from the run arrow every time.

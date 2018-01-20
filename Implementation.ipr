@@ -192,7 +192,6 @@
       <module fileurl="file://$PROJECT_DIR$/Bachelors-of-Domination.iml" filepath="$PROJECT_DIR$/Bachelors-of-Domination.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Bachelors-of-Domination.iml" filepath="$PROJECT_DIR$/.idea/modules/Bachelors-of-Domination.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/BoD.iml" filepath="$PROJECT_DIR$/.idea/modules/BoD.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Implementation.iml" filepath="$PROJECT_DIR$/Implementation.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" group="core" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/core.iml" group="core" />
       <module fileurl="file://$PROJECT_DIR$/core/core_main.iml" filepath="$PROJECT_DIR$/core/core_main.iml" group="core" />
@@ -217,6 +216,22 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
   <component name="libraryTable">
+    <library name="com.badlogicgames.gdx:gdx-backend-headless:1.9.5" type="repository">
+      <properties maven-id="com.badlogicgames.gdx:gdx-backend-headless:1.9.5" />
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/gdx-backend-headless-1.9.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/gdx-1.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Gradle: com.badlogicgames.gdx:gdx-backend-headless:1.9.5">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/badlogicgames/gdx/gdx-backend-headless/1.9.5/gdx-backend-headless-1.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
     <library name="Gradle: com.badlogicgames.gdx:gdx-backend-lwjgl:1.9.5">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-lwjgl/1.9.5/ad5223b755809a92f44e7f6208f4af6a3b39dcc0/gdx-backend-lwjgl-1.9.5.jar!/" />
@@ -226,21 +241,28 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-lwjgl/1.9.5/746874b7c5ec7d49eae06d891417af0f7dd29ff6/gdx-backend-lwjgl-1.9.5-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Gradle: com.badlogicgames.gdx:gdx-box2d-platform:natives-desktop:1.9.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-box2d-platform/1.9.5/949c188c91f775dd9f17725989dfc20e1be44f76/gdx-box2d-platform-1.9.5-natives-desktop.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Gradle: com.badlogicgames.gdx:gdx-box2d:1.9.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-box2d/1.9.5/c8098219abfe00b849cc43d461b1105fea3a2944/gdx-box2d-1.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-box2d/1.9.5/75c262f9ca8e522063388daf21c2a91a60724a1b/gdx-box2d-1.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Gradle: com.badlogicgames.gdx:gdx-freetype-platform:natives-desktop:1.9.5">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype-platform/1.9.5/8ceda028ccbad322d1c02bb806291d2b6bed0232/gdx-freetype-platform-1.9.5-natives-desktop.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
-    </library>
-    <library name="Gradle: com.badlogicgames.gdx:gdx-freetype:1.9.5">
-      <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype/1.9.5/71eba1332b3c2436d3b8e24296a0feb1c01d9e67/gdx-freetype-1.9.5.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype/1.9.5/ad7f98d441627f849932bb903034183d77e87ef2/gdx-freetype-1.9.5-sources.jar!/" />
-      </SOURCES>
     </library>
     <library name="Gradle: com.badlogicgames.gdx:gdx-platform:natives-desktop:1.9.5">
       <CLASSES>
@@ -251,12 +273,10 @@
     </library>
     <library name="Gradle: com.badlogicgames.gdx:gdx:1.9.5">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.5/dc65bb2f51828c58b1b2b3ac585357204d54ee5f/gdx-1.9.5.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/badlogicgames/gdx/gdx/1.9.5/gdx-1.9.5.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.5/df0e6a52ed42009b20ab64cc81e57c3ae24d9109/gdx-1.9.5-sources.jar!/" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="Gradle: com.badlogicgames.jlayer:jlayer:1.0.1-gdx">
       <CLASSES>
@@ -378,6 +398,21 @@
       <SOURCES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl_util/2.9.2/308d4ebe8d7b240d3490b6a7e0424807ea3ad98b/lwjgl_util-2.9.2-sources.jar!/" />
       </SOURCES>
+    </library>
+    <library name="Gradle: org.mockito:mockito-all:2.2.7">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/Could not find org.mockito:mockito-all:2.2.7." />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="org.mockito:mockito-core:2.2.7" type="repository">
+      <properties maven-id="org.mockito:mockito-core:2.2.7" />
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/mockito-core-2.2.7.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
     </library>
   </component>
   <component name="masterDetails">
