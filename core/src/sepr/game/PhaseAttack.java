@@ -49,7 +49,7 @@ public class PhaseAttack extends Phase{
         gameplayBatch.draw(arrow, startX, (startY - thickness/2), 0, thickness/2, (float)height, thickness,1, 1, (float)angle);
     }
 
-    private void getNumberOfAttackers() throws RuntimeException{
+    private void getNumberOfAttackers() throws RuntimeException {
         if (attackingSector == null || defendingSector == null) {
             throw new RuntimeException("Cannot execute attack unless both an attacking and defending sector have been selected");
         }

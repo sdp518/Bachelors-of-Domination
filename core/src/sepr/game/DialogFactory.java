@@ -216,8 +216,11 @@ public class DialogFactory {
      * @param stage to draw the box to
      */
     public static void playersOutDialog(String[] playerNames, Stage stage) {
-        Dialog dialog = new Dialog("Game Over!", DialogFactory.skin);
-        String message = "The following players have been eliminated:";
+        Dialog dialog = new Dialog("Elimination!", DialogFactory.skin);
+        String message = "The following player has been eliminated:";
+        if (playerNames.length > 1) {
+            message = "The following players have been eliminated:";
+        }
         for (String s : playerNames) {
             message += "\n    " + s;
         }

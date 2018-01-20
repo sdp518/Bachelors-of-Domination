@@ -118,30 +118,6 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * This method is used for progression through the phases of a turn evaluating the currentPhase case label
-     */
-    protected void nextPhase() {
-        removeEliminatedPlayers();
-
-        this.phases.get(currentPhase).endPhase();
-
-        switch (currentPhase) {
-            case REINFORCEMENT:
-                currentPhase = TurnPhaseType.ATTACK;
-                break;
-            case ATTACK:
-                currentPhase = TurnPhaseType.MOVEMENT;
-                break;
-            case MOVEMENT:
-                currentPhase = TurnPhaseType.REINFORCEMENT;
-                nextPlayer();
-                break;
-        }
-        this.updateInputProcessor();
-        this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
-    }
-
-    /**
      *
      * @return time remaining in turn in seconds
      */
@@ -168,13 +144,14 @@ public class GameScreen implements Screen, InputProcessor{
         for (Integer i : turnOrder) {
             boolean hasSector = false;
             for (Integer j : map.getSectorIds()) {
-                if (map.getSectorById(i).getOwnerId() == j) {
+                if (map.getSectorById(j).getOwnerId() == i) {
                     hasSector = true; // sector owned by player i found
                     break; // only need one sector to remain in turn order so can break once one found
                 }
             }
             if (!hasSector) { // player has no sectors so remove them from the game
                 playerIdsToRemove.add(i);
+                System.out.println(i);
             }
         }
 
@@ -193,10 +170,33 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * This method is used for progression through the phases of a turn evaluating the currentPhase case label
+     */
+    protected void nextPhase() {
+        this.phases.get(currentPhase).endPhase();
+
+        switch (currentPhase) {
+            case REINFORCEMENT:
+                currentPhase = TurnPhaseType.ATTACK;
+                break;
+            case ATTACK:
+                currentPhase = TurnPhaseType.MOVEMENT;
+                break;
+            case MOVEMENT:
+                currentPhase = TurnPhaseType.REINFORCEMENT;
+                nextPlayer();
+                break;
+        }
+        this.updateInputProcessor();
+        this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
+        removeEliminatedPlayers();
+
+    }
+
+    /**
      * Called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
      */
     private void nextPlayer() {
-        removeEliminatedPlayers();
         currentPlayer++;
         if (currentPlayer == turnOrder.size()) {
             currentPlayer = 0;
@@ -206,11 +206,7 @@ public class GameScreen implements Screen, InputProcessor{
 
         if (this.turnTimerEnabled) {
             this.turnTimeStart = System.currentTimeMillis();
-        }      
-    }
-
-    protected SpriteBatch getGameplayBatch() {
-        return this.gameplayBatch;
+        }
     }
 
     /**
@@ -225,6 +221,10 @@ public class GameScreen implements Screen, InputProcessor{
         }
         int winnerId = turnOrder.get(0); // winner will be the only player in the turn order list
         DialogFactory.gameOverDialog(players.get(winnerId).getPlayerName(), players.get(winnerId).getCollegeName().getCollegeName(), main, phases.get(currentPhase));
+    }
+
+    protected SpriteBatch getGameplayBatch() {
+        return this.gameplayBatch;
     }
 
     /**
