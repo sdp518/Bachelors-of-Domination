@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.util.Random;
-
 /**
  * Created by Dom's Surface Mark 2 on 16/11/2017
  */
