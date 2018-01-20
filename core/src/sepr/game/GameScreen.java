@@ -27,7 +27,7 @@ public class GameScreen implements Screen, InputProcessor{
     private HashMap<TurnPhaseType, Phase> phases;
 
     private SpriteBatch gameplayBatch;
-    protected OrthographicCamera gameplayCamera;
+    private OrthographicCamera gameplayCamera;
     private Viewport gameplayViewport;
     private Texture mapBackground;
 
@@ -137,6 +137,14 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     *
+     * @return the camera used for rendering the game
+     */
+    public OrthographicCamera getGameplayCamera() {
+        return gameplayCamera;
+    }
+
+    /**
      * removes all players who have 0 sectors from the turn order
      */
     private void removeEliminatedPlayers() {
@@ -223,6 +231,10 @@ public class GameScreen implements Screen, InputProcessor{
         DialogFactory.gameOverDialog(players.get(winnerId).getPlayerName(), players.get(winnerId).getCollegeName().getCollegeName(), main, phases.get(currentPhase));
     }
 
+    /**
+     *
+     * @return the sprite batch being used to render the game
+     */
     protected SpriteBatch getGameplayBatch() {
         return this.gameplayBatch;
     }
@@ -354,15 +366,17 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * converts a point on the screen to a point in the world, with respect to the gameplay camera
+     * converts a point on the screen to a point in the world
+     * pixMaps use an inverted coordinate
+     *
      * @param screenX screen point X
      * @param screenY screen point Y
-     * @return the world coordinates as a vector
+     * @return the corresponding world coordinate
      */
-    public Vector2 screenToWorldCoord(int screenX, int screenY) {
-        float worldX = gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x;
-        float worldY = (gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y - Gdx.graphics.getHeight()) * -1;
-        return new Vector2(worldX, worldY);
+    public Vector2 screenToWorldCoords(int screenX, int screenY) {
+        float x = (getGameplayCamera().unproject(new Vector3(screenX, screenY, 0)).x);
+        float y = (getGameplayCamera().unproject(new Vector3(screenX, screenY, 0)).y);
+        return new Vector2(x, y);
     }
 
     /* Input Processor */
@@ -397,6 +411,9 @@ public class GameScreen implements Screen, InputProcessor{
         if (keycode == Input.Keys.RIGHT) {
             keysDown.put(Input.Keys.RIGHT, false);
         }
+        if (keycode == Input.Keys.ESCAPE) {
+            main.setMenuScreen();
+        }
         return true;
     }
 
@@ -422,7 +439,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        Vector2 worldCoords = screenToWorldCoord(screenX, screenY);
+        Vector2 worldCoords = screenToWorldCoords(screenX, screenY);
 
         Sector hoveredSector = map.getSectorById(map.detectSectorContainsPoint((int)worldCoords.x, (int)worldCoords.y));
         phases.get(currentPhase).setBottomBarText(hoveredSector); // update the bottom bar of the UI with the details of the sector currently hovered over by the mouse

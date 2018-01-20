@@ -295,10 +295,11 @@ public class Map{
     /**
      *
      * @param worldX world x coord of mouse click
-     * @param worldY world y coord of mouse click
+     * @param worldYNotInverted world y coord of mouse click
      * @return id of sector that contains point or -1 if no sector contains the point or sector is decor only
      */
-    public int detectSectorContainsPoint(int worldX, int worldY) {
+    public int detectSectorContainsPoint(int worldX, int worldYNotInverted) {
+        int worldY = 1080 - 1 - worldYNotInverted; // invert coordinate for pixmap coordinate system
         for (Sector sector : sectors.values()) {
             if (worldX < 0 || worldY < 0 || worldX > sector.getSectorTexture().getWidth() || worldY > sector.getSectorTexture().getHeight()) {
                 return -1; // return no sector contains the point if it outside of the map bounds

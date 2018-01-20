@@ -1,5 +1,5 @@
 package test.java.sepr.game;
-
+/*
 
 
 import com.badlogic.gdx.Gdx;
@@ -52,4 +52,4 @@ public class CollegeTest extends test.java.sepr.game.GameTest {
 
     }
 
-}
+}*/
