@@ -1,3 +1,5 @@
+
+
 package sepr.game;
 
 import com.badlogic.gdx.Gdx;
@@ -14,7 +16,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-
 /**
  * stores the game map and the sectors within it
  */
