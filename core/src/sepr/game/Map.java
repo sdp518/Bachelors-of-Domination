@@ -135,7 +135,8 @@ public class Map{
             if (i != GameScreen.NEUTRAL_PLAYER_ID) playerReinforcements.put(i, 0);
         }
 
-        int lowestReinforcementId = players.get(0).getId(); // id of player currently receiving the least reinforcements
+
+        int lowestReinforcementId = players.keySet().iterator().next(); // id of player currently receiving the least reinforcements, any player id is chosen to start as al have 0 reinforcements
         List<Integer> sectorIdsRandOrder = new ArrayList<Integer>(getSectorIds());
         Collections.shuffle(sectorIdsRandOrder); // randomise the order sectors are allocated
 
@@ -256,7 +257,6 @@ public class Map{
             attacker.addTroopsToAllocate(sectors.get(defendingSectorId).getReinforcementsProvided());
             DialogFactory.attackSuccessDialogBox(sectors.get(defendingSectorId).getReinforcementsProvided(), sectors.get(attackingSectorId).getUnitsInSector(), unitsToMove, defender.getPlayerName(), attacker.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage);
             sectors.get(defendingSectorId).setOwner(attacker);
-            success = true;
         } else if (sectors.get(defendingSectorId).getUnitsInSector() == 0 && sectors.get(attackingSectorId).getUnitsInSector() == 1) { // territory conquered but only one attacker remaining so can't move troops onto it
             DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage);
             sectors.get(defendingSectorId).setOwner(neutral);

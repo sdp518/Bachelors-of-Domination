@@ -48,15 +48,35 @@ public class DialogFactory {
     }
 
     /**
-     * Creates a dialog where the player can confirm if they want to exit the game
+     * Creates a dialog where the player can confirm if they want to exit the program
      *
      * @param stage The stage to draw the box onto
      */
-    public static void exitDialogBox(Stage stage) {
+    public static void exitProgramDialogBox(Stage stage) {
         Dialog dialog = new Dialog("Quit", DialogFactory.skin) {
             protected void result(Object object) {
                 if (object.toString().equals("1")){ // yes pressed : quit the game
                     Gdx.app.exit();
+                }
+            }
+        };
+        dialog.text("Are you sure you want to exit the game?");
+        dialog.button("Yes", "1");
+        dialog.button("No", "0");
+        dialog.show(stage);
+    }
+
+    /**
+     * Creates a dialog where the player can confirm if they want to leave the current game
+     *
+     * @param gameScreen for changing the screen
+     * @param stage the stage to draw the box onto
+     */
+    public static void leaveGameDialogBox(final GameScreen gameScreen, Stage stage) {
+        Dialog dialog = new Dialog("Quit", DialogFactory.skin) {
+            protected void result(Object object) {
+                if (object.toString().equals("1")){ // yes pressed : quit the game
+                    gameScreen.openMenu();
                 }
             }
         };

@@ -466,8 +466,9 @@ public class GameSetupScreen implements Screen{
             DialogFactory.basicDialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
             return;
         }
-
-        main.setGameScreen(generatePlayerHashmaps(), turnTimerSwitch.isChecked(), MAX_TURN_TIME, neutralPlayerSwitch.isChecked());
+        HashMap<Integer, Player> x = generatePlayerHashmaps();
+        System.out.println(x.toString());
+        main.setGameScreen(x, turnTimerSwitch.isChecked(), MAX_TURN_TIME, neutralPlayerSwitch.isChecked());
     }
 
     private void setupUi() {
@@ -510,7 +511,6 @@ public class GameSetupScreen implements Screen{
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        main.applyPreferences();
     }
 
     @Override

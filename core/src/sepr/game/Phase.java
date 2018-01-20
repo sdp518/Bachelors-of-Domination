@@ -68,7 +68,7 @@ public abstract class Phase extends Stage {
         table.add(WidgetFactory.genGameHUDTopBar(turnPhase, new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.openMenu();
+                DialogFactory.leaveGameDialogBox(gameScreen, actor.getStage());
             }
         })).colspan(2).expandX().height(60).width(910);
 

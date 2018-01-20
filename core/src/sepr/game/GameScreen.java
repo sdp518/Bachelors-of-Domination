@@ -42,7 +42,7 @@ public class GameScreen implements Screen, InputProcessor{
     private long turnTimeStart;
 
     private List<Integer> turnOrder; // array of player ids in order of players' turns;
-    private int currentPlayer; // index of current player in turnOrder list
+    private int currentPlayerPointer; // index of current player in turnOrder list
 
     private boolean gameSetup = false; // true once setupGame has been called
 
@@ -83,6 +83,8 @@ public class GameScreen implements Screen, InputProcessor{
                 this.turnOrder.add(i);
             }
         }
+
+        this.currentPlayerPointer = 0;
 
         this.turnTimerEnabled = turnTimerEnabled;
         this.maxTurnTime = maxTurnTime;
@@ -196,18 +198,26 @@ public class GameScreen implements Screen, InputProcessor{
                 break;
         }
         this.updateInputProcessor();
-        this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
+        this.phases.get(currentPhase).enterPhase(getCurrentPlayer());
         removeEliminatedPlayers();
 
+    }
+
+    /**
+     *
+     * @return gets the player object for the player whos turn it currently is
+     */
+    private Player getCurrentPlayer() {
+        return players.get(turnOrder.get(currentPlayerPointer));
     }
 
     /**
      * Called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
      */
     private void nextPlayer() {
-        currentPlayer++;
-        if (currentPlayer == turnOrder.size()) {
-            currentPlayer = 0;
+        currentPlayerPointer++;
+        if (currentPlayerPointer == turnOrder.size()) {
+            currentPlayerPointer = 0;
         }
 
         resetCameraPosition();
@@ -223,7 +233,7 @@ public class GameScreen implements Screen, InputProcessor{
      */
     private void gameOver() throws RuntimeException {
         if (turnOrder.size() == 0) { // neutral player has won
-            DialogFactory.basicDialogBox("Game Over!", "The Neutral Player has won.", phases.get(currentPhase));
+            DialogFactory.gameOverDialog(players.get(NEUTRAL_PLAYER_ID).getPlayerName(), players.get(NEUTRAL_PLAYER_ID).getCollegeName().getCollegeName(), main, phases.get(currentPhase));
         } else if (turnOrder.size() != 1) {
             throw new RuntimeException("Game Over called but more than one player in turn order");
         }
@@ -286,7 +296,7 @@ public class GameScreen implements Screen, InputProcessor{
      * called once screen is setup to initialise the first phase of the game
      */
     public void startGame() {
-        this.phases.get(currentPhase).enterPhase(players.get(currentPlayer));
+        this.phases.get(currentPhase).enterPhase(getCurrentPlayer());
         resetCameraPosition();
     }
 
@@ -304,7 +314,7 @@ public class GameScreen implements Screen, InputProcessor{
     public void render(float delta) {
         if (!gameSetup) throw new RuntimeException("Game must be setup before attempting to play it"); // throw exception if attempt to run game before its setup
         this.controlCamera(); // move camera
-
+        System.out.println(delta);
         gameplayCamera.update();
         gameplayBatch.setProjectionMatrix(gameplayCamera.combined);
 
@@ -314,7 +324,6 @@ public class GameScreen implements Screen, InputProcessor{
 
         map.draw(gameplayBatch); // draw the map
         gameplayBatch.end(); // stop rendering
-
 
         if (this.turnTimerEnabled) { // update the timer display, if it is enabled
             this.phases.get(currentPhase).setTimerValue(getTurnTimeRemaining());
@@ -454,7 +463,7 @@ public class GameScreen implements Screen, InputProcessor{
         return true;
     }
 
-    public Player getCurrentPlayer() {
-        return players.get(currentPlayer);
+    public Player getCurrentPlayerPointer() {
+        return players.get(currentPlayerPointer);
     }
 }
