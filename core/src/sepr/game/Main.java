@@ -102,6 +102,8 @@ public class Main extends Game implements ApplicationListener {
 	public void dispose() {
 		super.dispose();
 		menuScreen.dispose();
+		optionsScreen.dispose();
+		gameSetupScreen.dispose();
 		gameScreen.dispose();
 	}
 

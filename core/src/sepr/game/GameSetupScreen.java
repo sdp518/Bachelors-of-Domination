@@ -558,6 +558,6 @@ public class GameSetupScreen implements Screen{
 
     @Override
     public void dispose() {
-        collegeTableBackground.dispose();
+
     }
 }
