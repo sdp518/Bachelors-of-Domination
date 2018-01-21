@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Dom's Surface Mark 2 on 16/11/2017.
  * Options managed by this class:
  *      Music Volume
  *      FX Volume
@@ -29,6 +28,7 @@ import java.util.Set;
  *      Colourblind mode On/Off
  */
 public class OptionsScreen implements Screen {
+    // names for accessing different preferences in the preferences file
     public static final String PREFERENCES_NAME = "Options";
     public static final String MUSIC_VOL_PREF = "musicVol";
     public static final String FX_VOL_PREF = "fxVol";
@@ -41,12 +41,18 @@ public class OptionsScreen implements Screen {
     private Stage stage;
     private Table table;
 
+    // screen UI widgets
     private Slider musicSlider;
     private Slider fxSlider;
     private SelectBox<String> resolutionSelector;
     private CheckBox fullscreenSwitch;
     private CheckBox colourblindModeSwitch;
 
+    /**
+     * sets up the screen
+     *
+     * @param main for changing back to the menu screen
+     */
     public OptionsScreen(final Main main) {
         this.main = main;
 
@@ -59,6 +65,7 @@ public class OptionsScreen implements Screen {
                 return super.keyUp(keyCode);
             }
         };
+
         this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
 
@@ -72,6 +79,8 @@ public class OptionsScreen implements Screen {
     /**
      * Method generates a string array of possible resolutions the game could be displayed at on this monitor
      * Used to get selectable elements in the Resolution selector widget
+     * Resolutions must be a minimum of 1000 x 1000 pixels
+     *
      * @return possible display resolutions in format ScreenWidth x ScreenHeight
      */
     private String[] getPossibleResolutions() {
@@ -89,12 +98,14 @@ public class OptionsScreen implements Screen {
     }
 
     private Table setupOptionsTable() {
+        // setup widgets for selecting the options
         musicSlider = WidgetFactory.genStyledSlider();
         fxSlider = WidgetFactory.genStyledSlider();
         resolutionSelector = WidgetFactory.genStyledSelectBox(getPossibleResolutions());
         fullscreenSwitch = WidgetFactory.genOnOffSwitch();
         colourblindModeSwitch = WidgetFactory.genOnOffSwitch();
 
+        // setup labels
         Label musicVolumeLabel = WidgetFactory.genMenuBtnLabel("MUSIC VOLUME");
         musicVolumeLabel.setAlignment(Align.center);
         Label fxVolumeLabel = WidgetFactory.genMenuBtnLabel("FX VOLUME");
@@ -106,6 +117,7 @@ public class OptionsScreen implements Screen {
         Label colourblindModeSwitchLabel = WidgetFactory.genMenuBtnLabel("COLOURBLIND MODE");
         colourblindModeSwitchLabel.setAlignment(Align.center);
 
+        // add the setup widgets to a table
         Table table = new Table();
         table.setDebug(false);
         table.left();
@@ -141,8 +153,8 @@ public class OptionsScreen implements Screen {
         acceptButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                acceptChanges();
-                main.setMenuScreen();
+                acceptChanges(); // save and apply changes when CONFIRM CHANGES button is pressed
+                main.setMenuScreen(); // revert to the menu screen
             }
         });
 
@@ -176,8 +188,8 @@ public class OptionsScreen implements Screen {
 
     /**
      * Called when accept button clicked in options menu
-     * Should apply the changes to the game settings made by the player
-     * Should also save the updated preferences to file
+     * applies the changes to the game settings made by the player
+     * saves the updated preferences to file
      */
     private void acceptChanges() {
         Preferences prefs = Gdx.app.getPreferences(PREFERENCES_NAME);
@@ -199,7 +211,7 @@ public class OptionsScreen implements Screen {
     }
 
     /**
-     * Reads the preferences file so that the options screen may be set to the current settings
+     * reads the preferences file so that the options screen may be set to the current settings
      */
     private void readPreferences() {
         Preferences prefs = Gdx.app.getPreferences(OptionsScreen.PREFERENCES_NAME);

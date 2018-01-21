@@ -22,6 +22,11 @@ public class MenuScreen implements Screen {
     private Stage stage;
     private Table table; // table for inserting ui widgets into
 
+    /**
+     * sets up the menu screen
+     *
+     * @param main for changing which screen is currently being displayed
+     */
     public MenuScreen(final Main main) {
         this.main = main;
 
@@ -43,11 +48,18 @@ public class MenuScreen implements Screen {
         this.setupUi();
     }
 
+    /**
+     * generates a table containing the start game, load game and options buttons
+     * pressing;
+     *      Start Game  --> Takes player to setup game screen
+     *      Load Game   --> Not yet implemented
+     *      Options     --> Takes player to options screen
+     * @return a table of buttons
+     */
     private Table setupMenuTable() {
         final TextButton startGameBtn = WidgetFactory.genBasicButton("START NEW GAME");
         final TextButton loadGameBtn = WidgetFactory.genBasicButton("LOAD GAME");
         final TextButton optionsBtn = WidgetFactory.genBasicButton("OPTIONS");
-        final TextButton exitBtn = WidgetFactory.genBasicButton("QUIT");
 
         /* Create sub-table for all the menu buttons */
         Table btnTable = new Table();
@@ -84,17 +96,13 @@ public class MenuScreen implements Screen {
             }
         });
 
-        exitBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
-            }
-        });
-
         /* Sub-table complete */
         return btnTable;
     }
 
+    /**
+     * sets up the UI tables for the menu screen
+     */
     private void setupUi() {
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
 

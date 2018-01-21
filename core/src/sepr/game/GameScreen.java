@@ -472,8 +472,12 @@ public class GameScreen implements Screen, InputProcessor{
     public boolean mouseMoved(int screenX, int screenY) {
         Vector2 worldCoords = screenToWorldCoords(screenX, screenY);
 
-        Sector hoveredSector = map.getSectorById(map.detectSectorContainsPoint((int)worldCoords.x, (int)worldCoords.y));
-        phases.get(currentPhase).setBottomBarText(hoveredSector); // update the bottom bar of the UI with the details of the sector currently hovered over by the mouse
+        int hoveredSectorId = map.detectSectorContainsPoint((int)worldCoords.x, (int)worldCoords.y); // get id of sector mouse is currently hovered over
+        if (hoveredSectorId == -1) {
+            phases.get(currentPhase).setBottomBarText(null); // no sector hovered over: update bottom bar with null sector
+        } else {
+            phases.get(currentPhase).setBottomBarText(map.getSectorById(hoveredSectorId)); // update the bottom bar of the UI with the details of the sector currently hovered over by the mouse
+        }
         return false;
     }
 
