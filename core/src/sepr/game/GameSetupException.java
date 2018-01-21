@@ -5,7 +5,6 @@ package sepr.game;
  */
 public class GameSetupException extends Exception {
     public enum GameSetupExceptionType {
-        NO_HUMAN_PLAYER("There must be at least one player"),
         MINIMUM_TWO_PLAYERS("There must be at least two players"),
         NO_NEUTRAL_PLAYER("You must enable the neutral player for games with only two normal players"),
         DUPLICATE_PLAYER_NAME("Each player must have a unique name"),

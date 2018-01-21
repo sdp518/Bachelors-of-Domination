@@ -23,7 +23,8 @@ public class DialogFactory {
     }
 
     /**
-     * Creates a dialog modal in the given stage with an ok button and the given title and message
+     * creates a dialog in the given stage with an ok button and the given title and message
+     * the dialog displays until the okay button is pressed then it quickly fades away
      *
      * @param title String to be used at the top of the dialog box
      * @param message String to be used as the content of the dialog
@@ -37,10 +38,11 @@ public class DialogFactory {
     }
 
     /**
-     * Generates a dialog box displaying which players turn it is next and how many troops they have to allocate
+     * creates a dialog box displaying which players turn it is next and how many troops they have to allocate
+     * the dialog displays until the okay button is pressed then it quickly fades away
      *
      * @param nextPlayer String to be used to display the name of the next player
-     * @param troopsToAllocate Integer to be used to display number of troops
+     * @param troopsToAllocate Integer to be used to display number of troops the player has to allocate
      * @param stage to draw the box onto
      */
     public static void nextTurnDialogBox(String nextPlayer, Integer troopsToAllocate, Stage stage) {
@@ -48,7 +50,7 @@ public class DialogFactory {
     }
 
     /**
-     * Creates a dialog where the player can confirm if they want to exit the program
+     * creates a dialog where the player can confirm if they want to exit the program
      *
      * @param stage The stage to draw the box onto
      */
@@ -56,7 +58,7 @@ public class DialogFactory {
         Dialog dialog = new Dialog("Quit", DialogFactory.skin) {
             protected void result(Object object) {
                 if (object.toString().equals("1")){ // yes pressed : quit the game
-                    Gdx.app.exit();
+                    Gdx.app.exit(); // close the program
                 }
             }
         };
@@ -67,7 +69,9 @@ public class DialogFactory {
     }
 
     /**
-     * Creates a dialog where the player can confirm if they want to leave the current game
+     * creates a dialog where the player can confirm if they want to leave the current game
+     * if yes pressed then the screen is changed to the main menu
+     * if no pressed then the screen stays the same and the dialog closes
      *
      * @param gameScreen for changing the screen
      * @param stage the stage to draw the box onto
@@ -75,8 +79,8 @@ public class DialogFactory {
     public static void leaveGameDialogBox(final GameScreen gameScreen, Stage stage) {
         Dialog dialog = new Dialog("Quit", DialogFactory.skin) {
             protected void result(Object object) {
-                if (object.toString().equals("1")){ // yes pressed : quit the game
-                    gameScreen.openMenu();
+                if (object.toString().equals("1")){ // yes pressed therefore quit the game
+                    gameScreen.openMenu(); // change screen to menu screen
                 }
             }
         };
@@ -87,7 +91,7 @@ public class DialogFactory {
     }
 
     /**
-     * Creates a dialog modal which says which player took control of a sector from which other player
+     * creates a dialog that says which player took control of a sector from which other player
      *
      * @param prevOwner name of the player who used to own the sector
      * @param newOwner name of the player who now controls the sector
@@ -99,9 +103,9 @@ public class DialogFactory {
     }
 
     /**
-     * Creates a dialog box with a slider and okay box allowing a player who has conquered a sector to select how many troops to move onto it
+     * creates a dialog box with a slider and okay box allowing a player who has conquered a sector to select how many troops to move onto it
      *
-     * @param bonusTroops Integer used to provide the bonus troops provided by conquered tile
+     * @param bonusTroops amount of troops the player is awarded for conquering the tile
      * @param maxTroops the amount of troops on the attacking tile
      * @param troopsMoved 3 index final array for setting value of slider to representing how many troops to move: [0] amount of units to move; [1] id of source sector; [2] id of target sector
      * @param prevOwner name of the player who used to own the sector
@@ -110,7 +114,7 @@ public class DialogFactory {
      * @param stage The stage to draw the box onto
      */
     public static void attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, final int[] troopsMoved, String prevOwner, String newOwner, String sectorName, Stage stage) {
-        final Slider slider = new Slider(1, (maxTroops - 1), 1, false, DialogFactory.skin); // slider max value is maxTroops -1 as must leave at least one troop on attacking sector
+        final Slider slider = new Slider(1, (maxTroops - 1), 1, false, DialogFactory.skin); // slider max value is (maxTroops - 1) as must leave at least one troop on attacking sector
         slider.setValue(1); // must move at least one troop so set initial value to 1
         final Label sliderValue = new Label("1", DialogFactory.skin); // label to display the slider value
 
@@ -141,12 +145,12 @@ public class DialogFactory {
     }
 
     /**
-     * Creates a dialog modal allowing the user to select how many units they want to allocate to a sector
+     * creates a dialog modal allowing the user to select how many units they want to allocate to a sector
      *
-     * @param maxAllocation maximum amount of troops that can be assigned to this tile
+     * @param maxAllocation maximum amount of troops that can be assigned
      * @param allocation 2 index array storing : [0] number of troops to allocate ; [1] id of sector to allocate to
      * @param sectorName name of sector being allocated to
-     * @param stage The stage to draw the box onto
+     * @param stage to draw the box onto
      */
     public static void allocateUnitsDialog(Integer maxAllocation, final int[] allocation, String sectorName, Stage stage) {
         final Slider slider = new Slider(1, maxAllocation, 1, false, DialogFactory.skin);
@@ -160,11 +164,11 @@ public class DialogFactory {
 
         Dialog dialog = new Dialog("Select amount of troops to allocate", DialogFactory.skin) {
             protected void result(Object object) {
-                if (object.equals("0")) {
+                if (object.equals("0")) { // Cancel button pressed
                     allocation[0] = -1;
-                    allocation[1] = -1;
-                } else if (object.equals("1")) {
-                    allocation[0] = (int)slider.getValue();
+                    allocation[1] = -1; // set allocating sector id to -1 to indicate the allocation has been cancelled
+                } else if (object.equals("1")) { // Ok button pressed
+                    allocation[0] = (int)slider.getValue(); // set the number of troops to allocate to the value of the slider
                 }
             }
         };
@@ -182,14 +186,16 @@ public class DialogFactory {
     }
 
     /**
-     * Dialog box for the player to select how many troops they want to attack with
+     * creates a dialog box for the player to select how many troops they want to attack with
+     * if player cancels the attackers[0] = 0 to signify the attack has been cancelled
      *
-     * @param stage to display the dialog on
      * @param maxAttackers max number of attackers the player chooses to attack with
      * @param defenders how many units are defending
+     * @param attackers 1 index array for setting number of troops the player has chosen to attack with: [0] number of troops player has set to attack with
+     * @param stage to display the dialog on
      * @return the number of troops chosen to attack with or 0 if the attack is canceled
      */
-    public static void attackDialog(Stage stage, int maxAttackers, int defenders, final int[] attackers) {
+    public static void attackDialog(int maxAttackers, int defenders, final int[] attackers, Stage stage) {
         final Slider slider = new Slider(1, maxAttackers, 1, false, DialogFactory.skin);
         slider.setValue(maxAttackers);
         final Label sliderValue = new Label(maxAttackers + "", DialogFactory.skin); // label showing the value of the slider
@@ -202,11 +208,10 @@ public class DialogFactory {
 
         Dialog dialog = new Dialog("Select number of troops to attack with", DialogFactory.skin) {
             protected void result(Object object) {
-                // object is the button pressed
-                if (object.equals("0")) {
-                    attackers[0] = 0; // cancel pressed: set number of attacker to 0, i.e. no attack
-                } else {
-                    attackers[0] = (int)slider.getValue(); // set numvber of attackers to the value of the slider
+                if (object.equals("0")) { // cancel pressed
+                    attackers[0] = 0; // set number of attacker to 0, i.e. no attack
+                } else if (object.equals("1")){ // ok button pressed
+                    attackers[0] = (int)slider.getValue(); // set number of attackers to the value of the slider
                 }
             }
         };
@@ -232,7 +237,8 @@ public class DialogFactory {
 
     /**
      * dialog that displays a list of players that have been eliminated
-     * @param playerNames players that have been eliminated
+     *
+     * @param playerNames array of eliminated player names
      * @param stage to draw the box to
      */
     public static void playersOutDialog(String[] playerNames, Stage stage) {
@@ -241,7 +247,7 @@ public class DialogFactory {
         if (playerNames.length > 1) {
             message = "The following players have been eliminated:";
         }
-        for (String s : playerNames) {
+        for (String s : playerNames) { // for each eliminated player start a new line and list their name
             message += "\n    " + s;
         }
         dialog.text(message);
@@ -250,7 +256,7 @@ public class DialogFactory {
     }
 
     /**
-     * dialog displayed when a player has won the game
+     * dialog displayed when a player has won the game showing the name of the player that has won and what college they belong to
      *
      * @param playerName name of player who has won
      * @param collegeName name of the winning player's college
@@ -260,7 +266,7 @@ public class DialogFactory {
     public static void gameOverDialog(String playerName, String collegeName, final Main main, Stage stage) {
         Dialog dialog = new Dialog("Game Over!", DialogFactory.skin) {
             protected void result(Object object) {
-                main.setMenuScreen();
+                main.setMenuScreen(); // change to menu screen when ok button is pressed
             }
         };
         dialog.text("Game Over!\n" + playerName + " of College " + collegeName + " has conquered the University of York!");

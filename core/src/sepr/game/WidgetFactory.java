@@ -2,9 +2,11 @@ package sepr.game;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -12,23 +14,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 /**
- * Created by Dom's Surface Mark 2 on 28/11/2017.
+ * class that generates widgets for using in the UI
  */
 public class WidgetFactory {
 
     private static Texture basicButtonTexture;
-    private static Texture mainMenuTopBarTexture;
-    private static Texture bottomBarTexture;
     private static Texture mapGraphicTexture;
-    private static Texture labelTexture;
     private static Texture optionsGraphicTexture;
 
     private static Texture sliderBarTexture;
     private static Texture sliderKnobTexture;
 
+    private static Texture textFieldCursorTexture;
+
     private static Texture onSwitchTexture;
     private static Texture offSwitchTexture;
-  
+
     private static Texture gameHUDBottomBarRightPartTexture;
     private static Texture gameHUDTopBarTexture;
     private static Texture endPhaseBtnTexture;
@@ -40,8 +41,6 @@ public class WidgetFactory {
     private static Texture collegeLeftBtnTexture;
     private static Texture collegeRightBtnTexture;
     private static Texture startGameBtnTexture;
-    private static Texture nameBoxLabelTexture;
-
 
     private static Texture menusTopBarLeftTexture;
     private static Texture menusTopBarRightTexture;
@@ -58,18 +57,20 @@ public class WidgetFactory {
     private static BitmapFont fontBig;
     private static BitmapFont fontSmall;
 
+    /**
+     * initialises all the assets required for generating the UI components
+     */
     public WidgetFactory() {
         setupFont();
 
         basicButtonTexture = new Texture("uiComponents/Menu-Button-Full.png");
-        mainMenuTopBarTexture = new Texture("uiComponents/Main-Menu-Top-Bar.png");
-        bottomBarTexture = new Texture("uiComponents/Bottom-Bar.png");
         mapGraphicTexture = new Texture("uiComponents/Main-Menu-Map.png");
-        labelTexture = new Texture("uiComponents/Menu-Button.png");
         optionsGraphicTexture = new Texture("uiComponents/General-Jack.png");
 
         sliderBarTexture = new Texture("uiComponents/sliderBar.png");
         sliderKnobTexture = new Texture("uiComponents/sliderKnob.png");
+
+        textFieldCursorTexture = new Texture("uiComponents/textFieldCursor.png");
 
         onSwitchTexture = new Texture("uiComponents/On-Switch.png");
         offSwitchTexture = new Texture("uiComponents/Off-Switch.png");
@@ -81,10 +82,13 @@ public class WidgetFactory {
         collegeLeftBtnTexture = new Texture("uiComponents/College-Left-Button.png");
         collegeRightBtnTexture = new Texture("uiComponents/College-Right-Button.png");
         startGameBtnTexture = new Texture("uiComponents/Start-Game-Button-Full.png");
-        nameBoxLabelTexture = new Texture("uiComponents/Game-Setup-Name-Box.png");
 
         menusTopBarLeftTexture = new Texture("uiComponents/MenusTopBarLeft.png");
         menusTopBarRightTexture = new Texture("uiComponents/MenusTopBarRight.png");
+
+        gameHUDBottomBarRightPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Right-Part.png");
+        gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
+        endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png");
 
         // load college logos
         alcuinLogoTexture = new Texture("logos/alcuin-logo.png");
@@ -95,13 +99,11 @@ public class WidgetFactory {
         uniOfYorkLogoTexture = new Texture("logos/uni-of-york-logo.png");
         vanbrughLogoTexture = new Texture("logos/vanbrugh-logo.png");
         wentworthLogoTexture = new Texture("logos/wentworth-logo.png");
-
-        gameHUDBottomBarRightPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Right-Part.png");
-        gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
-        endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png");
-
     }
 
+    /**
+     * sets up the big and small fonts
+     */
     private void setupFont() {
         FileHandle alteDinBig = new FileHandle("font/Alte-DIN-Big.fnt");
         FileHandle alteDinSmall = new FileHandle("font/Alte-DIN-Small.fnt");
@@ -109,6 +111,12 @@ public class WidgetFactory {
         fontSmall = new BitmapFont(alteDinSmall);
     }
 
+    /**
+     * creates a button with the specified text on it which changes colour when clicked
+     *
+     * @param buttonText the text on the button
+     * @return a button widget
+     */
     public static TextButton genBasicButton(String buttonText) {
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(); // create style for buttons to use
         style.up = new TextureRegionDrawable(new TextureRegion(basicButtonTexture, 0, 0, 857, 123)); // image for button to use in default state
@@ -118,6 +126,13 @@ public class WidgetFactory {
         return new TextButton(buttonText, style);
     }
 
+    /**
+     * creates a bar for the GUI which has a text label in the top left corner
+     * used at the top of all menu screens
+     *
+     * @param text in the top left corner of the menu
+     * @return the GUI bar with the specified label
+     */
     public static Table genMenusTopBar(String text){
         Image menusTopBarLeft = new Image(new TextureRegionDrawable(new TextureRegion(menusTopBarLeftTexture)));
         Image menusTopBarRight = new Image(new TextureRegionDrawable(new TextureRegion(menusTopBarRightTexture)));
@@ -136,6 +151,13 @@ public class WidgetFactory {
         return topBar;
     }
 
+    /**
+     * creates a bar for the bottom of the GUI with an escape button in the bottom left, the on click action is configurable, and the game name is on the right
+     *
+     * @param buttonText the text on the escape button
+     * @param changeListener action to be performed when the escape button is pressed
+     * @return
+     */
     public static Table genBottomBar(String buttonText, ChangeListener changeListener){
 
         Image leftPart = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/Left-Part-End-Bottom-Bar.png"))));
@@ -167,18 +189,27 @@ public class WidgetFactory {
         return bottomBar;
     }
 
+    /**
+     *
+     * @return an image widget of the map to be displayed on the main menu
+     */
     public static Image genMapGraphic() {
         return new Image(mapGraphicTexture);
     }
 
+    /**
+     *
+     * @return an image widget of a soldier to be displayed in the options screen
+     */
     public static Image genOptionsGraphic() {
         return new Image(optionsGraphicTexture);
     }
 
     /**
+     * gets the logo of the college associated with the college supplied
      *
-     * @param college
-     * @return
+     * @param college the college to get the logo for
+     * @return a Drawable of the college's logo
      */
     public static Drawable genCollegeLogoDrawable(GameSetupScreen.CollegeName college) {
         switch (college) {
@@ -211,43 +242,84 @@ public class WidgetFactory {
         return new Image(genCollegeLogoDrawable(college));
     }
 
+    /**
+     * generates a label with the specified text and background image
+     *
+     * @param labelText the text on the label
+     * @param labelBackground the background of the label
+     * @param alignment of the text in the label
+     * @return a label with the specified text and background
+     */
+    private static Label getLabel(String labelText, Texture labelBackground, int alignment) {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = fontSmall;
+        style.background = new TextureRegionDrawable(new TextureRegion(labelBackground));
 
+        Label label = new Label(labelText, style);
+        label.setAlignment(alignment);
+
+        return label;
+    }
+
+    /**
+     * Generates the UI widget to be displayed at the bottom right of the in game GUI
+     * @param labelText the text on the bar
+     * @return a label that forms right part of the HUD's bottom bar
+     */
+    public static Label genGameHUDBottomBarRightPart(String labelText) {
+        return getLabel(labelText, gameHUDBottomBarRightPartTexture, Align.center);
+    }
+
+
+    /**
+     * creates a label used for selecting the player type in the Game Setup Screen
+     * @param labelText text to be displayed on label
+     * @return a label with the secified background and text
+     */
     public static Label genPlayerLabel(String labelText) {
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = fontSmall;
-        style.background = new TextureRegionDrawable(new TextureRegion(playerLabelTexture));
-
-        Label label = new Label(labelText, style);
-        label.setAlignment(Align.center);
-
-        return label;
+        return getLabel(labelText, playerLabelTexture, Align.center);
     }
 
-    public static Label genMenuBtnLabel(String labelText) {
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = fontSmall;
-        style.background = new TextureRegionDrawable(new TextureRegion(menuBtnLabelTexture));
-
-        return new Label(labelText, style);
+    /**
+     * creates a label with the specified text to be used in menus
+     *
+     * @param labelText text to be displayed on label
+     * @return a label to be used in menus
+     */
+    public static Label genMenuLabel(String labelText) {
+        return getLabel(labelText, menuBtnLabelTexture, Align.left);
     }
 
-    public static Label genNameBoxLabel(String labelText) {
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = fontSmall;
-        Label label = new Label(labelText, style);
-        label.setAlignment(Align.left);
-
-        return label;
+    /**
+     * creates label, with a transparent background, for displaying the name of a college in the game setup screen
+     *
+     * @param collegeName the college name
+     * @return a label with no background and the specified text
+     */
+    public static Label genTransparentLabel(String collegeName) {
+        return getLabel(collegeName, new Texture(1, 1, Pixmap.Format.RGBA8888), Align.left);
     }
 
+    /**
+     * creates a textfield for the player to input their name into
+     *
+     * @param name the initial value of the player name
+     * @return a textfield with the initial value name
+     */
     public static TextField playerNameTextField(String name){
+
         TextField.TextFieldStyle  style = new TextField.TextFieldStyle();
         style.font = fontSmall;
         style.fontColor = new Color(Color.WHITE);
+        style.cursor = new TextureRegionDrawable(new TextureRegion(textFieldCursorTexture));
 
         return new TextField(name, style);
     }
 
+    /**
+     *
+     * @return left arrow button for changing the player type
+     */
     public static Button genPlayerLeftButton() {
         Button.ButtonStyle style = new Button.ButtonStyle();
         style.up = new TextureRegionDrawable(new TextureRegion(playerLeftBtnTexture, 0, 0, 111, 123));
@@ -256,6 +328,10 @@ public class WidgetFactory {
         return new Button(style);
     }
 
+    /**
+     *
+     * @return right arrow button for changing the player type
+     */
     public static Button genPlayerRightButton() {
         Button.ButtonStyle style = new Button.ButtonStyle();
         style.up = new TextureRegionDrawable(new TextureRegion(playerRightBtnTexture, 0, 0, 111, 123));
@@ -264,6 +340,10 @@ public class WidgetFactory {
         return new Button(style);
     }
 
+    /**
+     *
+     * @return left arrow button for changing the college type
+     */
     public static Button genCollegeLeftButton() {
         Button.ButtonStyle style = new Button.ButtonStyle();
         style.up = new TextureRegionDrawable(new TextureRegion(collegeLeftBtnTexture));
@@ -272,6 +352,10 @@ public class WidgetFactory {
         return new Button(style);
     }
 
+    /**
+     *
+     * @return right arrow button for changing the college type
+     */
     public static Button genCollegeRightButton() {
         Button.ButtonStyle style = new Button.ButtonStyle();
         style.up = new TextureRegionDrawable(new TextureRegion(collegeRightBtnTexture));
@@ -280,46 +364,50 @@ public class WidgetFactory {
         return new Button(style);
     }
 
-    public static TextButton genStartGameButton(String buttonText) {
+    /**
+     *
+     * @return a button with the text START GAME
+     */
+    public static TextButton genStartGameButton() {
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
         style.up = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture, 0, 0, 723, 123));
         style.down = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture, 0, 123, 723, 123));
         style.font = fontSmall;
 
-        return new TextButton(buttonText,style);
+        return new TextButton("START GAME",style);
     }
 
-    public static TextButton genEndPhaseButton(String buttonText){
+    /**
+     *
+     * @return a button with the text END PHASE
+     */
+    public static TextButton genEndPhaseButton(){
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
         style.up = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,0, 348, 123));
         style.down = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,123, 348, 123));
         style.font = fontSmall;
 
-        return new TextButton(buttonText, style);
+        return new TextButton("END PHASE", style);
     }
 
     /**
-     * Generates the UI widget to be displayed at the bottom of the HUD
-     * @param labelText what the bar should say
-     * @return
+     * creates a table containing the components to make up the top bar of the HUD
+     *
+     * @param turnPhase the phase this bar is for
+     * @param gameScreen for creating the leave game dialog
+     * @return the top bar of the HUD for the specified phase
      */
-    public static Label genGameHUDBottomBarRightPart(String labelText) {
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = fontSmall;
-        style.background = new TextureRegionDrawable(new TextureRegion(gameHUDBottomBarRightPartTexture));
-
-        Label label = new Label(labelText, style);
-        label.setAlignment(Align.center);
-
-        return label;
-    }
-
-    public static Table genGameHUDTopBar(TurnPhaseType turnPhase, ChangeListener changeListener) {
+    public static Table genGameHUDTopBar(TurnPhaseType turnPhase, final GameScreen gameScreen) {
         TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
         btnStyle.font = fontSmall;
         TextButton exitButton = new TextButton("QUIT", btnStyle);
 
-        exitButton.addListener(changeListener);
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                DialogFactory.leaveGameDialogBox(gameScreen, actor.getStage());
+            }
+        });
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = fontSmall;
@@ -350,6 +438,7 @@ public class WidgetFactory {
 
 
     /**
+     * creates a selector widget with the options specified by the passed string array
      *
      * @param items the list of items that may be selected
      * @return a selector widget styled and using the items provided
@@ -392,11 +481,10 @@ public class WidgetFactory {
         return new Slider(0f, 1f, 0.01f, false, style);
     }
 
-    public static BitmapFont getFontBig() {
-        FileHandle alteDinBig = new FileHandle("font/Alte-DIN-Big.fnt");
-        return new BitmapFont(alteDinBig);
-    }
-
+    /**
+     *
+     * @return a new instance of the small font
+     */
     public static BitmapFont getFontSmall() {
         FileHandle alteDinSmall = new FileHandle("font/Alte-DIN-Small.fnt");
         return new BitmapFont(alteDinSmall);

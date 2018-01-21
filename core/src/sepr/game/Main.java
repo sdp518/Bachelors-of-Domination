@@ -39,16 +39,30 @@ public class Main extends Game implements ApplicationListener {
 		this.setScreen(menuScreen);
 	}
 
+	/**
+	 * displays the game screen and starts a game with the passed properties
+	 *
+	 * @param players hashmap of players who should be present in the game
+	 * @param turnTimerEnabled whether or not this game should have a turn timer on
+	 * @param maxTurnTime the maximum time of a turn, in seconds, if the turn tumer is enabled
+	 * @param allocateNeutralPlayer should the neutral player be given sectors to start with
+	 */
 	public void setGameScreen(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime, boolean allocateNeutralPlayer) {
 		gameScreen.setupGame(players, turnTimerEnabled, maxTurnTime, allocateNeutralPlayer);
 		this.setScreen(gameScreen);
 		gameScreen.startGame();
 	}
 
+	/**
+	 * change the screen currently being displayed to the options screen
+	 */
 	public void setOptionsScreen() {
 		this.setScreen(optionsScreen);
 	}
 
+	/**
+	 * change the screen currently being displayed to the game setup screen
+	 */
 	public void setGameSetupScreen() {
 		this.setScreen(gameSetupScreen);
 	}
@@ -88,11 +102,9 @@ public class Main extends Game implements ApplicationListener {
 	public void dispose() {
 		super.dispose();
 		menuScreen.dispose();
+		optionsScreen.dispose();
+		gameSetupScreen.dispose();
 		gameScreen.dispose();
-	}
-
-	public GameScreen getGameScreen() {
-		return gameScreen;
 	}
 
 }
