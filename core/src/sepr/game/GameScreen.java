@@ -99,9 +99,9 @@ public class GameScreen implements Screen, InputProcessor{
 
         // create the game phases and add them to the phases hashmap
         this.phases = new HashMap<TurnPhaseType, Phase>();
-        this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, map));
-        this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, map));
-        this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this, map));
+        this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this));
+        this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this));
+        this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this));
 
         gameSetup = true; // game is now setup
     }
@@ -174,6 +174,14 @@ public class GameScreen implements Screen, InputProcessor{
      */
     protected SpriteBatch getGameplayBatch() {
         return this.gameplayBatch;
+    }
+
+    /**
+     *
+     * @return the map object for this game
+     */
+    public Map getMap() {
+        return map;
     }
 
     /**
@@ -317,7 +325,6 @@ public class GameScreen implements Screen, InputProcessor{
     public void openMenu() {
         main.setMenuScreen();
     }
-
     /**
      * draws a background image behind the map and UI covering the whole visible area of the render window
      */
@@ -325,6 +332,7 @@ public class GameScreen implements Screen, InputProcessor{
         Vector3 mapDrawPos = gameplayCamera.unproject(new Vector3(0, Gdx.graphics.getHeight(), 0));
         gameplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
     }
+
     /* Screen implementation */
 
     /**
@@ -409,8 +417,8 @@ public class GameScreen implements Screen, InputProcessor{
             phase.dispose();
         }
     }
-
     /* Input Processor implementation */
+
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.UP) {

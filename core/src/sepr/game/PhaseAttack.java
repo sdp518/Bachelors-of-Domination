@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
+/**
+ * handles input, updating and rendering for the attack phase
+ */
 public class PhaseAttack extends Phase{
 
     private TextureRegion arrow; // TextureRegion for rendering attack visualisation
@@ -20,8 +23,8 @@ public class PhaseAttack extends Phase{
 
     private Random random; // random object for adding some unpredictability to the outcome of attacks
 
-    public PhaseAttack(GameScreen gameScreen, Map map) {
-        super(gameScreen, map, TurnPhaseType.ATTACK);
+    public PhaseAttack(GameScreen gameScreen) {
+        super(gameScreen, TurnPhaseType.ATTACK);
 
         this.arrow = new TextureRegion(new Texture(Gdx.files.internal("uiComponents/arrow.png")));
         this.attackingSector = null;
@@ -48,6 +51,11 @@ public class PhaseAttack extends Phase{
         gameplayBatch.draw(arrow, startX, (startY - thickness/2), 0, thickness/2, (float)height, thickness,1, 1, (float)angle);
     }
 
+    /**
+     * creates a dialog asking the player how many units they want to attack with
+     *
+     * @throws RuntimeException if the attacking sector or defending sector are set to null
+     */
     private void getNumberOfAttackers() throws RuntimeException {
         if (attackingSector == null || defendingSector == null) {
             throw new RuntimeException("Cannot execute attack unless both an attacking and defending sector have been selected");
@@ -57,6 +65,9 @@ public class PhaseAttack extends Phase{
         DialogFactory.attackDialog(attackingSector.getUnitsInSector(), defendingSector.getUnitsInSector(), numOfAttackers, this);
     }
 
+    /**
+     * carries out attack once number of attackers has been set using the dialog
+     */
     private void executeAttack() {
         int attackers = numOfAttackers[0];
         int defenders = defendingSector.getUnitsInSector();
@@ -64,6 +75,7 @@ public class PhaseAttack extends Phase{
         float propAttack = (float)attackers / (float)(attackers + defenders); // proportion of troops that are attackers
         float propDefend = (float)defenders / (float)(attackers + defenders); // proportion of troops that are defenders
 
+        // calculate the proportion of attackers and defenders lost
         float propAttackersLost = (float)Math.max(0, Math.min(1, 0.02 * Math.exp(5 * propDefend) + 0.1 + (-0.125 + random.nextFloat()/4)));
         float propDefendersLost = (float)Math.max(0, Math.min(1, 0.02 * Math.exp(5 * propAttack) + 0.15 + (-0.125 + random.nextFloat()/4)));
 
@@ -76,11 +88,14 @@ public class PhaseAttack extends Phase{
         int defendersLost = (int)(defenders * propDefendersLost);
 
         // apply the attack to the map
-        if (map.attackSector(attackingSector.getId(), defendingSector.getId(), attackersLost, defendersLost, gameScreen.getPlayerById(attackingSector.getOwnerId()), gameScreen.getPlayerById(defendingSector.getOwnerId()), gameScreen.getPlayerById(gameScreen.NEUTRAL_PLAYER_ID), this)) {
+        if (gameScreen.getMap().attackSector(attackingSector.getId(), defendingSector.getId(), attackersLost, defendersLost, gameScreen.getPlayerById(attackingSector.getOwnerId()), gameScreen.getPlayerById(defendingSector.getOwnerId()), gameScreen.getPlayerById(gameScreen.NEUTRAL_PLAYER_ID), this)) {
             updateTroopReinforcementLabel();
         }
     }
 
+    /**
+     * process an attack if one is being carried out
+     */
     @Override
     public void phaseAct() {
         if (attackingSector != null && defendingSector != null && numOfAttackers[0] != -1) {
@@ -96,6 +111,10 @@ public class PhaseAttack extends Phase{
         }
     }
 
+    /**
+     * render graphics specific to the attack phase
+     * @param batch the sprite batch to render to
+     */
     @Override
     public void visualisePhase(SpriteBatch batch) {
         if (this.attackingSector != null) { // If attacking
@@ -113,8 +132,6 @@ public class PhaseAttack extends Phase{
         super.endPhase();
         attackingSector = null;
         defendingSector = null;
-
-
     }
 
     @Override
@@ -125,6 +142,14 @@ public class PhaseAttack extends Phase{
         return false;
     }
 
+    /**
+     *
+     * @param screenX mouse x position on screen when clicked
+     * @param screenY mouse y position on screen when clicked
+     * @param pointer pointer to the event
+     * @param button which button was pressed
+     * @return if the event has been handled
+     */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (super.touchUp(screenX, screenY, pointer, button)) {
@@ -133,10 +158,10 @@ public class PhaseAttack extends Phase{
 
         Vector2 worldCoord = gameScreen.screenToWorldCoords(screenX, screenY);
 
-        int sectorId = map.detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
+        int sectorId = gameScreen.getMap().detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
         if (sectorId != -1) { // If selected a sector
 
-            Sector selected = map.getSectorById(sectorId); // Current sector
+            Sector selected = gameScreen.getMap().getSectorById(sectorId); // Current sector
             boolean notAlreadySelected = this.attackingSector == null && this.defendingSector == null; // T/F if the attack sequence is complete
 
             if (this.attackingSector != null && this.defendingSector == null) { // If its the second selection in the attack phase

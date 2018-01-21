@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  */
 public abstract class Phase extends Stage {
     GameScreen gameScreen;
-    Map map;
     Player currentPlayer;
 
     private Table table;
@@ -27,18 +26,22 @@ public abstract class Phase extends Stage {
 
     private Label.LabelStyle playerNameStyle; // store style for updating player name colour with player's colour
 
-    private Label playerNameLabel;
+    private Label playerNameLabel; // displays the name of the current player in their college's colour colour
     private Label reinforcementLabel; // label showing how many troops the player has to allocate in their next reinforcement phase
-    private Label turnTimerLabel;
-    private Image collegeLogo;
+    private Label turnTimerLabel; // displays how much time the player has left
+    private Image collegeLogo; // ui component for displaying the logo of the current players college
 
     private static Texture gameHUDBottomBarLeftPartTexture;
 
-    public Phase(GameScreen gameScreen, Map map, TurnPhaseType turnPhase) {
+    /**
+     *
+     * @param gameScreen for accessing the map and additional game properties
+     * @param turnPhase type of phase this is
+     */
+    public Phase(GameScreen gameScreen, TurnPhaseType turnPhase) {
         this.setViewport(new ScreenViewport());
 
         this.gameScreen = gameScreen;
-        this.map = map;
 
         this.turnPhase = turnPhase;
 
@@ -52,9 +55,11 @@ public abstract class Phase extends Stage {
         this.setupUi();
     }
 
-
+    /**
+     * setup UI that is consistent across all game phases
+     */
     private void setupUi() {
-        TextButton endPhaseButton = WidgetFactory.genEndPhaseButton("END PHASE");
+        TextButton endPhaseButton = WidgetFactory.genEndPhaseButton();
         endPhaseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -65,12 +70,7 @@ public abstract class Phase extends Stage {
         Table bottomBarLeftPart = genGameHUDBottomBarLeftPart();
 
         table.top().center();
-        table.add(WidgetFactory.genGameHUDTopBar(turnPhase, new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                DialogFactory.leaveGameDialogBox(gameScreen, actor.getStage());
-            }
-        })).colspan(2).expandX().height(60).width(910);
+        table.add(WidgetFactory.genGameHUDTopBar(turnPhase, gameScreen)).colspan(2).expandX().height(60).width(910);
 
         table.row();
         table.add(new Table()).expand();
@@ -90,7 +90,7 @@ public abstract class Phase extends Stage {
     }
 
     /**
-     * Generates the UI widget to be displayed at the bottom left of the HUD
+     * generates the UI widget to be displayed at the bottom left of the HUD
      * @return table containing the information to display in the HUD
      */
     private Table genGameHUDBottomBarLeftPart(){
@@ -125,7 +125,7 @@ public abstract class Phase extends Stage {
     }
 
     /**
-     * Sets the bar at the bottom of the HUD to the details of the sector currently hovered over
+     * sets the bar at the bottom of the HUD to the details of the sector currently hovered over
      * If no sector is being hovered then displays "Mouse over a sector to see further details"
      * @param sector the sector of details to be displayed
      */
@@ -137,18 +137,24 @@ public abstract class Phase extends Stage {
         }
     }
 
+    /**
+     * sets up phase when a new player enters it
+     *
+     * @param player the new player that is entering the phase
+     */
     void enterPhase(Player player) {
         this.currentPlayer = player;
 
         playerNameStyle.fontColor = GameSetupScreen.getCollegeColor(currentPlayer.getCollegeName()); // update colour of player name
 
-        playerNameLabel.setText(new StringBuilder((CharSequence) currentPlayer.getPlayerName()));
+        playerNameLabel.setText(new StringBuilder((CharSequence) currentPlayer.getPlayerName())); // change the bottom bar label to the players name
         collegeLogo.setDrawable(WidgetFactory.genCollegeLogoDrawable(player.getCollegeName()));
         updateTroopReinforcementLabel();
     }
 
     /**
      * updates the text of the turn timer label
+     *
      * @param timeRemaining time remaining of turn in seconds
      */
     void setTimerValue(int timeRemaining) {

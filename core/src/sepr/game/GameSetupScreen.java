@@ -232,13 +232,13 @@ public class GameSetupScreen implements Screen{
      */
     private Table setupSwitchTable(){
         // neutral player
-        Label neutralPlayerLabel = WidgetFactory.genMenuBtnLabel("NEUTRAL PLAYER");
+        Label neutralPlayerLabel = WidgetFactory.genMenuLabel("NEUTRAL PLAYER");
         neutralPlayerLabel.setAlignment(0, 0);
 
         neutralPlayerSwitch = WidgetFactory.genOnOffSwitch();
 
         // turn timer
-        Label turnTimerLabel = WidgetFactory.genMenuBtnLabel("TURN TIMER");
+        Label turnTimerLabel = WidgetFactory.genMenuLabel("TURN TIMER");
         turnTimerLabel.setAlignment(0, 0);
 
         turnTimerSwitch = WidgetFactory.genOnOffSwitch();
@@ -274,7 +274,7 @@ public class GameSetupScreen implements Screen{
 
         // generate the textfields, college labels and college logos
         for (int i = 0; i < MAX_NUMBER_OF_PLAYERS; i++) {
-            Label collegeName = WidgetFactory.genNameBoxLabel("ALCUIN");
+            Label collegeName = WidgetFactory.genTransparentLabel("ALCUIN");
             Image collegeImage = WidgetFactory.genCollegeLogoImage(CollegeName.ALCUIN);
 
             playerColleges[i] = new Pair<Label, Image>(collegeName, collegeImage);
@@ -377,12 +377,12 @@ public class GameSetupScreen implements Screen{
         for (int i = 0; i < MAX_NUMBER_OF_PLAYERS; i++) {
             if (playerTypes[i].getText().toString().equals(PlayerType.HUMAN.getPlayerType())) {
                 // create human player
-                players.put(i, new PlayerHuman(i, CollegeName.fromString(playerColleges[i].getKey().getText().toString()), getCollegeColor(CollegeName.fromString(playerColleges[i].getKey().getText().toString())), playerNames[i].getText()));
+                players.put(i, Player.createHumanPlayer(i, CollegeName.fromString(playerColleges[i].getKey().getText().toString()), getCollegeColor(CollegeName.fromString(playerColleges[i].getKey().getText().toString())), playerNames[i].getText()));
             }
         }
 
         // setup neutral player
-        players.put(GameScreen.NEUTRAL_PLAYER_ID, new PlayerNeutralAI(GameScreen.NEUTRAL_PLAYER_ID));
+        players.put(GameScreen.NEUTRAL_PLAYER_ID, Player.createNeutralPlayer(GameScreen.NEUTRAL_PLAYER_ID));
         return players;
     }
 
@@ -483,7 +483,7 @@ public class GameSetupScreen implements Screen{
      * sets up the UI for the game setup screen
      */
     private void setupUi() {
-        TextButton startGameButton = WidgetFactory.genStartGameButton("START GAME");
+        TextButton startGameButton = WidgetFactory.genStartGameButton();
         startGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

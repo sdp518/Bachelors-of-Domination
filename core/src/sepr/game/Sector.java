@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
- * Created by Dom's Surface Mark 2 on 16/11/2017
+ * class for specifying properties of a sector that is part of a map
  */
 public class Sector {
     private int id;
@@ -14,13 +14,13 @@ public class Sector {
     private String displayName;
     private int unitsInSector;
     private int reinforcementsProvided;
-    private String college;
-    private boolean neutral;
-    private int[] adjacentSectorIds; // <-- May want to reconsider structure
+    private String college; // name of the college this sector belongs to
+    private boolean neutral; // is this sector a default neutral sector
+    private int[] adjacentSectorIds; // ids of sectors adjacent to this one
     private Texture sectorTexture;
-    private Pixmap sectorPixmap;
-    private int sectorCentreX;
-    private int sectorCentreY;
+    private Pixmap sectorPixmap; // the pixel data of this sectors texture
+    private int sectorCentreX; // the centre x coordinate of this sector, relative to the sectorTexture
+    private int sectorCentreY; //the centre y coordinate of this sector, relative to the sectorTexture
     private boolean decor; // is this sector for visual purposes only, i.e. lakes are decor
     private String fileName;
     private boolean allocated; // becomes true once the sector has been allocated
@@ -58,8 +58,16 @@ public class Sector {
         this.allocated = false;
     }
 
+    /**
+     *
+     * @return this sectors unique id
+     */
     public int getId() { return id; }
 
+    /**
+     *
+     * @return the id of the player that owns this sector
+     */
     public int getOwnerId() {
         return ownerId;
     }
@@ -74,22 +82,34 @@ public class Sector {
         this.allocated = true;
     }
 
-    public void setOwner(int playerId){
-        this.ownerId = playerId;
-    }
-
+    /**
+     *
+     * @return the name of the sector that is to be shown in the GUI
+     */
     public String getDisplayName() {
         return displayName;
     }
 
+    /**
+     *
+     * @return number of troops rewarded for conquering this territory
+     */
     public int getReinforcementsProvided() {
         return reinforcementsProvided;
     }
 
+    /**
+     *
+     * @return number of units present in this sector
+     */
     public int getUnitsInSector() {
         return unitsInSector;
     }
 
+    /**
+     *
+     * @return the texture used for drawing the sector
+     */
     public Texture getSectorTexture() {
         return sectorTexture;
     }
@@ -104,14 +124,26 @@ public class Sector {
         this.sectorTexture = temp;
     }
 
+    /**
+     *
+     * @return the pixel data of this sectors texture
+     */
     public Pixmap getSectorPixmap() {
         return sectorPixmap;
     }
-  
+
+    /**
+     *
+     * @return centre x coordinate of this sector
+     */
     public int getSectorCentreX() {
         return sectorCentreX;
     }
 
+    /**
+     *
+     * @return centre y coordinate of this sector
+     */
     public int getSectorCentreY() {
         return sectorCentreY;
     }
@@ -123,14 +155,30 @@ public class Sector {
         return decor;
     }
 
+    /**
+     *
+     * @return true if this sector is a default neutral sector, else false
+     */
     public boolean isNeutral() { return neutral; }
 
+    /**
+     *
+     * @return true if this sector has been allocated to a player, else false
+     */
     public boolean isAllocated() {
         return allocated;
     }
 
+    /**
+     *
+     * @return the name of the college this sector belongs to
+     */
     public String getCollege() { return college; }
 
+    /**
+     *
+     * @return the filename of the sector image
+     */
     public String getFileName() {
         return fileName;
     }
@@ -152,8 +200,8 @@ public class Sector {
     /**
      * Changes the number of units in this sector
      * If there are 0 units in sector then ownerId should be -1 (neutral)
-     * @throws IllegalArgumentException if units in sector is below 0
      * @param amount number of units to change by, (can be negative to subtract units
+     * @throws IllegalArgumentException if units in sector is below 0
      */
     public void addUnits(int amount) throws IllegalArgumentException {
         this.unitsInSector += amount;

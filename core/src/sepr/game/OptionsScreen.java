@@ -106,15 +106,15 @@ public class OptionsScreen implements Screen {
         colourblindModeSwitch = WidgetFactory.genOnOffSwitch();
 
         // setup labels
-        Label musicVolumeLabel = WidgetFactory.genMenuBtnLabel("MUSIC VOLUME");
+        Label musicVolumeLabel = WidgetFactory.genMenuLabel("MUSIC VOLUME");
         musicVolumeLabel.setAlignment(Align.center);
-        Label fxVolumeLabel = WidgetFactory.genMenuBtnLabel("FX VOLUME");
+        Label fxVolumeLabel = WidgetFactory.genMenuLabel("FX VOLUME");
         fxVolumeLabel.setAlignment(Align.center);
-        Label resolutionSelectorLabel = WidgetFactory.genMenuBtnLabel("RESOLUTION");
+        Label resolutionSelectorLabel = WidgetFactory.genMenuLabel("RESOLUTION");
         resolutionSelectorLabel.setAlignment(Align.center);
-        Label fullscreenSwitchLabel = WidgetFactory.genMenuBtnLabel("FULLSCREEN");
+        Label fullscreenSwitchLabel = WidgetFactory.genMenuLabel("FULLSCREEN");
         fullscreenSwitchLabel.setAlignment(Align.center);
-        Label colourblindModeSwitchLabel = WidgetFactory.genMenuBtnLabel("COLOURBLIND MODE");
+        Label colourblindModeSwitchLabel = WidgetFactory.genMenuLabel("COLOURBLIND MODE");
         colourblindModeSwitchLabel.setAlignment(Align.center);
 
         // add the setup widgets to a table
