@@ -412,10 +412,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void dispose() {
-        mapBackground.dispose();
-        for (Phase phase : phases.values()) {
-            phase.dispose();
-        }
+
     }
     /* Input Processor implementation */
 
