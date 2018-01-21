@@ -26,9 +26,11 @@ public class WidgetFactory {
     private static Texture sliderBarTexture;
     private static Texture sliderKnobTexture;
 
+    private static Texture textFieldCursorTexture;
+
     private static Texture onSwitchTexture;
     private static Texture offSwitchTexture;
-  
+
     private static Texture gameHUDBottomBarRightPartTexture;
     private static Texture gameHUDTopBarTexture;
     private static Texture endPhaseBtnTexture;
@@ -70,6 +72,8 @@ public class WidgetFactory {
 
         sliderBarTexture = new Texture("uiComponents/sliderBar.png");
         sliderKnobTexture = new Texture("uiComponents/sliderKnob.png");
+
+        textFieldCursorTexture = new Texture("uiComponents/textFieldCursor.png");
 
         onSwitchTexture = new Texture("uiComponents/On-Switch.png");
         offSwitchTexture = new Texture("uiComponents/Off-Switch.png");
@@ -244,6 +248,7 @@ public class WidgetFactory {
         TextField.TextFieldStyle  style = new TextField.TextFieldStyle();
         style.font = fontSmall;
         style.fontColor = new Color(Color.WHITE);
+        style.cursor = new TextureRegionDrawable(new TextureRegion(textFieldCursorTexture));
 
         return new TextField(name, style);
     }

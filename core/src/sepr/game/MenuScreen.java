@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
- * Created by Dom's Surface Mark 2 on 16/11/2017.
+ * controls the UI for the main menu screen
  */
 public class MenuScreen implements Screen {
     private Main main;

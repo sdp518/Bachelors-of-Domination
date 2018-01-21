@@ -16,22 +16,23 @@ import java.util.List;
 
 /**
  * main class for controlling the game
+ * implements screen for swapping what is being displayed with other screens, i.e. menu screens
+ * input processor implemented to parse user input
  */
 public class GameScreen implements Screen, InputProcessor{
     public static final int NEUTRAL_PLAYER_ID = 4;
 
     private Main main; // main stored for switching between screens
 
-    private TurnPhaseType currentPhase = TurnPhaseType.REINFORCEMENT; // first phase of game is reinforcement
+    private TurnPhaseType currentPhase = TurnPhaseType.REINFORCEMENT; // set initial phase to the reinforcement phase
 
-    private HashMap<TurnPhaseType, Phase> phases;
+    private HashMap<TurnPhaseType, Phase> phases; // hashmap for storing the three phases of the game
 
-    private SpriteBatch gameplayBatch;
-    private OrthographicCamera gameplayCamera;
-    private Viewport gameplayViewport;
-    private Texture mapBackground;
+    private SpriteBatch gameplayBatch; // sprite batch for rendering the game to
+    private OrthographicCamera gameplayCamera; // camera for controlling what aspects of the game can be seen
+    private Viewport gameplayViewport; // viewport for handling rendering the game at different resolutions
 
-    private Map map;
+    private Map map; // stores state of the game: who owns which sectors
     private HashMap<Integer, Player> players; // player id mapping to the relevant player
 
     private HashMap<Integer, Boolean> keysDown; // mapping from key, (Input.Keys), to whether it has been pressed down
@@ -44,11 +45,14 @@ public class GameScreen implements Screen, InputProcessor{
     private List<Integer> turnOrder; // array of player ids in order of players' turns;
     private int currentPlayerPointer; // index of current player in turnOrder list
 
+    private Texture mapBackground; // texture for drawing as a background behind the game
+
     private boolean gameSetup = false; // true once setupGame has been called
 
     /**
-     * Performs the game's initial setup
-     * setupGame must be called before a game is ready to be played
+     * sets up rendering objects and key input handling
+     * setupGame then start game must be called before a game is ready to be played
+     *
      * @param main used to change screen
      */
 
@@ -71,6 +75,8 @@ public class GameScreen implements Screen, InputProcessor{
 
     /**
      * sets up a new game
+     * start game must be called before the game is ready to be played
+     *
      * @param players HashMap of the players in this game
      * @param turnTimerEnabled should players turns be limited
      * @param maxTurnTime time elapsed in current turn, irrelevant if turn timer not enabled
@@ -84,13 +90,12 @@ public class GameScreen implements Screen, InputProcessor{
             }
         }
 
-        this.currentPlayerPointer = 0;
+        this.currentPlayerPointer = 0; // set the current player to the player in the first position of the turnOrder list
 
         this.turnTimerEnabled = turnTimerEnabled;
         this.maxTurnTime = maxTurnTime;
-        this.turnTimeStart = System.currentTimeMillis();
 
-        this.map = new Map(this.players, allocateNeutralPlayer);
+        this.map = new Map(this.players, allocateNeutralPlayer); // setup the game map and allocate the sectors
 
         // create the game phases and add them to the phases hashmap
         this.phases = new HashMap<TurnPhaseType, Phase>();
@@ -98,11 +103,25 @@ public class GameScreen implements Screen, InputProcessor{
         this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, map));
         this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this, map));
 
-        gameSetup = true;
+        gameSetup = true; // game is now setup
     }
 
     /**
-     * Input keys for controlling the game camera
+     * called once game is setup to enter the first phase of the game; centre the game camera and start the turn timer
+     *
+     * @throws RuntimeException if this is called before the game is setup, i.e. setupGame has not been called before this
+     */
+    public void startGame() {
+        if (!gameSetup) {
+            throw new RuntimeException("Cannot start game before it is setup");
+        }
+        this.turnTimeStart = System.currentTimeMillis(); // set turn start time to current rime
+        this.phases.get(currentPhase).enterPhase(getCurrentPlayer());
+        resetCameraPosition();
+    }
+
+    /**
+     * configure input so that input into the current phase's UI takes priority then unhandled input is handled by this class
      */
     private void updateInputProcessor() {
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -112,7 +131,8 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * checks if game is over by checking how many players are in the turn order, if 1 then player has won
+     * checks if game is over by checking how many players are in the turn order, if 1 then player has won, if 0 then the neutral player has won
+     *
      * @return true if game is over else false
      */
     private boolean isGameOver() {
@@ -120,18 +140,20 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * gets in seconds the amount of time remaining of the current player's turn
      *
      * @return time remaining in turn in seconds
      */
-    public int getTurnTimeRemaining(){
+    private int getTurnTimeRemaining(){
         return maxTurnTime - (int)((System.currentTimeMillis() - turnTimeStart) / 1000);
     }
 
     /**
+     * returns the player object corresponding to the passed id from the players hashmap
      *
      * @param id of the player object that is wanted
-     * @return the player whose id matches the given one
-     * @throws IllegalArgumentException if the supplied id does not match any of the players
+     * @return the player whose id matches the given one in the players hashmap
+     * @throws IllegalArgumentException if the supplied id is not a key value in the players hashmap
      */
     protected Player getPlayerById(int id) throws IllegalArgumentException {
         if (!players.containsKey(id)) throw new IllegalArgumentException("Cannot fetch player as id: " + id + " does not exist");
@@ -140,47 +162,23 @@ public class GameScreen implements Screen, InputProcessor{
 
     /**
      *
-     * @return the camera used for rendering the game
+     * @return gets the player object for the player who's turn it currently is
      */
-    public OrthographicCamera getGameplayCamera() {
-        return gameplayCamera;
+    private Player getCurrentPlayer() {
+        return players.get(turnOrder.get(currentPlayerPointer));
     }
 
     /**
-     * removes all players who have 0 sectors from the turn order
+     *
+     * @return the sprite batch being used to render the game
      */
-    private void removeEliminatedPlayers() {
-        List<Integer> playerIdsToRemove = new ArrayList<Integer>();
-        for (Integer i : turnOrder) {
-            boolean hasSector = false;
-            for (Integer j : map.getSectorIds()) {
-                if (map.getSectorById(j).getOwnerId() == i) {
-                    hasSector = true; // sector owned by player i found
-                    break; // only need one sector to remain in turn order so can break once one found
-                }
-            }
-            if (!hasSector) { // player has no sectors so remove them from the game
-                playerIdsToRemove.add(i);
-                System.out.println(i);
-            }
-        }
-
-        if (playerIdsToRemove.size() > 0) {
-            turnOrder.removeAll(playerIdsToRemove);
-            String[] playerNames = new String[playerIdsToRemove.size()];
-            for (int i = 0; i < playerIdsToRemove.size(); i++) {
-                playerNames[i] = players.get(playerIdsToRemove.get(i)).getPlayerName();
-            }
-
-            DialogFactory.playersOutDialog(playerNames, phases.get(currentPhase)); // display which players have been eliminated
-            if (isGameOver()) {
-                gameOver();
-            }
-        }
+    protected SpriteBatch getGameplayBatch() {
+        return this.gameplayBatch;
     }
 
     /**
-     * This method is used for progression through the phases of a turn evaluating the currentPhase case label
+     * method is used for progression through the phases of a turn evaluating the currentPhase case label
+     * if nextPhase is called during the movement phase then the game progresses to the next players turn
      */
     protected void nextPhase() {
         this.phases.get(currentPhase).endPhase();
@@ -194,59 +192,82 @@ public class GameScreen implements Screen, InputProcessor{
                 break;
             case MOVEMENT:
                 currentPhase = TurnPhaseType.REINFORCEMENT;
-                nextPlayer();
+                nextPlayer(); // nextPhase called during final phase of a player's turn so goto next player
                 break;
         }
-        this.updateInputProcessor();
-        this.phases.get(currentPhase).enterPhase(getCurrentPlayer());
-        removeEliminatedPlayers();
 
+        this.updateInputProcessor(); // phase changed so update input handling
+        this.phases.get(currentPhase).enterPhase(getCurrentPlayer()); // setup the new phase for the current player
+        removeEliminatedPlayers(); // check no players have been eliminated
     }
 
     /**
-     *
-     * @return gets the player object for the player whos turn it currently is
-     */
-    private Player getCurrentPlayer() {
-        return players.get(turnOrder.get(currentPlayerPointer));
-    }
-
-    /**
-     * Called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
+     * called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
+     * increments the currentPlayerPointer and resets it to 0 if it now exceeds the number of players in the list
      */
     private void nextPlayer() {
         currentPlayerPointer++;
-        if (currentPlayerPointer == turnOrder.size()) {
+        if (currentPlayerPointer == turnOrder.size()) { // reached end of players, reset to 0
             currentPlayerPointer = 0;
         }
 
-        resetCameraPosition();
+        resetCameraPosition(); // re-centres the camera for the next player
 
-        if (this.turnTimerEnabled) {
+        if (this.turnTimerEnabled) { // if the turn timer is on reset it for the next player
             this.turnTimeStart = System.currentTimeMillis();
         }
     }
 
     /**
+     * removes all players who have 0 sectors from the turn order
+     */
+    private void removeEliminatedPlayers() {
+        List<Integer> playerIdsToRemove = new ArrayList<Integer>(); // list of players in the turn order who have 0 sectors
+        for (Integer i : turnOrder) {
+            boolean hasSector = false; // has a sector belonging to player i been found
+            for (Integer j : map.getSectorIds()) {
+                if (map.getSectorById(j).getOwnerId() == i) {
+                    hasSector = true; // sector owned by player i found
+                    break; // only need one sector to remain in turn order so can break once one found
+                }
+            }
+            if (!hasSector) { // player has no sectors so remove them from the game
+                playerIdsToRemove.add(i);
+            }
+        }
+
+        if (playerIdsToRemove.size() > 0) { // if there are any players to remove
+            turnOrder.removeAll(playerIdsToRemove);
+
+            String[] playerNames = new String[playerIdsToRemove.size()]; // array of names of players who have been removed
+            for (int i = 0; i < playerIdsToRemove.size(); i++) {
+                playerNames[i] = players.get(playerIdsToRemove.get(i)).getPlayerName();
+            }
+
+            DialogFactory.playersOutDialog(playerNames, phases.get(currentPhase)); // display which players have been eliminated
+        }
+
+        if (isGameOver()) { // check if game is now over
+            gameOver();
+        }
+    }
+
+    /**
      * method called when one player owns all the sectors in the map
+     *
      * @throws RuntimeException if there is more than one player in the turn order when gameOver is called
      */
     private void gameOver() throws RuntimeException {
         if (turnOrder.size() == 0) { // neutral player has won
             DialogFactory.gameOverDialog(players.get(NEUTRAL_PLAYER_ID).getPlayerName(), players.get(NEUTRAL_PLAYER_ID).getCollegeName().getCollegeName(), main, phases.get(currentPhase));
-        } else if (turnOrder.size() != 1) {
+
+        } else if (turnOrder.size() == 1){ // winner is player id at index 0 in turn order
+            int winnerId = turnOrder.get(0); // winner will be the only player in the turn order list
+            DialogFactory.gameOverDialog(players.get(winnerId).getPlayerName(), players.get(winnerId).getCollegeName().getCollegeName(), main, phases.get(currentPhase));
+
+        } else { // more than one player in turn order so no winner found therefore throw error
             throw new RuntimeException("Game Over called but more than one player in turn order");
         }
-        int winnerId = turnOrder.get(0); // winner will be the only player in the turn order list
-        DialogFactory.gameOverDialog(players.get(winnerId).getPlayerName(), players.get(winnerId).getCollegeName().getCollegeName(), main, phases.get(currentPhase));
-    }
-
-    /**
-     *
-     * @return the sprite batch being used to render the game
-     */
-    protected SpriteBatch getGameplayBatch() {
-        return this.gameplayBatch;
     }
 
     /**
@@ -269,11 +290,25 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * draws a background image behind the map and UI
+     * re-centres the camera and sets the zoom level back to default
      */
-    private void renderBackground() {
-        Vector3 mapDrawPos = gameplayCamera.unproject(new Vector3(0, Gdx.graphics.getHeight(), 0));
-        gameplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
+    private void resetCameraPosition() {
+        this.gameplayCamera.position.x = 1920/2;
+        this.gameplayCamera.position.y = 1080/2;
+        this.gameplayCamera.zoom = 1;
+    }
+
+    /**
+     * converts a point on the screen to a point in the world
+     *
+     * @param screenX x coordinate of point on screen
+     * @param screenY y coordinate of point on screen
+     * @return the corresponding world coordinates
+     */
+    public Vector2 screenToWorldCoords(int screenX, int screenY) {
+        float x = gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).x;
+        float y = gameplayCamera.unproject(new Vector3(screenX, screenY, 0)).y;
+        return new Vector2(x, y);
     }
 
     /**
@@ -284,22 +319,17 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
-     * re-centres the camera and sets the zoom level back to default
+     * draws a background image behind the map and UI covering the whole visible area of the render window
      */
-    private void resetCameraPosition() {
-        this.gameplayCamera.position.x = 1920/2;
-        this.gameplayCamera.position.y = 1080/2;
-        this.gameplayCamera.zoom = 1;
+    private void renderBackground() {
+        Vector3 mapDrawPos = gameplayCamera.unproject(new Vector3(0, Gdx.graphics.getHeight(), 0));
+        gameplayBatch.draw(mapBackground, mapDrawPos.x, mapDrawPos.y, gameplayCamera.viewportWidth * gameplayCamera.zoom, gameplayCamera.viewportHeight * gameplayCamera.zoom );
     }
+    /* Screen implementation */
 
     /**
-     * called once screen is setup to initialise the first phase of the game
+     * when this screen is shown updates the input handling so it is from this screen
      */
-    public void startGame() {
-        this.phases.get(currentPhase).enterPhase(getCurrentPlayer());
-        resetCameraPosition();
-    }
-
     @Override
     public void show() {
         this.updateInputProcessor();
@@ -307,22 +337,24 @@ public class GameScreen implements Screen, InputProcessor{
 
     /**
      * updates the game and renders it to the screen
+     *
+     * @param delta time elapsed between this and the previous update in seconds
      * @throws RuntimeException when method called before the game is setup
-     * @param delta time elapsed between this and the previous update
      */
     @Override
     public void render(float delta) {
         if (!gameSetup) throw new RuntimeException("Game must be setup before attempting to play it"); // throw exception if attempt to run game before its setup
+
         this.controlCamera(); // move camera
-        System.out.println(delta);
+
         gameplayCamera.update();
         gameplayBatch.setProjectionMatrix(gameplayCamera.combined);
 
         gameplayBatch.begin(); // begin rendering
 
         renderBackground(); // draw the background of the game
-
         map.draw(gameplayBatch); // draw the map
+
         gameplayBatch.end(); // stop rendering
 
         if (this.turnTimerEnabled) { // update the timer display, if it is enabled
@@ -338,7 +370,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void resize(int width, int height) {
-        for (Stage stage : phases.values()) {
+        for (Stage stage : phases.values()) { // update the rendering properties of each stage when the screen is resized
             stage.getViewport().update(width, height);
             stage.getCamera().viewportWidth = width;
             stage.getCamera().viewportHeight = height;
@@ -347,6 +379,7 @@ public class GameScreen implements Screen, InputProcessor{
             stage.getCamera().update();
         }
 
+        // update this classes rending properties for the new display size
         this.gameplayViewport.update(width, height);
         this.gameplayCamera.viewportWidth = width;
         this.gameplayCamera.viewportHeight = height;
@@ -371,24 +404,13 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void dispose() {
-
+        mapBackground.dispose();
+        for (Phase phase : phases.values()) {
+            phase.dispose();
+        }
     }
 
-    /**
-     * converts a point on the screen to a point in the world
-     * pixMaps use an inverted coordinate
-     *
-     * @param screenX screen point X
-     * @param screenY screen point Y
-     * @return the corresponding world coordinate
-     */
-    public Vector2 screenToWorldCoords(int screenX, int screenY) {
-        float x = (getGameplayCamera().unproject(new Vector3(screenX, screenY, 0)).x);
-        float y = (getGameplayCamera().unproject(new Vector3(screenX, screenY, 0)).y);
-        return new Vector2(x, y);
-    }
-
-    /* Input Processor */
+    /* Input Processor implementation */
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.UP) {
@@ -421,7 +443,7 @@ public class GameScreen implements Screen, InputProcessor{
             keysDown.put(Input.Keys.RIGHT, false);
         }
         if (keycode == Input.Keys.ESCAPE) {
-            main.setMenuScreen();
+            DialogFactory.leaveGameDialogBox(this, phases.get(currentPhase)); // confirm if the player wants to leave if escape is pressed
         }
         return true;
     }
@@ -461,9 +483,5 @@ public class GameScreen implements Screen, InputProcessor{
             gameplayCamera.zoom += amount * 0.03f;
         }
         return true;
-    }
-
-    public Player getCurrentPlayerPointer() {
-        return players.get(currentPlayerPointer);
     }
 }
