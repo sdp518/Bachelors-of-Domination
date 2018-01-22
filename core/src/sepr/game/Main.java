@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.GL20;
 import java.util.HashMap;
 
 /**
+ * executable http://www.riskydevelopments.co.uk/bod/BoD.zip
+ *
  * main game class used for controlling what screen is currently being displayed
  */
 public class Main extends Game implements ApplicationListener {
