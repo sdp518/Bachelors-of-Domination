@@ -4,9 +4,11 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
+
 
 /**
  * executable http://www.riskydevelopments.co.uk/bod/BoD.zip
@@ -18,6 +20,7 @@ public class Main extends Game implements ApplicationListener {
 	private GameScreen gameScreen;
 	private OptionsScreen optionsScreen;
 	private GameSetupScreen gameSetupScreen;
+	private Music music;
 
 	/**
 	 * Setup the screens and set the first screen as the menu
@@ -32,6 +35,9 @@ public class Main extends Game implements ApplicationListener {
 		this.optionsScreen = new OptionsScreen(this);
 		this.gameSetupScreen = new GameSetupScreen(this);
 
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/bensound-epic.mp3"));
+        music.setLooping(true);
+        music.play();
 		applyPreferences();
 
 		this.setMenuScreen();
@@ -90,6 +96,9 @@ public class Main extends Game implements ApplicationListener {
 			// change game to fullscreen
 			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		}
+
+		float volume = prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF);
+		this.music.setVolume(volume);
 	}
 
 	@Override

@@ -358,4 +358,15 @@ public class Map{
         }
         particles.removeAll(toDelete);
     }
+
+    public boolean executeMove(int sourceSectorId, int targetSectorId, int unitsToMove) {
+
+        this.unitsToMove = new int[3];
+        this.unitsToMove[0] = unitsToMove;
+        this.unitsToMove[1] = sourceSectorId;
+        this.unitsToMove[2] = targetSectorId;
+
+
+        return true;
+    }
 }
