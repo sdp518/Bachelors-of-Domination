@@ -7,9 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -53,9 +56,11 @@ public class GameScreen implements Screen, InputProcessor{
 
     private boolean gameSetup = false; // true once setupGame has been called
 
-    private Stage menuStage = new Stage();
+    private Stage pauseMenuStage = new Stage();
     private boolean isPaused;
     private Group pauseGroup;
+    private long pauseStartTime;
+    private long pausedTime;
 
     /**
      * sets up rendering objects and key input handling
@@ -133,8 +138,10 @@ public class GameScreen implements Screen, InputProcessor{
      */
     private void updateInputProcessor() {
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(pauseMenuStage);
         inputMultiplexer.addProcessor(phases.get(currentPhase));
         inputMultiplexer.addProcessor(this);
+
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
@@ -153,7 +160,11 @@ public class GameScreen implements Screen, InputProcessor{
      * @return time remaining in turn in seconds
      */
     private int getTurnTimeRemaining(){
-        return maxTurnTime - (int)((System.currentTimeMillis() - turnTimeStart) / 1000);
+        return maxTurnTime - (int)((System.currentTimeMillis() - (turnTimeStart + pausedTime)) / 1000);
+    }
+
+    public void pauseTimer(){
+        this.pauseStartTime = System.currentTimeMillis();
     }
 
     /**
@@ -231,6 +242,7 @@ public class GameScreen implements Screen, InputProcessor{
 
         if (this.turnTimerEnabled) { // if the turn timer is on reset it for the next player
             this.turnTimeStart = System.currentTimeMillis();
+            this.pausedTime = 0;
         }
     }
 
@@ -375,17 +387,17 @@ public class GameScreen implements Screen, InputProcessor{
         gameplayBatch.end(); // stop rendering
 
         if (isPaused) {
-            menuStage.act();
-            menuStage.draw();
+            pauseMenuStage.act();
+            pauseMenuStage.draw();
         }
 
-        if (this.turnTimerEnabled) { // update the timer display, if it is enabled
+        if (this.turnTimerEnabled && !this.isPaused) { // update the timer display, if it is enabled
             this.phases.get(currentPhase).setTimerValue(getTurnTimeRemaining());
         }
         this.phases.get(currentPhase).act(delta); // update the stage of the current phase
         this.phases.get(currentPhase).draw(); // draw the phase UI
 
-        if (this.turnTimerEnabled && (getTurnTimeRemaining() <= 0)) { // goto the next player's turn if the timer is enabled and they have run out of time
+        if (this.turnTimerEnabled && (getTurnTimeRemaining() <= 0) && !this.isPaused) { // goto the next player's turn if the timer is enabled and they have run out of time
             nextPlayer();
         }
     }
@@ -421,7 +433,18 @@ public class GameScreen implements Screen, InputProcessor{
         menuBackgroundImg.setPosition(backgroundX, backgroundY);
         pauseGroup.addActor(menuBackgroundImg);
 
-        menuStage.addActor(pauseGroup);
+        TextButton endPhaseButton = WidgetFactory.genEndPhaseButton();
+        endPhaseButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                resume();
+            }
+        });
+        endPhaseButton.setText("RESUME");
+        endPhaseButton.setPosition(backgroundX, backgroundY);
+        pauseGroup.addActor(endPhaseButton);
+
+        pauseMenuStage.addActor(pauseGroup);
     }
 
     @Override
@@ -429,6 +452,8 @@ public class GameScreen implements Screen, InputProcessor{
         if (isPaused) {
             isPaused = false;
             pauseGroup.remove();
+            pausedTime += (System.currentTimeMillis() - pauseStartTime);
+            pauseStartTime = 0;
         }
     }
 
@@ -439,7 +464,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void dispose() {
-        menuStage.dispose();
+        pauseMenuStage.dispose();
     }
     /* Input Processor implementation */
 

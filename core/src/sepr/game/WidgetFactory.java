@@ -405,6 +405,7 @@ public class WidgetFactory {
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.pauseTimer();
                 gameScreen.pause();
             }
         });
