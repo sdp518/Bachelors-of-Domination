@@ -400,12 +400,12 @@ public class WidgetFactory {
     public static Table genGameHUDTopBar(TurnPhaseType turnPhase, final GameScreen gameScreen) {
         TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
         btnStyle.font = fontSmall;
-        TextButton exitButton = new TextButton("QUIT", btnStyle);
+        TextButton exitButton = new TextButton("PAUSE", btnStyle);
 
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                DialogFactory.leaveGameDialogBox(gameScreen, actor.getStage());
+                gameScreen.pause();
             }
         });
 

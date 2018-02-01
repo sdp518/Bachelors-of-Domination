@@ -4,9 +4,13 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -48,6 +52,10 @@ public class GameScreen implements Screen, InputProcessor{
     private Texture mapBackground; // texture for drawing as a background behind the game
 
     private boolean gameSetup = false; // true once setupGame has been called
+
+    private Stage menuStage = new Stage();
+    private boolean isPaused;
+    private Group pauseGroup;
 
     /**
      * sets up rendering objects and key input handling
@@ -115,7 +123,7 @@ public class GameScreen implements Screen, InputProcessor{
         if (!gameSetup) {
             throw new RuntimeException("Cannot start game before it is setup");
         }
-        this.turnTimeStart = System.currentTimeMillis(); // set turn start time to current rime
+        this.turnTimeStart = System.currentTimeMillis(); // set turn start time to current time
         this.phases.get(currentPhase).enterPhase(getCurrentPlayer());
         resetCameraPosition();
     }
@@ -325,6 +333,7 @@ public class GameScreen implements Screen, InputProcessor{
     public void openMenu() {
         main.setMenuScreen();
     }
+
     /**
      * draws a background image behind the map and UI covering the whole visible area of the render window
      */
@@ -365,6 +374,11 @@ public class GameScreen implements Screen, InputProcessor{
 
         gameplayBatch.end(); // stop rendering
 
+        if (isPaused) {
+            menuStage.act();
+            menuStage.draw();
+        }
+
         if (this.turnTimerEnabled) { // update the timer display, if it is enabled
             this.phases.get(currentPhase).setTimerValue(getTurnTimeRemaining());
         }
@@ -397,12 +411,25 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void pause() {
+        isPaused = true;
+        pauseGroup = new Group();
+        // Placeholder UI
+        Texture menuBackground = new Texture("uiComponents/inGameMenu.png");
+        Image menuBackgroundImg = new Image(menuBackground);
+        float backgroundX = (gameplayViewport.getScreenWidth() - menuBackgroundImg.getWidth())/2f;
+        float backgroundY = (gameplayViewport.getScreenHeight() - menuBackgroundImg.getHeight())/2f;
+        menuBackgroundImg.setPosition(backgroundX, backgroundY);
+        pauseGroup.addActor(menuBackgroundImg);
 
+        menuStage.addActor(pauseGroup);
     }
 
     @Override
     public void resume() {
-
+        if (isPaused) {
+            isPaused = false;
+            pauseGroup.remove();
+        }
     }
 
     @Override
@@ -412,7 +439,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void dispose() {
-
+        menuStage.dispose();
     }
     /* Input Processor implementation */
 
