@@ -8,6 +8,8 @@ import com.badlogic.gdx.audio.Sound;
 class Sounds {
     private Sound menuSound;
     private Sound attackSound;
+    private Sound reinforceSound;
+    private Sound moveSound;
     private float fxVolume;
     private Music music;
     private float musicVolume;
@@ -25,8 +27,14 @@ class Sounds {
         if (soundToPlay.equals("menu_sound")){
             menuSound.play(fxVolume);
         }
-        else if (soundToPlay .equals("attack_sound")){
+        else if (soundToPlay.equals("attack_sound")){
             attackSound.play(fxVolume);
+        }
+        else if (soundToPlay.equals("reinforce_sound")){
+            reinforceSound.play(fxVolume);
+        }
+        else if (soundToPlay.equals("move_sound")){
+            moveSound.play(fxVolume);
         }
 
     }
