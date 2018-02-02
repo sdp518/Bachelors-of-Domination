@@ -323,6 +323,7 @@ public class GameScreen implements Screen, InputProcessor{
      * changes the screen currently being displayed to the menu
      */
     public void openMenu() {
+        main.sounds.playSound("menu_sound");
         main.setMenuScreen();
     }
     /**
@@ -351,7 +352,7 @@ public class GameScreen implements Screen, InputProcessor{
      */
     @Override
     public void render(float delta) {
-        if (!gameSetup) throw new RuntimeException("Game must be setup before attempting to play it"); // throw exception if attempt to run game before its setup
+        if (!gameSetup) throw new RuntimeException("Game must be setup before attempting to playSound it"); // throw exception if attempt to run game before its setup
 
         this.controlCamera(); // move camera
 
@@ -448,6 +449,7 @@ public class GameScreen implements Screen, InputProcessor{
             keysDown.put(Input.Keys.RIGHT, false);
         }
         if (keycode == Input.Keys.ESCAPE) {
+            main.sounds.playSound("menu_sound");
             DialogFactory.leaveGameDialogBox(this, phases.get(currentPhase)); // confirm if the player wants to leave if escape is pressed
         }
         return true;

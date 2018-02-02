@@ -60,6 +60,7 @@ public class OptionsScreen implements Screen {
             @Override
             public boolean keyUp(int keyCode) {
                 if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                    main.sounds.playSound("menu_sound");
                     main.setMenuScreen();
                 }
                 return super.keyUp(keyCode);
@@ -154,6 +155,7 @@ public class OptionsScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 acceptChanges(); // save and apply changes when CONFIRM CHANGES button is pressed
+                main.sounds.playSound("menu_sound");
                 main.setMenuScreen(); // revert to the menu screen
             }
         });
@@ -181,6 +183,7 @@ public class OptionsScreen implements Screen {
         table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 main.setMenuScreen();}
 
         })).colspan(2);

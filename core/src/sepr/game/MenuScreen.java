@@ -34,6 +34,7 @@ public class MenuScreen implements Screen {
             @Override
             public boolean keyUp(int keyCode) {
                 if (keyCode == Input.Keys.ESCAPE) { // ask player if they would like to exit the game if they press escape
+                    main.sounds.playSound("menu_sound");
                     DialogFactory.exitProgramDialogBox(stage);
                 }
                 return super.keyUp(keyCode);
@@ -78,6 +79,7 @@ public class MenuScreen implements Screen {
         startGameBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 main.setGameSetupScreen();
             }
         });
@@ -85,6 +87,7 @@ public class MenuScreen implements Screen {
         loadGameBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 System.out.println("Load game");
             }
         });
@@ -92,6 +95,7 @@ public class MenuScreen implements Screen {
         optionsBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 main.setOptionsScreen();
             }
         });
@@ -121,6 +125,7 @@ public class MenuScreen implements Screen {
         table.add(WidgetFactory.genBottomBar("QUIT", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 DialogFactory.exitProgramDialogBox(stage);}
 
         })).colspan(2);

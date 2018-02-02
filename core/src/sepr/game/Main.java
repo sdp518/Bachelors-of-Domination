@@ -20,7 +20,8 @@ public class Main extends Game implements ApplicationListener {
 	private GameScreen gameScreen;
 	private OptionsScreen optionsScreen;
 	private GameSetupScreen gameSetupScreen;
-	private Music music;
+	public  Sounds sounds;
+
 
 	/**
 	 * Setup the screens and set the first screen as the menu
@@ -35,9 +36,7 @@ public class Main extends Game implements ApplicationListener {
 		this.optionsScreen = new OptionsScreen(this);
 		this.gameSetupScreen = new GameSetupScreen(this);
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/bensound-epic.mp3"));
-        music.setLooping(true);
-        music.play();
+        this.sounds = new Sounds();
 		applyPreferences();
 
 		this.setMenuScreen();
@@ -97,8 +96,8 @@ public class Main extends Game implements ApplicationListener {
 			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		}
 
-		float volume = prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF);
-		this.music.setVolume(volume);
+		sounds.setMusicVolume(prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF));
+		sounds.setFxVolume(prefs.getFloat(OptionsScreen.FX_VOL_PREF));
 	}
 
 	@Override
