@@ -169,6 +169,7 @@ public class DialogFactory {
                     allocation[1] = -1; // set allocating sector id to -1 to indicate the allocation has been cancelled
                 } else if (object.equals("1")) { // Ok button pressed
                     allocation[0] = (int)slider.getValue(); // set the number of troops to allocate to the value of the slider
+                    remove();
                 }
             }
         };

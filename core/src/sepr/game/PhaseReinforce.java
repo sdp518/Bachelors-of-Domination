@@ -38,6 +38,8 @@ public class PhaseReinforce extends Phase {
                 gameScreen.getMap().addUnitsToSectorAnimated(allocateUnits[1], allocateUnits[0]);
                 currentPlayer.addTroopsToAllocate(-allocateUnits[0]);
                 if (currentPlayer.getTroopsToAllocate() == 0) {
+                    allocateUnits = null;
+                    updateTroopReinforcementLabel();
                     gameScreen.nextPhase();
                 } else {
                     allocateUnits = null;
