@@ -45,6 +45,8 @@ public class WidgetFactory {
     private static Texture menusTopBarLeftTexture;
     private static Texture menusTopBarRightTexture;
 
+    private static Texture pauseMenuTexture;
+
     private static Texture alcuinLogoTexture;
     private static Texture derwentLogoTexture;
     private static Texture halifaxLogoTexture;
@@ -89,6 +91,8 @@ public class WidgetFactory {
         gameHUDBottomBarRightPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Right-Part.png");
         gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
         endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png");
+
+        pauseMenuTexture = new Texture("uiComponents/inGameMenu.png");
 
         // load college logos
         alcuinLogoTexture = new Texture("logos/alcuin-logo.png");
@@ -480,6 +484,27 @@ public class WidgetFactory {
         style.knobOver = new TextureRegionDrawable(new TextureRegion(sliderKnobTexture));
 
         return new Slider(0f, 1f, 0.01f, false, style);
+    }
+
+    // TODO Finish pause menu implementation once all UI elements are available
+    /**
+     * Generates the in-game pause menu
+     * @return the in-game pause menu
+     */
+    public static Table genPauseMenu() {
+        Image pauseMenuBackground = new Image(pauseMenuTexture);
+
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = fontBig;
+        Label textLabel = new Label("PAUSED", style);
+
+        Table menu = new Table();
+        menu.setDebug(false);
+        menu.row();
+        menu.add(pauseMenuBackground).height(60);
+        menu.add(textLabel).padRight(20).padLeft(20);
+
+        return menu;
     }
 
     /**

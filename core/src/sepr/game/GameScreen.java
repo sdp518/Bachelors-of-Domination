@@ -426,6 +426,7 @@ public class GameScreen implements Screen, InputProcessor{
         isPaused = true;
         pauseGroup = new Group();
         // Placeholder UI
+        // TODO Move UI code to widget factory
         Texture menuBackground = new Texture("uiComponents/inGameMenu.png");
         Image menuBackgroundImg = new Image(menuBackground);
         float backgroundX = (gameplayViewport.getScreenWidth() - menuBackgroundImg.getWidth())/2f;

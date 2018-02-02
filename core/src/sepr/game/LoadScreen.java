@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -79,6 +80,30 @@ public class LoadScreen implements Screen{
 
         table.center();
         table.add(WidgetFactory.genMenusTopBar("LOAD GAME")).colspan(2);
+
+        TextButton saveButton = WidgetFactory.genEndPhaseButton();
+        saveButton.setText("SAVE");
+        saveButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // CALL SAVE GAME HERE
+            }
+        });
+
+        TextButton loadButton = WidgetFactory.genEndPhaseButton();
+        loadButton.setText("LOAD");
+        loadButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // CALL LOAD GAME HERE
+            }
+        });
+
+        table.row();
+        table.add(saveButton).fill().height(60).width(170);
+        table.row();
+        table.add(loadButton).fill().height(60).width(170);
+
 
         table.row();
         table.add().expand();
