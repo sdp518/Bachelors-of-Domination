@@ -47,7 +47,7 @@ public class GameSetupScreen implements Screen{
     private Texture collegeTableBackground;
 
     /**
-     * the colleges available to playSound as
+     * the colleges available to play as
      */
     public enum CollegeName {
         ALCUIN("ALCUIN"),
