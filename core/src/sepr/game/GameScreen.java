@@ -320,7 +320,7 @@ public class GameScreen implements Screen, InputProcessor{
     /**
      * re-centres the camera and sets the zoom level back to default
      */
-    private void resetCameraPosition() {
+    public void resetCameraPosition() {
         this.gameplayCamera.position.x = 1920/2;
         this.gameplayCamera.position.y = 1080/2;
         this.gameplayCamera.zoom = 1;
@@ -433,16 +433,27 @@ public class GameScreen implements Screen, InputProcessor{
         menuBackgroundImg.setPosition(backgroundX, backgroundY);
         pauseGroup.addActor(menuBackgroundImg);
 
-        TextButton endPhaseButton = WidgetFactory.genEndPhaseButton();
-        endPhaseButton.addListener(new ChangeListener() {
+        TextButton saveButton = WidgetFactory.genEndPhaseButton();
+        saveButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                main.setSaveScreen();
+            }
+        });
+        saveButton.setText("SAVE");
+        saveButton.setPosition(backgroundX, backgroundY + 100);
+        pauseGroup.addActor(saveButton);
+
+        TextButton resumeButton = WidgetFactory.genEndPhaseButton();
+        resumeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 resume();
             }
         });
-        endPhaseButton.setText("RESUME");
-        endPhaseButton.setPosition(backgroundX, backgroundY);
-        pauseGroup.addActor(endPhaseButton);
+        resumeButton.setText("RESUME");
+        resumeButton.setPosition(backgroundX, backgroundY);
+        pauseGroup.addActor(resumeButton);
 
         pauseMenuStage.addActor(pauseGroup);
     }

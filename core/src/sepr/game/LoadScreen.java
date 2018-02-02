@@ -19,22 +19,39 @@ public class LoadScreen implements Screen{
     private Stage stage;
     private Table table;
 
+    // TODO Switch to enum(?) and set save load variants correctly
+    private String entry;
+
     /**
      *
      * @param main for changing to different screens
      */
-    public LoadScreen (final Main main) {
+    public LoadScreen (final Main main, String entry) {
         this.main = main;
+        this.entry = entry;
 
-        this.stage = new Stage(){
-            @Override
-            public boolean keyUp(int keyCode) {
-                if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
-                    main.setMenuScreen();
+        if (entry == "MainMenu") {
+            this.stage = new Stage() {
+                @Override
+                public boolean keyUp(int keyCode) {
+                    if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                        main.setMenuScreen();
+                    }
+                    return super.keyUp(keyCode);
                 }
-                return super.keyUp(keyCode);
-            }
-        };
+            };
+        }
+        else{
+            this.stage = new Stage() {
+                @Override
+                public boolean keyUp(int keyCode) {
+                    if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                        main.returnGameScreen();
+                    }
+                    return super.keyUp(keyCode);
+                }
+            };
+        }
 
         this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
@@ -66,13 +83,25 @@ public class LoadScreen implements Screen{
         table.row();
         table.add().expand();
 
-        table.row();
-        table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                main.setMenuScreen();}
+        if (entry == "MainMenu") {
+            table.row();
+            table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    main.setMenuScreen();}
 
-        })).colspan(2);
+            })).colspan(2);
+        }
+        else{
+            table.row();
+            table.add(WidgetFactory.genBottomBar("RETURN", new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    main.returnGameScreen();}
+
+            })).colspan(2);
+        }
+
     }
 
     /**

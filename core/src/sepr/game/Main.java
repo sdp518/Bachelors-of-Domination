@@ -19,6 +19,7 @@ public class Main extends Game implements ApplicationListener {
 	private OptionsScreen optionsScreen;
 	private GameSetupScreen gameSetupScreen;
 	private LoadScreen loadScreen;
+	private LoadScreen saveScreen;
 
 	/**
 	 * Setup the screens and set the first screen as the menu
@@ -32,7 +33,8 @@ public class Main extends Game implements ApplicationListener {
 		this.gameScreen = new GameScreen(this);
 		this.optionsScreen = new OptionsScreen(this);
 		this.gameSetupScreen = new GameSetupScreen(this);
-		this.loadScreen = new LoadScreen(this);
+		this.loadScreen = new LoadScreen(this, "MainMenu");
+		this.saveScreen = new LoadScreen(this, "Game");
 
 		applyPreferences();
 
@@ -58,6 +60,14 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
+	 * returns to the game screen in the state it was left in
+	 */
+	public void returnGameScreen() {
+		this.setScreen(gameScreen);
+		gameScreen.resetCameraPosition();
+	}
+
+	/**
 	 * change the screen currently being displayed to the options screen
 	 */
 	public void setOptionsScreen() {
@@ -76,6 +86,13 @@ public class Main extends Game implements ApplicationListener {
 	 */
 	public void setLoadScreen() {
 		this.setScreen(loadScreen);
+	}
+
+	/**
+	 * change the screen currently being displayed to the save screen
+	 */
+	public void setSaveScreen() {
+		this.setScreen(saveScreen);
 	}
 
 	/**
