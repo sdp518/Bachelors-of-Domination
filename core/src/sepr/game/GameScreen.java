@@ -56,6 +56,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     private boolean gameSetup = false; // true once setupGame has been called
 
+    // pause menu setup
     private Stage pauseMenuStage = new Stage();
     private boolean isPaused;
     private Group pauseGroup;
@@ -442,7 +443,7 @@ public class GameScreen implements Screen, InputProcessor{
             }
         });
         saveButton.setText("SAVE");
-        saveButton.setPosition(backgroundX, backgroundY + 100);
+        saveButton.setPosition(backgroundX, backgroundY + 200);
         pauseGroup.addActor(saveButton);
 
         TextButton resumeButton = WidgetFactory.genEndPhaseButton();
@@ -453,8 +454,19 @@ public class GameScreen implements Screen, InputProcessor{
             }
         });
         resumeButton.setText("RESUME");
-        resumeButton.setPosition(backgroundX, backgroundY);
+        resumeButton.setPosition(backgroundX, backgroundY + 100);
         pauseGroup.addActor(resumeButton);
+
+        TextButton quitButton = WidgetFactory.genEndPhaseButton();
+        quitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                DialogFactory.leaveGameDialogBox(GameScreen.this, pauseMenuStage);
+            }
+        });
+        quitButton.setText("QUIT");
+        quitButton.setPosition(backgroundX, backgroundY);
+        pauseGroup.addActor(quitButton);
 
         pauseMenuStage.addActor(pauseGroup);
     }
@@ -512,7 +524,9 @@ public class GameScreen implements Screen, InputProcessor{
             keysDown.put(Input.Keys.RIGHT, false);
         }
         if (keycode == Input.Keys.ESCAPE) {
-            DialogFactory.leaveGameDialogBox(this, phases.get(currentPhase)); // confirm if the player wants to leave if escape is pressed
+            //DialogFactory.leaveGameDialogBox(this, phases.get(currentPhase)); // confirm if the player wants to leave if escape is pressed
+            this.pauseTimer();
+            this.pause();
         }
         return true;
     }
