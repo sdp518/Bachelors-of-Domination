@@ -20,18 +20,17 @@ public class LoadScreen implements Screen{
     private Stage stage;
     private Table table;
 
-    // TODO Switch to enum(?) and set save load variants correctly
-    private String entry;
+    private EntryPoint entryPoint;
 
     /**
      *
      * @param main for changing to different screens
      */
-    public LoadScreen (final Main main, String entry) {
+    public LoadScreen (final Main main, EntryPoint entryPoint) {
         this.main = main;
-        this.entry = entry;
+        this.entryPoint = entryPoint;
 
-        if (entry == "MainMenu") {
+        if (entryPoint == EntryPoint.MENU_SCREEN) {
             this.stage = new Stage() {
                 @Override
                 public boolean keyUp(int keyCode) {
@@ -42,7 +41,7 @@ public class LoadScreen implements Screen{
                 }
             };
         }
-        else{
+        else {
             this.stage = new Stage() {
                 @Override
                 public boolean keyUp(int keyCode) {
@@ -108,7 +107,7 @@ public class LoadScreen implements Screen{
         table.row();
         table.add().expand();
 
-        if (entry == "MainMenu") {
+        if (entryPoint == EntryPoint.MENU_SCREEN) {
             table.row();
             table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
                 @Override
@@ -117,7 +116,7 @@ public class LoadScreen implements Screen{
 
             })).colspan(2);
         }
-        else{
+        else {
             table.row();
             table.add(WidgetFactory.genBottomBar("RETURN", new ChangeListener() {
                 @Override
