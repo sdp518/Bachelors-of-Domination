@@ -45,7 +45,7 @@ public class WidgetFactory {
     private static Texture menusTopBarLeftTexture;
     private static Texture menusTopBarRightTexture;
 
-    private static Texture pauseMenuTexture;
+    private static Texture pauseMenuBtnTexture;
 
     private static Texture alcuinLogoTexture;
     private static Texture derwentLogoTexture;
@@ -92,7 +92,7 @@ public class WidgetFactory {
         gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
         endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png");
 
-        pauseMenuTexture = new Texture("uiComponents/inGameMenu.png");
+        pauseMenuBtnTexture = new Texture("uiComponents/pauseMenuButton.png");
 
         // load college logos
         alcuinLogoTexture = new Texture("logos/alcuin-logo.png");
@@ -486,25 +486,18 @@ public class WidgetFactory {
         return new Slider(0f, 1f, 0.01f, false, style);
     }
 
-    // TODO Finish pause menu implementation once all UI elements are available
     /**
-     * Generates the in-game pause menu
-     * @return the in-game pause menu
+     *
+     * @param text the text to be displayed on the button
+     * @return a pause menu button with desired text
      */
-    public static Table genPauseMenu() {
-        Image pauseMenuBackground = new Image(pauseMenuTexture);
+    public static TextButton genPauseMenuButton(String text){
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(pauseMenuBtnTexture, 0,0, 211, 60));
+        style.down = new TextureRegionDrawable(new TextureRegion(pauseMenuBtnTexture, 0,60, 211, 60));
+        style.font = fontSmall;
 
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = fontBig;
-        Label textLabel = new Label("PAUSED", style);
-
-        Table menu = new Table();
-        menu.setDebug(false);
-        menu.row();
-        menu.add(pauseMenuBackground).height(60);
-        menu.add(textLabel).padRight(20).padLeft(20);
-
-        return menu;
+        return new TextButton(text, style);
     }
 
     /**

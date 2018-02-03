@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -59,7 +59,6 @@ public class GameScreen implements Screen, InputProcessor{
     // pause menu setup
     private Stage pauseMenuStage = new Stage();
     private boolean isPaused;
-    private Group pauseGroup;
     private long pauseStartTime;
     private long pausedTime;
 
@@ -139,7 +138,6 @@ public class GameScreen implements Screen, InputProcessor{
      */
     private void updateInputProcessor() {
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(pauseMenuStage);
         inputMultiplexer.addProcessor(phases.get(currentPhase));
         inputMultiplexer.addProcessor(this);
 
@@ -164,6 +162,9 @@ public class GameScreen implements Screen, InputProcessor{
         return maxTurnTime - (int)((System.currentTimeMillis() - (turnTimeStart + pausedTime)) / 1000);
     }
 
+    /**
+     * record the time at which the timer was paused
+     */
     public void pauseTimer(){
         this.pauseStartTime = System.currentTimeMillis();
     }
@@ -362,7 +363,13 @@ public class GameScreen implements Screen, InputProcessor{
      */
     @Override
     public void show() {
-        this.updateInputProcessor();
+        if (isPaused){
+            Gdx.input.setInputProcessor(pauseMenuStage);
+        }
+        else {
+            this.updateInputProcessor();
+        }
+
     }
 
     /**
@@ -420,64 +427,79 @@ public class GameScreen implements Screen, InputProcessor{
         this.gameplayCamera.viewportHeight = height;
         this.gameplayCamera.translate(1920/2, 1080/2, 0);
         this.gameplayCamera.update();
+
+        this.resetCameraPosition();
     }
 
     @Override
     public void pause() {
         isPaused = true;
-        pauseGroup = new Group();
-        // Placeholder UI
-        // TODO Move UI code to widget factory
-        Texture menuBackground = new Texture("uiComponents/inGameMenu.png");
-        Image menuBackgroundImg = new Image(menuBackground);
-        float backgroundX = (gameplayViewport.getScreenWidth() - menuBackgroundImg.getWidth())/2f;
-        float backgroundY = (gameplayViewport.getScreenHeight() - menuBackgroundImg.getHeight())/2f;
-        menuBackgroundImg.setPosition(backgroundX, backgroundY);
-        pauseGroup.addActor(menuBackgroundImg);
 
-        TextButton saveButton = WidgetFactory.genEndPhaseButton();
+        Gdx.input.setInputProcessor(pauseMenuStage);
+
+        TextButton saveButton = WidgetFactory.genPauseMenuButton("SAVE");
         saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 main.setSaveScreen();
             }
         });
-        saveButton.setText("SAVE");
-        saveButton.setPosition(backgroundX, backgroundY + 200);
-        pauseGroup.addActor(saveButton);
 
-        TextButton resumeButton = WidgetFactory.genEndPhaseButton();
+        TextButton optionsButton = WidgetFactory.genPauseMenuButton("OPTIONS");
+        optionsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                main.setInGameOptionsScreen();
+            }
+        });
+
+        TextButton resumeButton = WidgetFactory.genPauseMenuButton("RESUME");
         resumeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 resume();
             }
         });
-        resumeButton.setText("RESUME");
-        resumeButton.setPosition(backgroundX, backgroundY + 100);
-        pauseGroup.addActor(resumeButton);
 
-        TextButton quitButton = WidgetFactory.genEndPhaseButton();
+        TextButton quitButton = WidgetFactory.genPauseMenuButton("QUIT");
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 DialogFactory.leaveGameDialogBox(GameScreen.this, pauseMenuStage);
             }
         });
-        quitButton.setText("QUIT");
-        quitButton.setPosition(backgroundX, backgroundY);
-        pauseGroup.addActor(quitButton);
 
-        pauseMenuStage.addActor(pauseGroup);
+        Label textLabel = WidgetFactory.genMenuLabel("PAUSED");
+
+        Table menu = new Table();
+        menu.setDebug(false);
+        menu.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/inGameMenu.png"))));
+        menu.top().center();
+        menu.add(textLabel);
+        menu.row().center();
+        menu.add(saveButton).padTop(30).padBottom(20);
+        menu.row().center();
+        menu.add(optionsButton).padBottom(20);
+        menu.row().center();
+        menu.add(resumeButton).padBottom(20);
+        menu.row().center();
+        menu.add(quitButton);
+
+        Table table = new Table();
+        table.setDebug(false);
+        table.setFillParent(true);
+        table.add(menu);
+
+        pauseMenuStage.addActor(table);
     }
 
     @Override
     public void resume() {
         if (isPaused) {
             isPaused = false;
-            pauseGroup.remove();
             pausedTime += (System.currentTimeMillis() - pauseStartTime);
             pauseStartTime = 0;
+            updateInputProcessor();
         }
     }
 
