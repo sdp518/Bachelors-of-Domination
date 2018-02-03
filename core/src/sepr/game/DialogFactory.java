@@ -205,7 +205,6 @@ public class DialogFactory {
                 sliderValue.setText(new StringBuilder((int)slider.getValue() + "")); // update slider value label when the slider is moved
             }
         });
-
         Dialog dialog = new Dialog("Select number of troops to attack with", DialogFactory.skin) {
             protected void result(Object object) {
                 if (object.equals("0")) { // cancel pressed

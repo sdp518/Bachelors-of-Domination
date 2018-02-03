@@ -22,6 +22,9 @@ class Sounds {
     public Sounds() {
         Preferences prefs = Gdx.app.getPreferences(OptionsScreen.PREFERENCES_NAME);
         this.menuSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/menu_sound.mp3"));
+        this.attackSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/attack_sound.mp3"));
+        this.reinforceSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/reinforce_sound.WAV"));
+        this.moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/move_sound.WAV"));
         setFxVolume(prefs.getFloat(OptionsScreen.FX_VOL_PREF));
         this.music = Gdx.audio.newMusic(Gdx.files.internal("music/bensound-epic.mp3"));
         setMusicVolume(prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF));

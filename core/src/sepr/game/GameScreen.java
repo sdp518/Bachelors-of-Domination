@@ -352,7 +352,7 @@ public class GameScreen implements Screen, InputProcessor{
      */
     @Override
     public void render(float delta) {
-        if (!gameSetup) throw new RuntimeException("Game must be setup before attempting to playSound it"); // throw exception if attempt to run game before its setup
+        if (!gameSetup) throw new RuntimeException("Game must be setup before attempting to play it"); // throw exception if attempt to run game before its setup
 
         this.controlCamera(); // move camera
 

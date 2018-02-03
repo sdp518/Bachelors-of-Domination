@@ -71,8 +71,10 @@ public class PhaseMovement extends Phase {
     public void phaseAct() {
         if (sourceSector != null && targetSector != null && movedUnits[0] != -1) {
             if (movedUnits[0] == 0) {
+                this.sound.playSound("menu_sound");
                 // cancel move
             } else {
+                this.sound.playSound("move_sound");
                 moveUnits();
             }
             // reset move
@@ -120,7 +122,7 @@ public class PhaseMovement extends Phase {
 
         int sectorId = gameScreen.getMap().detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
         if (sectorId != -1) { // If selected a sector
-
+            this.sound.playSound("menu_sound");
             Sector selected = gameScreen.getMap().getSectorById(sectorId); // Current sector
             boolean notAlreadySelected = this.sourceSector == null && this.targetSector == null; // T/F if the move sequence is complete
 
