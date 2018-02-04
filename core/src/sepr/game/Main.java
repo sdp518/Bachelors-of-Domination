@@ -23,6 +23,7 @@ public class Main extends Game implements ApplicationListener {
 	private GameSetupScreen gameSetupScreen;
 	private LoadScreen loadScreen;
 	private LoadScreen saveScreen;
+	private MinigameScreen minigameScreen;
 
 	/**
 	 * Setup the screens and set the first screen as the menu
@@ -39,11 +40,20 @@ public class Main extends Game implements ApplicationListener {
 		this.gameSetupScreen = new GameSetupScreen(this);
 		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN);
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN);
+		this.minigameScreen = new MinigameScreen(this);
 
 		applyPreferences();
 
-		this.setMenuScreen();
+		//this.setMenuScreen();
+        this.setMinigameScreen();
 	}
+
+    /**
+     * changes the screen currently being displayed to the menu
+     */
+    public void setMinigameScreen() {
+        this.setScreen(minigameScreen);
+    }
 
 	/**
 	 * changes the screen currently being displayed to the menu
