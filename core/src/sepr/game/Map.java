@@ -184,7 +184,7 @@ public class Map{
      * @param attackingSectorId id of the sector the attack is coming from
      * @param defendingSectorId id of the defending sector
      * @param attackersLost amount of units lost on the attacking sector
-     * @param defendersLost amount of units lost on the defenfing sector
+     * @param defendersLost amount of units lost on the defending sector
      * @param attacker the player who is carrying out the attack
      * @param defender the player who is being attacked
      * @param neutral the neutral player
