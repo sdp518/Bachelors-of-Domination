@@ -72,6 +72,7 @@ public class LoadScreen implements Screen{
     /**
      * sets up the UI for the load screen
      */
+    @SuppressWarnings("Duplicates") // As same code is present in other screens
     private void setupUi() {
 
         // add the menu background

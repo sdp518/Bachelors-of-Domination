@@ -187,6 +187,7 @@ public class OptionsScreen implements Screen {
         return table;
     }
 
+    @SuppressWarnings("Duplicates") // As same code is present in other screens
     private void setupUi() {
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
 
