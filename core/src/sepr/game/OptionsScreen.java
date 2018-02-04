@@ -74,7 +74,7 @@ public class OptionsScreen implements Screen {
             this.stage = new Stage() {
                 @Override
                 public boolean keyUp(int keyCode) {
-                    if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                    if (keyCode == Input.Keys.ESCAPE) { // change back to the game screen if the player presses esc
                         main.returnGameScreen();
                     }
                     return super.keyUp(keyCode);
