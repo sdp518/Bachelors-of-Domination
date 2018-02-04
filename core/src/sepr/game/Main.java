@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
 
+//  TODO Add classes to packages
+
 /**
  * executable http://www.riskydevelopments.co.uk/bod/BoD.zip
  *
@@ -155,6 +157,8 @@ public class Main extends Game implements ApplicationListener {
 		gameSetupScreen.dispose();
 		gameScreen.dispose();
 		loadScreen.dispose();
+		saveScreen.dispose();
+		inGameOptionsScreen.dispose();
 	}
 
 }
