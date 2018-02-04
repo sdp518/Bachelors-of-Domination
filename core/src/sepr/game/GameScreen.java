@@ -345,7 +345,7 @@ public class GameScreen implements Screen, InputProcessor{
      * changes the screen currently being displayed to the menu
      */
     public void openMenu() {
-        main.setMenuScreen();
+        main.exitToMenu();
     }
 
     /**

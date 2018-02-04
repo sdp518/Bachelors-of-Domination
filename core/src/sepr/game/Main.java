@@ -43,8 +43,20 @@ public class Main extends Game implements ApplicationListener {
 		this.setMenuScreen();
 	}
 
+	/**
+	 * changes the screen currently being displayed to the menu
+	 */
 	public void setMenuScreen() {
 		this.setScreen(menuScreen);
+	}
+
+	/**
+	 * changes the screen currently being displayed to the menu and re-instantiates game screen
+	 */
+	public void exitToMenu() {
+		this.setScreen(menuScreen);
+		this.gameScreen.dispose();
+		this.gameScreen = new GameScreen(this);
 	}
 
 	/**
