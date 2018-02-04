@@ -349,6 +349,66 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * adds the pause menu to the pause menu stage
+     */
+    private void displayPauseMenu() {
+        TextButton saveButton = WidgetFactory.genPauseMenuButton("SAVE");
+        saveButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                main.setSaveScreen();
+            }
+        });
+
+        TextButton optionsButton = WidgetFactory.genPauseMenuButton("OPTIONS");
+        optionsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                main.setInGameOptionsScreen();
+            }
+        });
+
+        TextButton resumeButton = WidgetFactory.genPauseMenuButton("RESUME");
+        resumeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                resume();
+            }
+        });
+
+        TextButton quitButton = WidgetFactory.genPauseMenuButton("QUIT");
+        quitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                DialogFactory.leaveGameDialogBox(GameScreen.this, pauseMenuStage);
+            }
+        });
+
+        Label textLabel = WidgetFactory.genMenuLabel("PAUSED");
+
+        Table menu = new Table();
+        menu.setDebug(false);
+        menu.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/inGameMenu.png"))));
+        menu.top().center();
+        menu.add(textLabel);
+        menu.row().center();
+        menu.add(resumeButton).padTop(30).padBottom(20);
+        menu.row().center();
+        menu.add(optionsButton).padBottom(20);
+        menu.row().center();
+        menu.add(saveButton).padBottom(20);
+        menu.row().center();
+        menu.add(quitButton);
+
+        Table table = new Table();
+        table.setDebug(false);
+        table.setFillParent(true);
+        table.add(menu);
+
+        pauseMenuStage.addActor(table);
+    }
+
+    /**
      * draws a background image behind the map and UI covering the whole visible area of the render window
      */
     private void renderBackground() {
@@ -434,63 +494,8 @@ public class GameScreen implements Screen, InputProcessor{
     @Override
     public void pause() {
         isPaused = true;
-
         Gdx.input.setInputProcessor(pauseMenuStage);
-
-        TextButton saveButton = WidgetFactory.genPauseMenuButton("SAVE");
-        saveButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                main.setSaveScreen();
-            }
-        });
-
-        TextButton optionsButton = WidgetFactory.genPauseMenuButton("OPTIONS");
-        optionsButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                main.setInGameOptionsScreen();
-            }
-        });
-
-        TextButton resumeButton = WidgetFactory.genPauseMenuButton("RESUME");
-        resumeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                resume();
-            }
-        });
-
-        TextButton quitButton = WidgetFactory.genPauseMenuButton("QUIT");
-        quitButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                DialogFactory.leaveGameDialogBox(GameScreen.this, pauseMenuStage);
-            }
-        });
-
-        Label textLabel = WidgetFactory.genMenuLabel("PAUSED");
-
-        Table menu = new Table();
-        menu.setDebug(false);
-        menu.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/inGameMenu.png"))));
-        menu.top().center();
-        menu.add(textLabel);
-        menu.row().center();
-        menu.add(saveButton).padTop(30).padBottom(20);
-        menu.row().center();
-        menu.add(optionsButton).padBottom(20);
-        menu.row().center();
-        menu.add(resumeButton).padBottom(20);
-        menu.row().center();
-        menu.add(quitButton);
-
-        Table table = new Table();
-        table.setDebug(false);
-        table.setFillParent(true);
-        table.add(menu);
-
-        pauseMenuStage.addActor(table);
+        this.displayPauseMenu();
     }
 
     @Override
@@ -499,7 +504,7 @@ public class GameScreen implements Screen, InputProcessor{
             isPaused = false;
             pausedTime += (System.currentTimeMillis() - pauseStartTime);
             pauseStartTime = 0;
-            updateInputProcessor();
+            this.updateInputProcessor();
         }
     }
 
