@@ -14,7 +14,7 @@ public class PhaseReinforce extends Phase {
     }
 
     @Override
-    void enterPhase(Player player) {
+    public void enterPhase(Player player) {
         super.enterPhase(player);
         currentPlayer.addTroopsToAllocate(5); // players get a basic reinforcement of 5 troops every turn
         updateTroopReinforcementLabel();

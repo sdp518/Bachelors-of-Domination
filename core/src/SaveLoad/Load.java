@@ -36,10 +36,11 @@ public class Load {
         }
         if (loadedSave != null) {
             gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());
-            loadedSave.updateSectors(gameScreen.getSectors());
             loadedSave.updatePlayers(gameScreen.getPlayers());
+            loadedSave.updateSectors(gameScreen.getSectors(), gameScreen.getPlayers());
             gameScreen.setTurnOrder(loadedSave.getTurnOrder());
             gameScreen.setCurrentPlayerPointer(loadedSave.getCurrentPlayerPointer());
+            gameScreen.getPhases().get(gameScreen.getCurrentPhase()).enterPhase(gameScreen.getCurrentPlayer());
             System.out.println("Load Successful");
         } else {
             throw new IOException("Load Error");

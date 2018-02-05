@@ -6,6 +6,7 @@ import sepr.game.Sector;
 import sepr.game.TurnPhaseType;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -22,18 +23,18 @@ public class Data implements java.io.Serializable {
                 List<Integer> turnOrder,
                 int currentPlayerPointer) {
         this.currentPhase = currentPhase;
+
         HashMap<Integer, ShrunkenSector> smallSectors = new HashMap<Integer, ShrunkenSector>();
         Integer[] keys = sectors.keySet().toArray(new Integer[sectors.size()]);
         for(int i = 0; i < sectors.size(); i++) {
-            Sector fullSector = sectors.get(keys[i]);
-            smallSectors.put(keys[i], new ShrunkenSector(fullSector));
+            smallSectors.put(keys[i], new ShrunkenSector(sectors.get(keys[i])));
         }
         this.sectors = smallSectors;
+
         HashMap<Integer, SavePlayer> savePlayers = new HashMap<Integer, SavePlayer>();
         keys = players.keySet().toArray(new Integer[players.size()]);
-        for(int i = 0; i < savePlayers.size(); i++) {
-            Player fullPlayer = players.get(keys[i]);
-            savePlayers.put(keys[i], new SavePlayer(fullPlayer));
+        for(int i = 0; i < players.size(); i++) {
+            savePlayers.put(keys[i], new SavePlayer(players.get(keys[i])));
         }
         this.players = savePlayers;
         this.turnOrder = turnOrder;
@@ -50,11 +51,16 @@ public class Data implements java.io.Serializable {
 
     public void updateSectors(HashMap<Integer, Sector> sectors, HashMap<Integer, Player> players) {
         Integer[] keys = sectors.keySet().toArray(new Integer[sectors.size()]);
+        Integer[] playerKeys = players.keySet().toArray(new Integer[players.size()]);
         for(int i = 0; i < sectors.size(); i++) {
             Sector fullSector = sectors.get(keys[i]);
             ShrunkenSector smallSector = this.sectors.get(keys[i]);
             fullSector.setOwnerId(smallSector.getOwnerId());
-            
+            for(int j = 0; j < playerKeys.length; j++) {
+                if (smallSector.getOwnerId() == players.get(playerKeys[j]).getId()) {
+                    fullSector.setOwner(players.get(playerKeys[j]));
+                }
+            }
             fullSector.setDisplayName(smallSector.getDisplayName());
             fullSector.setUnitsInSector(smallSector.getUnitsInSector());
             fullSector.setReinforcementsProvided(smallSector.getReinforcementsProvided());
@@ -68,7 +74,7 @@ public class Data implements java.io.Serializable {
     }
 
     public void updatePlayers(HashMap<Integer, Player> players) {
-        Integer[] keys = this.players.keySet().toArray(new Integer[players.size()]);
+        Integer[] keys = this.players.keySet().toArray(new Integer[this.players.size()]);
         for(int i = 0; i < this.players.size(); i++) {
             SavePlayer smallPlayer = this.players.get(keys[i]);
             players.remove(keys[i]);

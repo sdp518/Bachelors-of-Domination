@@ -187,7 +187,7 @@ public class GameScreen implements Screen, InputProcessor{
      *
      * @return gets the player object for the player who's turn it currently is
      */
-    private Player getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return players.get(turnOrder.get(currentPlayerPointer));
     }
 
@@ -211,10 +211,6 @@ public class GameScreen implements Screen, InputProcessor{
         return map.getSectors();
     }
 
-    public void setSectors(HashMap<Integer,Sector> sectors) {
-        this.map.setSectors(sectors);
-    }
-
     public TurnPhaseType getCurrentPhase() {
         return currentPhase;
     }
@@ -225,10 +221,6 @@ public class GameScreen implements Screen, InputProcessor{
 
     public HashMap<Integer, Player> getPlayers() {
         return this.players;
-    }
-
-    public void setPlayers(HashMap<Integer, Player> players) {
-        this.players = players;
     }
 
     public List<Integer> getTurnOrder() {
@@ -247,17 +239,16 @@ public class GameScreen implements Screen, InputProcessor{
         this.currentPlayerPointer = currentPlayerPointer;
     }
 
+    public HashMap<TurnPhaseType, Phase> getPhases() {
+        return phases;
+    }
+
     /**
      * method is used for progression through the phases of a turn evaluating the currentPhase case label
      * if nextPhase is called during the movement phase then the game progresses to the next players turn
      */
     protected void nextPhase() {
         this.phases.get(currentPhase).endPhase();
-        if (currentPhase == TurnPhaseType.ATTACK) {
-
-        } else if (currentPhase == TurnPhaseType.REINFORCEMENT) {
-
-        }
         switch (currentPhase) {
             case REINFORCEMENT:
                 currentPhase = TurnPhaseType.ATTACK;
