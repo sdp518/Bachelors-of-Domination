@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 /**
  * class for specifying properties of a sector that is part of a map
  */
-public class Sector {
+public class Sector implements java.io.Serializable {
     private int id;
     private int ownerId;
     private String displayName;
@@ -72,6 +72,10 @@ public class Sector {
         return ownerId;
     }
 
+    public void setOwnerId(int id) {
+        this.ownerId = id;
+    }
+
     /**
      * sets the owner id and colour of this sector
      * @param player the player object that owns this sector
@@ -90,6 +94,10 @@ public class Sector {
         return displayName;
     }
 
+    public void setDisplayName(String name) {
+        this.displayName = name;
+    }
+
     /**
      *
      * @return number of troops rewarded for conquering this territory
@@ -98,12 +106,20 @@ public class Sector {
         return reinforcementsProvided;
     }
 
+    public void setReinforcementsProvided(int reinforcements) {
+        this.reinforcementsProvided = reinforcements;
+    }
+
     /**
      *
      * @return number of units present in this sector
      */
     public int getUnitsInSector() {
         return unitsInSector;
+    }
+
+    public void setUnitsInSector(int units) {
+        this.unitsInSector = units;
     }
 
     /**
@@ -161,6 +177,10 @@ public class Sector {
      */
     public boolean isNeutral() { return neutral; }
 
+    public void setNeutral(boolean neutral) {
+        this.neutral = neutral;
+    }
+
     /**
      *
      * @return true if this sector has been allocated to a player, else false
@@ -169,11 +189,16 @@ public class Sector {
         return allocated;
     }
 
+
     /**
      *
      * @return the name of the college this sector belongs to
      */
     public String getCollege() { return college; }
+
+    public void setCollege(String college) {
+        this.college = college;
+    }
 
     /**
      *

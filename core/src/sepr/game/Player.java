@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 /**
  * base class for storing Neutral and Human player data
  */
-public class Player {
+public class Player implements java.io.Serializable{
     private int id; // player's unique id
     private GameSetupScreen.CollegeName collegeName; // college this player chose
     private String playerName;
@@ -26,6 +26,15 @@ public class Player {
         this.id = id;
         this.collegeName = collegeName;
         this.troopsToAllocate = 0;
+        this.sectorColour = sectorColour;
+        this.playerType = playerType;
+        this.playerName = playerName;
+    }
+
+    public Player(int id, GameSetupScreen.CollegeName collegeName, int troopsToAllocate, Color sectorColour, PlayerType playerType, String playerName) {
+        this.id = id;
+        this.collegeName = collegeName;
+        this.troopsToAllocate = troopsToAllocate;
         this.sectorColour = sectorColour;
         this.playerType = playerType;
         this.playerName = playerName;

@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * stores the game map and the sectors within it
  */
-public class Map{
+public class Map {
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
     private List<UnitChangeParticle> particles; // list of active particle effects displaying the changes to the amount of units on a sector
 
@@ -357,5 +357,13 @@ public class Map{
             }
         }
         particles.removeAll(toDelete);
+    }
+
+    public HashMap<Integer, Sector> getSectors() {
+        return sectors;
+    }
+
+    public void setSectors(HashMap<Integer, Sector> sectors) {
+        this.sectors = sectors;
     }
 }
