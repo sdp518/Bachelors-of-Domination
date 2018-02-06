@@ -26,6 +26,27 @@ public class MinigameScreen implements Screen {
     private Stage slotStage;
     private Random random;
 
+    private boolean isSpinning;
+    private int slotOneSpins;
+    private int slotTwoSpins;
+    private int slotThreeSpins;
+    private int slotOneCurrent;
+    private int slotTwoCurrent;
+    private int slotThreeCurrent;
+
+    private Image a;
+    private Image b;
+    private Image c;
+    private Image d;
+    private Image e;
+    private Image f;
+    private Image g;
+    private Image h;
+    private Image i;
+    private Image j;
+    private Image k;
+    private Image l;
+
     /**
      *
      * @param main for changing to different screens
@@ -33,6 +54,29 @@ public class MinigameScreen implements Screen {
     public MinigameScreen (final Main main) {
         this.main = main;
         this.random = new Random();
+
+        this.isSpinning = false;
+        this.slotOneSpins = 0;
+        this.slotTwoSpins = 0;
+        this.slotThreeSpins = 0;
+
+        Texture slotOne = new Texture("uiComponents/minigame1.png");
+        Texture slotTwo = new Texture("uiComponents/minigame2.png");
+        Texture slotThree = new Texture("uiComponents/minigame3.png");
+        Texture slotFour = new Texture("uiComponents/minigame4.png");
+
+        a = new Image(slotOne);
+        b = new Image(slotTwo);
+        c = new Image(slotThree);
+        d = new Image(slotFour);
+        e = new Image(slotOne);
+        f = new Image(slotTwo);
+        g = new Image(slotThree);
+        h = new Image(slotFour);
+        i = new Image(slotOne);
+        j = new Image(slotTwo);
+        k = new Image(slotThree);
+        l = new Image(slotFour);
 
         //this.stage = new Stage();
 
@@ -55,44 +99,26 @@ public class MinigameScreen implements Screen {
         this.table.setDebug(false);
 
         this.setupUi();
-        this.slotMachine();
+        this.slotMachine(random.nextInt(4), random.nextInt(4), random.nextInt(4));
 
     }
 
     // TODO Implement slotTable()
-    private void slotMachine() {
+    private void slotMachine(int selectOne, int selectTwo, int selectThree) {
         this.slotStage = new Stage();
 
         Table slotTable = new Table();
         slotTable.setDebug(false);
         slotTable.setFillParent(true);
 
-        Texture slotOne = new Texture("uiComponents/minigame1.png");
-        Texture slotTwo = new Texture("uiComponents/minigame2.png");
-        Texture slotThree = new Texture("uiComponents/minigame3.png");
-        Texture slotFour = new Texture("uiComponents/minigame4.png");
-
-        Image a = new Image(slotOne);
-        Image b = new Image(slotTwo);
-        Image c = new Image(slotThree);
-        Image d = new Image(slotFour);
-        Image e = new Image(slotOne);
-        Image f = new Image(slotTwo);
-        Image g = new Image(slotThree);
-        Image h = new Image(slotFour);
-        Image i = new Image(slotOne);
-        Image j = new Image(slotTwo);
-        Image k = new Image(slotThree);
-        Image l = new Image(slotFour);
-
         Image[] imagesSlotOne = new Image[] {a, b, c, d} ;
         Image[] imagesSlotTwo = new Image[] {e, f, g, h} ;
         Image[] imagesSlotThree = new Image[] {i, j, k, l} ;
 
         slotTable.row().center().padBottom(100);
-        slotTable.add(imagesSlotOne[random.nextInt(4)]);
-        slotTable.add(imagesSlotTwo[random.nextInt(4)]).padLeft(40).padRight(40);
-        slotTable.add(imagesSlotThree[random.nextInt(4)]);
+        slotTable.add(imagesSlotOne[selectOne]);
+        slotTable.add(imagesSlotTwo[selectTwo]).padLeft(40).padRight(40);
+        slotTable.add(imagesSlotThree[selectThree]);
 
         slotStage.addActor(slotTable);
     }
@@ -108,7 +134,7 @@ public class MinigameScreen implements Screen {
         spinButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                slotMachine();
+                isSpinning = true;
             }
         });
 
@@ -150,6 +176,32 @@ public class MinigameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.stage.act(Gdx.graphics.getDeltaTime());
         this.stage.draw();
+
+        if (isSpinning){
+            int one;
+            int two;
+            int three;
+
+            if (slotThreeSpins == 150){
+                isSpinning = false;
+                slotOneSpins = 0;
+                slotTwoSpins = 0;
+                slotThreeSpins = 0;
+            }
+            else {
+                one = (slotOneSpins < 50 ? random.nextInt(4) : slotOneCurrent);
+                two = (slotTwoSpins < 100 ? random.nextInt(4) : slotTwoCurrent);
+                three = (slotThreeSpins < 150 ? random.nextInt(4) : slotThreeCurrent);
+                slotOneSpins ++;
+                slotTwoSpins ++;
+                slotThreeSpins ++;
+                slotOneCurrent = (slotOneSpins==50?one:slotOneCurrent);
+                slotTwoCurrent = (slotTwoSpins==100?two:slotTwoCurrent);
+                slotThreeCurrent = (slotThreeSpins==150?three:slotThreeCurrent);
+                this.slotMachine(one, two, three);
+            }
+        }
+
         this.slotStage.draw();
     }
 
