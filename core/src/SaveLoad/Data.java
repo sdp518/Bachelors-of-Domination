@@ -1,9 +1,6 @@
 package SaveLoad;
 
-import sepr.game.Map;
-import sepr.game.Player;
-import sepr.game.Sector;
-import sepr.game.TurnPhaseType;
+import sepr.game.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -73,18 +70,28 @@ public class Data implements java.io.Serializable {
         return this.players;
     }
 
-    public void updatePlayers(HashMap<Integer, Player> players) {
-        Integer[] keys = this.players.keySet().toArray(new Integer[this.players.size()]);
-        for(int i = 0; i < this.players.size(); i++) {
-            SavePlayer smallPlayer = this.players.get(keys[i]);
-            players.remove(keys[i]);
-            players.put(keys[i], new Player(smallPlayer.getId(),
-                                                smallPlayer.getCollegeName(),
-                                                smallPlayer.getTroopsToAllocate(),
-                                                smallPlayer.getSectorColor(),
-                                                smallPlayer.getPlayerType(),
-                                                smallPlayer.getPlayerName()));
+    public void updatePlayers(HashMap<Integer, Player> players, GameScreen gameScreen) {
+        Integer[] keys;
+        if (players != null) {
+            keys = players.keySet().toArray(new Integer[players.size()]);
+            for (int i = 0; i < players.size(); i++) {
+                players.remove(keys[i]);
+            }
+        } else {
+            players = new HashMap<Integer, Player>();
         }
+        keys = this.players.keySet().toArray(new Integer[this.players.size()]);
+        for(int i = 0; i < keys.length; i++) {
+            SavePlayer smallPlayer = this.players.get(keys[i]);
+            players.put(keys[i], new Player(smallPlayer.getId(),
+                    smallPlayer.getCollegeName(),
+                    smallPlayer.getTroopsToAllocate(),
+                    smallPlayer.getSectorColor(),
+                    smallPlayer.getPlayerType(),
+                    smallPlayer.getPlayerName()));
+            System.out.println(smallPlayer.getTroopsToAllocate());
+        }
+        gameScreen.setPlayers(players);
     }
 
     public List<Integer> getTurnOrder() {

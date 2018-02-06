@@ -22,6 +22,7 @@ public class LoadScreen implements Screen{
     private Stage stage;
     private Table table;
     private GameScreen gameScreen;
+    private GameSetupScreen gameSetupScreen;
 
     private EntryPoint entryPoint;
 
@@ -29,9 +30,11 @@ public class LoadScreen implements Screen{
      *
      * @param main for changing to different screens
      */
-    public LoadScreen (final Main main, EntryPoint entryPoint, GameScreen gameScreen) {
+    public LoadScreen (final Main main, EntryPoint entryPoint, GameScreen gameScreen, GameSetupScreen gameSetupScreen) {
         this.main = main;
         this.entryPoint = entryPoint;
+        this.gameScreen = gameScreen;
+        this.gameSetupScreen = gameSetupScreen;
 
         if (entryPoint == EntryPoint.MENU_SCREEN) {
             this.stage = new Stage() {
@@ -58,7 +61,6 @@ public class LoadScreen implements Screen{
 
         this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
-        this.gameScreen = gameScreen;
         this.stage.addActor(table);
         this.table.setFillParent(true);
         this.table.setDebug(false);
@@ -103,7 +105,9 @@ public class LoadScreen implements Screen{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 try {
-                    Load.loadGame(gameScreen);
+                    if (entryPoint == EntryPoint.MENU_SCREEN) {
+                    }
+                    Load.loadGame(gameScreen, main);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();

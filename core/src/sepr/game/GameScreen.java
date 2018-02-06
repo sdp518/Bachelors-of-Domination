@@ -207,6 +207,10 @@ public class GameScreen implements Screen, InputProcessor{
         return this.map;
     }
 
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
     public HashMap<Integer, Sector> getSectors() {
         return map.getSectors();
     }
@@ -221,6 +225,10 @@ public class GameScreen implements Screen, InputProcessor{
 
     public HashMap<Integer, Player> getPlayers() {
         return this.players;
+    }
+
+    public void setPlayers(HashMap<Integer, Player> players) {
+        this.players = players;
     }
 
     public List<Integer> getTurnOrder() {

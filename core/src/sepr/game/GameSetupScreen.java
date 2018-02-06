@@ -464,7 +464,7 @@ public class GameSetupScreen implements Screen{
      *  Player names must be at least three characters long
      *  Player names contain numbers and digits only
      */
-    private void startGame() {
+    public void startGame() {
         try {
             validatePlayerNames();
             validateCollegeSelection();

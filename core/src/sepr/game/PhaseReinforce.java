@@ -23,7 +23,7 @@ public class PhaseReinforce extends Phase {
 
     @Override
     public void endPhase() {
-        currentPlayer.setTroopsToAllocate(0); // any unallocated units are removed
+        //currentPlayer.setTroopsToAllocate(0); // any unallocated units are removed --> Matt: I don't think we should do this, going to comment out for now
         super.endPhase();
     }
 

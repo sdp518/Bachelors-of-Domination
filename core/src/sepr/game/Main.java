@@ -37,8 +37,8 @@ public class Main extends Game implements ApplicationListener {
 		this.optionsScreen = new OptionsScreen(this, EntryPoint.MENU_SCREEN);
 		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
-		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN, this.gameScreen);
-		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen);
+		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN, this.gameScreen, this.gameSetupScreen);
+		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
 
 		applyPreferences();
 		this.setMenuScreen();
