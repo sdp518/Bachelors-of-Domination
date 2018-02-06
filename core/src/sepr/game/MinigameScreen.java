@@ -27,25 +27,12 @@ public class MinigameScreen implements Screen {
     private Random random;
 
     private boolean isSpinning;
-    private int slotOneSpins;
-    private int slotTwoSpins;
-    private int slotThreeSpins;
-    private int slotOneCurrent;
-    private int slotTwoCurrent;
-    private int slotThreeCurrent;
+    private int slotOneSpins, slotTwoSpins, slotThreeSpins;
+    private int slotOneCurrent, slotTwoCurrent, slotThreeCurrent;
 
-    private Image a;
-    private Image b;
-    private Image c;
-    private Image d;
-    private Image e;
-    private Image f;
-    private Image g;
-    private Image h;
-    private Image i;
-    private Image j;
-    private Image k;
-    private Image l;
+    private Image a, b, c, d, e, f, g, h, i, j, k, l;
+
+    private Image[] imagesSlotOne, imagesSlotTwo, imagesSlotThree;
 
     /**
      *
@@ -54,6 +41,8 @@ public class MinigameScreen implements Screen {
     public MinigameScreen (final Main main) {
         this.main = main;
         this.random = new Random();
+
+        this.slotStage = new Stage();
 
         this.isSpinning = false;
         this.slotOneSpins = 0;
@@ -77,6 +66,10 @@ public class MinigameScreen implements Screen {
         j = new Image(slotTwo);
         k = new Image(slotThree);
         l = new Image(slotFour);
+
+        this.imagesSlotOne = new Image[] {a, b, c, d} ;
+        this.imagesSlotTwo = new Image[] {e, f, g, h} ;
+        this.imagesSlotThree = new Image[] {i, j, k, l} ;
 
         //this.stage = new Stage();
 
@@ -103,17 +96,15 @@ public class MinigameScreen implements Screen {
 
     }
 
-    // TODO Implement slotTable()
+    // TODO Implement slotMachine()
     private void slotMachine(int selectOne, int selectTwo, int selectThree) {
-        this.slotStage = new Stage();
+        if (slotStage.getActors().size != 0){
+            slotStage.getActors().items[0].remove();
+        }
 
         Table slotTable = new Table();
         slotTable.setDebug(false);
         slotTable.setFillParent(true);
-
-        Image[] imagesSlotOne = new Image[] {a, b, c, d} ;
-        Image[] imagesSlotTwo = new Image[] {e, f, g, h} ;
-        Image[] imagesSlotThree = new Image[] {i, j, k, l} ;
 
         slotTable.row().center().padBottom(100);
         slotTable.add(imagesSlotOne[selectOne]);
@@ -139,8 +130,6 @@ public class MinigameScreen implements Screen {
         });
 
         // add the menu background
-        table.setDebug(false);
-
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
 
         table.center();
