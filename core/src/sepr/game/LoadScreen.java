@@ -91,6 +91,7 @@ public class LoadScreen implements Screen{
         saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 Save.saveGame(gameScreen.getCurrentPhase(),
                         gameScreen.getSectors(),
                         gameScreen.getPlayers(),
@@ -107,6 +108,7 @@ public class LoadScreen implements Screen{
                 try {
                     if (entryPoint == EntryPoint.MENU_SCREEN) {
                     }
+                    main.sounds.playSound("menu_sound");
                     Load.loadGame(gameScreen, main);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -130,6 +132,7 @@ public class LoadScreen implements Screen{
             table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
+                    main.sounds.playSound("menu_sound");
                     main.setMenuScreen();}
 
             })).colspan(2);
@@ -139,6 +142,7 @@ public class LoadScreen implements Screen{
             table.add(WidgetFactory.genBottomBar("RETURN", new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
+                    main.sounds.playSound("menu_sound");
                     main.returnGameScreen();}
 
             })).colspan(2);

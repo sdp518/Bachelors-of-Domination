@@ -402,6 +402,7 @@ public class GameScreen implements Screen, InputProcessor{
         saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 main.setSaveScreen();
             }
         });
@@ -410,6 +411,7 @@ public class GameScreen implements Screen, InputProcessor{
         optionsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 main.setInGameOptionsScreen();
             }
         });
@@ -418,6 +420,7 @@ public class GameScreen implements Screen, InputProcessor{
         resumeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 resume();
             }
         });
@@ -426,6 +429,7 @@ public class GameScreen implements Screen, InputProcessor{
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 DialogFactory.leaveGameDialogBox(GameScreen.this, pauseMenuStage);
             }
         });
