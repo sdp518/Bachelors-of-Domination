@@ -398,6 +398,7 @@ public class GameScreen implements Screen, InputProcessor{
      * adds the pause menu to the pause menu stage
      */
     private void displayPauseMenu() {
+        main.sounds.playSound("menu_sound");
         TextButton saveButton = WidgetFactory.genPauseMenuButton("SAVE");
         saveButton.addListener(new ChangeListener() {
             @Override
@@ -601,7 +602,6 @@ public class GameScreen implements Screen, InputProcessor{
             keysDown.put(Input.Keys.RIGHT, false);
         }
         if (keycode == Input.Keys.ESCAPE) {
-            main.sounds.playSound("menu_sound");
             //DialogFactory.leaveGameDialogBox(this, phases.get(currentPhase)); // confirm if the player wants to leave if escape is pressed
             this.pauseTimer();
             this.pause();
