@@ -367,7 +367,7 @@ public class Map {
         this.sectors = sectors;
     }
 
-    /*public boolean executeMove(int sourceSectorId, int targetSectorId, int unitsToMove) {
+    public boolean executeMove(int sourceSectorId, int targetSectorId, int unitsToMove) {
 
         this.unitsToMove = new int[3];
         this.unitsToMove[0] = unitsToMove;
@@ -376,5 +376,5 @@ public class Map {
 
 
         return true;
-    }*/
+    }
 }
