@@ -44,8 +44,8 @@ public class Main extends Game implements ApplicationListener {
 
 		applyPreferences();
 
-		//this.setMenuScreen();
-        this.setMinigameScreen();
+		this.setMenuScreen();
+        //this.setMinigameScreen();
 	}
 
     /**
