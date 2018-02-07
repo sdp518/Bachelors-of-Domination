@@ -469,6 +469,7 @@ public class WidgetFactory {
         style.checkboxOn = new TextureRegionDrawable(new TextureRegion(onSwitchTexture));
         style.checkboxOff = new TextureRegionDrawable(new TextureRegion(offSwitchTexture));
 
+
         return new CheckBox(null, style);
     }
 

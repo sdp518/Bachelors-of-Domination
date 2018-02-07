@@ -6,6 +6,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
@@ -26,6 +27,8 @@ public class Main extends Game implements ApplicationListener {
 	private LoadScreen loadScreen;
 	private LoadScreen saveScreen;
 	private MinigameScreen minigameScreen;
+	public  Sounds sounds;
+
 
 	/**
 	 * Setup the screens and set the first screen as the menu
@@ -44,6 +47,7 @@ public class Main extends Game implements ApplicationListener {
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.minigameScreen = new MinigameScreen(this);
 
+        this.sounds = new Sounds();
 		applyPreferences();
 
 		this.setMenuScreen();
@@ -151,6 +155,9 @@ public class Main extends Game implements ApplicationListener {
 			// change game to fullscreen
 			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		}
+
+		sounds.setMusicVolume(prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF));
+		sounds.setFxVolume(prefs.getFloat(OptionsScreen.FX_VOL_PREF));
 	}
 
 	@Override

@@ -101,6 +101,7 @@ public class GameSetupScreen implements Screen{
             @Override
             public boolean keyUp(int keyCode) {
                 if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                    main.sounds.playSound("menu_sound");
                     main.setMenuScreen();
                 }
                 return super.keyUp(keyCode);
@@ -204,6 +205,7 @@ public class GameSetupScreen implements Screen{
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     togglePlayerType(playerTypes[finalI]); // toggle player type when left arrow button pressed
+                    main.sounds.playSound("menu_sound");
                 }
             });
 
@@ -211,6 +213,7 @@ public class GameSetupScreen implements Screen{
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     togglePlayerType(playerTypes[finalI]); // toggle player type when right arrow button pressed
+                    main.sounds.playSound("menu_sound");
                 }
             });
 
@@ -311,6 +314,7 @@ public class GameSetupScreen implements Screen{
 
                     playerColleges[finalI].getKey().setText(nextCollege.getCollegeName());
                     playerColleges[finalI].getValue().setDrawable(WidgetFactory.genCollegeLogoDrawable(nextCollege));
+                    main.sounds.playSound("menu_sound");
                 }
             });
 
@@ -321,6 +325,7 @@ public class GameSetupScreen implements Screen{
 
                     playerColleges[finalI].getKey().setText(nextCollege.getCollegeName());
                     playerColleges[finalI].getValue().setDrawable(WidgetFactory.genCollegeLogoDrawable(nextCollege));
+                    main.sounds.playSound("menu_sound");
                 }
             });
 
@@ -505,6 +510,7 @@ public class GameSetupScreen implements Screen{
         startGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 validateGame();
             }
         });
@@ -531,6 +537,7 @@ public class GameSetupScreen implements Screen{
         table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 main.setMenuScreen();
             }
 

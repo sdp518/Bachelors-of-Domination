@@ -33,8 +33,10 @@ public class PhaseReinforce extends Phase {
     private void detectUnitAllocation() {
         if (allocateUnits != null) { // check that an allocation has been initiated
             if (allocateUnits[1] == -1 || allocateUnits[0] == 0) { // cancel allocation if sector id set to -1 or 0 units are allocated
+                this.sound.playSound("menu_sound");
                 allocateUnits = null;
             } else if (allocateUnits[0] != -1) { // dialog complete : perform the allocation
+                this.sound.playSound("reinforce_sound");
                 gameScreen.getMap().addUnitsToSectorAnimated(allocateUnits[1], allocateUnits[0]);
                 currentPlayer.addTroopsToAllocate(-allocateUnits[0]);
                 allocateUnits = null;
@@ -63,6 +65,7 @@ public class PhaseReinforce extends Phase {
 
         int sectorId = gameScreen.getMap().detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
         if (sectorId != -1) { // If selected a sector
+            this.sound.playSound("menu_sound");
             if (currentPlayer.getTroopsToAllocate() <= 0) { // check the player still has units to allocate
                 DialogFactory.basicDialogBox("Allocation Problem", "You have no more troops to allocate", this);
             } else if (gameScreen.getMap().getSectorById(sectorId).getOwnerId() != currentPlayer.getId()) { // check the player has chosen to add units to their own sector

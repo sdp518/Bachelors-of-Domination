@@ -390,6 +390,7 @@ public class GameScreen implements Screen, InputProcessor{
      * changes the screen currently being displayed to the menu
      */
     public void openMenu() {
+        main.sounds.playSound("menu_sound");
         main.exitToMenu();
     }
 
@@ -596,6 +597,7 @@ public class GameScreen implements Screen, InputProcessor{
             keysDown.put(Input.Keys.RIGHT, false);
         }
         if (keycode == Input.Keys.ESCAPE) {
+            main.sounds.playSound("menu_sound");
             //DialogFactory.leaveGameDialogBox(this, phases.get(currentPhase)); // confirm if the player wants to leave if escape is pressed
             this.pauseTimer();
             this.pause();

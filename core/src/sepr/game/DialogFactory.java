@@ -205,7 +205,6 @@ public class DialogFactory {
                 sliderValue.setText(new StringBuilder((int)slider.getValue() + "")); // update slider value label when the slider is moved
             }
         });
-
         Dialog dialog = new Dialog("Select number of troops to attack with", DialogFactory.skin) {
             protected void result(Object object) {
                 if (object.equals("0")) { // cancel pressed
@@ -271,6 +270,39 @@ public class DialogFactory {
         };
         dialog.text("Game Over!\n" + playerName + " of College " + collegeName + " has conquered the University of York!");
         dialog.button("Ok", "0");
+        dialog.show(stage);
+    }
+
+    public static void moveUnitsDialog(Integer maxMoved, final int[] movement, Sector sectorName, Stage stage) {
+        final Slider slider = new Slider(1, maxMoved, 1, false, DialogFactory.skin);
+        final Label sliderValue = new Label("1", DialogFactory.skin);
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                sliderValue.setText(new StringBuilder((int)slider.getValue() + ""));
+            }
+        });
+
+        Dialog dialog = new Dialog("Select amount of troops to move", DialogFactory.skin) {
+            protected void result(Object object) {
+                if (object.equals("0")) { // Cancel button pressed
+                    movement[0] = 0;
+                    movement[1] = -1; // set source sector id to -1 to indicate the allocation has been cancelled
+                } else if (object.equals("1")) { // Ok button pressed
+                    movement[0] = (int)slider.getValue(); // set the number of troops to allocate to the value of the slider
+                }
+            }
+        };
+        dialog.text("You can move up to " + maxMoved + " troops to " + sectorName.getDisplayName());
+        dialog.getContentTable().row();
+
+        dialog.getContentTable().add(slider).padLeft(20).padRight(20).align(Align.left).expandX();
+        dialog.getContentTable().add(sliderValue).padLeft(20).padRight(20).align(Align.right);
+
+        dialog.getContentTable().row();
+
+        dialog.button("Cancel", "0");
+        dialog.button("Ok", "1");
         dialog.show(stage);
     }
 }
