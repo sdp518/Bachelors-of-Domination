@@ -1,12 +1,17 @@
 package sepr.game;
 
+import SaveLoad.Load;
+import SaveLoad.Save;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
+
+//  TODO Add classes to packages
 
 /**
  * executable http://www.riskydevelopments.co.uk/bod/BoD.zip
@@ -17,7 +22,13 @@ public class Main extends Game implements ApplicationListener {
 	private MenuScreen menuScreen;
 	private GameScreen gameScreen;
 	private OptionsScreen optionsScreen;
+	private OptionsScreen inGameOptionsScreen;
 	private GameSetupScreen gameSetupScreen;
+	private LoadScreen loadScreen;
+	private LoadScreen saveScreen;
+	private MinigameScreen minigameScreen;
+	public  Sounds sounds;
+
 
 	/**
 	 * Setup the screens and set the first screen as the menu
@@ -29,16 +40,41 @@ public class Main extends Game implements ApplicationListener {
 
 		this.menuScreen = new MenuScreen(this);
 		this.gameScreen = new GameScreen(this);
-		this.optionsScreen = new OptionsScreen(this);
+		this.optionsScreen = new OptionsScreen(this, EntryPoint.MENU_SCREEN);
+		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
+		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN, this.gameScreen, this.gameSetupScreen);
+		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
+		this.minigameScreen = new MinigameScreen(this);
 
+        this.sounds = new Sounds();
 		applyPreferences();
 
 		this.setMenuScreen();
+        //this.setMinigameScreen();
 	}
 
+    /**
+     * changes the screen currently being displayed to the menu
+     */
+    public void setMinigameScreen() {
+        this.setScreen(minigameScreen);
+    }
+
+	/**
+	 * changes the screen currently being displayed to the menu
+	 */
 	public void setMenuScreen() {
 		this.setScreen(menuScreen);
+	}
+
+	/**
+	 * changes the screen currently being displayed to the menu and re-instantiates game screen
+	 */
+	public void exitToMenu() {
+		this.setScreen(menuScreen);
+		this.gameScreen.dispose();
+		this.gameScreen = new GameScreen(this);
 	}
 
 	/**
@@ -56,6 +92,14 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
+	 * returns to the game screen in the state it was left in
+	 */
+	public void returnGameScreen() {
+	    this.setScreen(gameScreen);
+		gameScreen.resetCameraPosition();
+	}
+
+	/**
 	 * change the screen currently being displayed to the options screen
 	 */
 	public void setOptionsScreen() {
@@ -63,10 +107,31 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
+	 * change the screen currently being displayed to the in-game options screen
+	 */
+	public void setInGameOptionsScreen() {
+		this.setScreen(inGameOptionsScreen);
+	}
+
+	/**
 	 * change the screen currently being displayed to the game setup screen
 	 */
 	public void setGameSetupScreen() {
 		this.setScreen(gameSetupScreen);
+	}
+
+	/**
+	 * change the screen currently being displayed to the load screen
+	 */
+	public void setLoadScreen() {
+		this.setScreen(loadScreen);
+	}
+
+	/**
+	 * change the screen currently being displayed to the save screen
+	 */
+	public void setSaveScreen() {
+		this.setScreen(saveScreen);
 	}
 
 	/**
@@ -90,6 +155,9 @@ public class Main extends Game implements ApplicationListener {
 			// change game to fullscreen
 			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		}
+
+		sounds.setMusicVolume(prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF));
+		sounds.setFxVolume(prefs.getFloat(OptionsScreen.FX_VOL_PREF));
 	}
 
 	@Override
@@ -107,6 +175,9 @@ public class Main extends Game implements ApplicationListener {
 		optionsScreen.dispose();
 		gameSetupScreen.dispose();
 		gameScreen.dispose();
+		loadScreen.dispose();
+		saveScreen.dispose();
+		inGameOptionsScreen.dispose();
 	}
 
 }

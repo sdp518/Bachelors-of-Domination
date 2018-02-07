@@ -32,6 +32,7 @@ public abstract class Phase extends Stage {
     private Image collegeLogo; // ui component for displaying the logo of the current players college
 
     private static Texture gameHUDBottomBarLeftPartTexture;
+    public Sounds sound;
 
     /**
      *
@@ -53,6 +54,7 @@ public abstract class Phase extends Stage {
         gameHUDBottomBarLeftPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Left-Part.png");
 
         this.setupUi();
+        this.sound = new Sounds();
     }
 
     /**
@@ -142,7 +144,7 @@ public abstract class Phase extends Stage {
      *
      * @param player the new player that is entering the phase
      */
-    void enterPhase(Player player) {
+    public void enterPhase(Player player) {
         this.currentPlayer = player;
 
         playerNameStyle.fontColor = GameSetupScreen.getCollegeColor(currentPlayer.getCollegeName()); // update colour of player name
@@ -172,6 +174,7 @@ public abstract class Phase extends Stage {
      * method for tidying up phase for next player to use
      */
     public void endPhase () {
+        this.sound.playSound("menu_sound");
         this.currentPlayer = null;
     }
 

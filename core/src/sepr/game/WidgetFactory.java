@@ -45,6 +45,8 @@ public class WidgetFactory {
     private static Texture menusTopBarLeftTexture;
     private static Texture menusTopBarRightTexture;
 
+    private static Texture pauseMenuBtnTexture;
+
     private static Texture alcuinLogoTexture;
     private static Texture derwentLogoTexture;
     private static Texture halifaxLogoTexture;
@@ -89,6 +91,8 @@ public class WidgetFactory {
         gameHUDBottomBarRightPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Right-Part.png");
         gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
         endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png");
+
+        pauseMenuBtnTexture = new Texture("uiComponents/pauseMenuButton.png");
 
         // load college logos
         alcuinLogoTexture = new Texture("logos/alcuin-logo.png");
@@ -400,12 +404,13 @@ public class WidgetFactory {
     public static Table genGameHUDTopBar(TurnPhaseType turnPhase, final GameScreen gameScreen) {
         TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
         btnStyle.font = fontSmall;
-        TextButton exitButton = new TextButton("QUIT", btnStyle);
+        TextButton exitButton = new TextButton("PAUSE", btnStyle);
 
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                DialogFactory.leaveGameDialogBox(gameScreen, actor.getStage());
+                gameScreen.pauseTimer();
+                gameScreen.pause();
             }
         });
 
@@ -464,6 +469,7 @@ public class WidgetFactory {
         style.checkboxOn = new TextureRegionDrawable(new TextureRegion(onSwitchTexture));
         style.checkboxOff = new TextureRegionDrawable(new TextureRegion(offSwitchTexture));
 
+
         return new CheckBox(null, style);
     }
 
@@ -479,6 +485,20 @@ public class WidgetFactory {
         style.knobOver = new TextureRegionDrawable(new TextureRegion(sliderKnobTexture));
 
         return new Slider(0f, 1f, 0.01f, false, style);
+    }
+
+    /**
+     *
+     * @param text the text to be displayed on the button
+     * @return a pause menu button with desired text
+     */
+    public static TextButton genPauseMenuButton(String text){
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(pauseMenuBtnTexture, 0,0, 211, 60));
+        style.down = new TextureRegionDrawable(new TextureRegion(pauseMenuBtnTexture, 0,60, 211, 60));
+        style.font = fontSmall;
+
+        return new TextButton(text, style);
     }
 
     /**

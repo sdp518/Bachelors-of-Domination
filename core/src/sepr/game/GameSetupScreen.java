@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -45,6 +47,10 @@ public class GameSetupScreen implements Screen{
     private CheckBox turnTimerSwitch; // switch for enabling the turn timer
 
     private Texture collegeTableBackground;
+
+    private Stage loadingWidgetStage;
+    private boolean isLoading;
+    private boolean loadingWidgetDrawn;
 
     /**
      * the colleges available to play as
@@ -95,6 +101,7 @@ public class GameSetupScreen implements Screen{
             @Override
             public boolean keyUp(int keyCode) {
                 if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                    main.sounds.playSound("menu_sound");
                     main.setMenuScreen();
                 }
                 return super.keyUp(keyCode);
@@ -108,6 +115,10 @@ public class GameSetupScreen implements Screen{
         this.table.setDebug(false); // enable table drawing for ui debug
 
         this.collegeTableBackground = new Texture("uiComponents/Game-Setup-Name-Box.png");
+
+        this.loadingWidgetStage = new Stage();
+        this.isLoading = false;
+        this.loadingWidgetDrawn = false;
 
         this.setupUi();
     }
@@ -194,6 +205,7 @@ public class GameSetupScreen implements Screen{
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     togglePlayerType(playerTypes[finalI]); // toggle player type when left arrow button pressed
+                    main.sounds.playSound("menu_sound");
                 }
             });
 
@@ -201,6 +213,7 @@ public class GameSetupScreen implements Screen{
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     togglePlayerType(playerTypes[finalI]); // toggle player type when right arrow button pressed
+                    main.sounds.playSound("menu_sound");
                 }
             });
 
@@ -301,6 +314,7 @@ public class GameSetupScreen implements Screen{
 
                     playerColleges[finalI].getKey().setText(nextCollege.getCollegeName());
                     playerColleges[finalI].getValue().setDrawable(WidgetFactory.genCollegeLogoDrawable(nextCollege));
+                    main.sounds.playSound("menu_sound");
                 }
             });
 
@@ -311,6 +325,7 @@ public class GameSetupScreen implements Screen{
 
                     playerColleges[finalI].getKey().setText(nextCollege.getCollegeName());
                     playerColleges[finalI].getValue().setDrawable(WidgetFactory.genCollegeLogoDrawable(nextCollege));
+                    main.sounds.playSound("menu_sound");
                 }
             });
 
@@ -454,7 +469,7 @@ public class GameSetupScreen implements Screen{
     }
 
     /**
-     * Method attempts to start the game
+     * Method checks if the given settings are valid
      * Following conditions must be met for a game to be able to start
      *  At least 2 players
      *  At least 1 human player
@@ -464,7 +479,7 @@ public class GameSetupScreen implements Screen{
      *  Player names must be at least three characters long
      *  Player names contain numbers and digits only
      */
-    private void startGame() {
+    private void validateGame() {
         try {
             validatePlayerNames();
             validateCollegeSelection();
@@ -473,6 +488,14 @@ public class GameSetupScreen implements Screen{
             DialogFactory.basicDialogBox("Game Setup Error", e.getExceptionType().getErrorMessage(), stage);
             return;
         }
+        Gdx.input.setInputProcessor(null); //Blocks user input as the game is now loading
+        this.showLoadingWidget();
+    }
+
+    /**
+     * Method starts the game
+     */
+    private void startGame() {
         HashMap<Integer, Player> x = generatePlayerHashmaps();
 
         int MAX_TURN_TIME = 120;
@@ -487,7 +510,8 @@ public class GameSetupScreen implements Screen{
         startGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                startGame();
+                main.sounds.playSound("menu_sound");
+                validateGame();
             }
         });
 
@@ -513,10 +537,23 @@ public class GameSetupScreen implements Screen{
         table.add(WidgetFactory.genBottomBar("MAIN MENU", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 main.setMenuScreen();
             }
 
         })).colspan(2);
+    }
+
+    /**
+     * sets up loading widget to be shown when game starts
+     */
+    private void showLoadingWidget() {
+        isLoading = true;
+        Table table = new Table();
+        table.setDebug(false);
+        table.setFillParent(true);
+        table.add(new Image(new Texture("uiComponents/loadingBox.png")));
+        loadingWidgetStage.addActor(table);
     }
 
 
@@ -525,14 +562,23 @@ public class GameSetupScreen implements Screen{
      */
     @Override
     public void show() {
+        isLoading = false;
+        loadingWidgetDrawn = false;
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
+        if (loadingWidgetDrawn) {
+            startGame();
+        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.stage.act(Gdx.graphics.getDeltaTime());
         this.stage.draw();
+        if (isLoading) {
+            loadingWidgetStage.draw();
+            loadingWidgetDrawn = true;
+        }
     }
 
     @Override

@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * stores the game map and the sectors within it
  */
-public class Map{
+public class Map {
     private HashMap<Integer, Sector> sectors; // mapping of sector ID to the sector object
     private List<UnitChangeParticle> particles; // list of active particle effects displaying the changes to the amount of units on a sector
 
@@ -184,7 +184,7 @@ public class Map{
      * @param attackingSectorId id of the sector the attack is coming from
      * @param defendingSectorId id of the defending sector
      * @param attackersLost amount of units lost on the attacking sector
-     * @param defendersLost amount of units lost on the defenfing sector
+     * @param defendersLost amount of units lost on the defending sector
      * @param attacker the player who is carrying out the attack
      * @param defender the player who is being attacked
      * @param neutral the neutral player
@@ -357,5 +357,24 @@ public class Map{
             }
         }
         particles.removeAll(toDelete);
+    }
+
+    public HashMap<Integer, Sector> getSectors() {
+        return sectors;
+    }
+
+    public void setSectors(HashMap<Integer, Sector> sectors) {
+        this.sectors = sectors;
+    }
+
+    public boolean executeMove(int sourceSectorId, int targetSectorId, int unitsToMove) {
+
+        this.unitsToMove = new int[3];
+        this.unitsToMove[0] = unitsToMove;
+        this.unitsToMove[1] = sourceSectorId;
+        this.unitsToMove[2] = targetSectorId;
+
+
+        return true;
     }
 }
