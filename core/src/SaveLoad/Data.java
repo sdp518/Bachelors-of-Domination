@@ -89,7 +89,6 @@ public class Data implements java.io.Serializable {
                     smallPlayer.getSectorColor(),
                     smallPlayer.getPlayerType(),
                     smallPlayer.getPlayerName()));
-            System.out.println(smallPlayer.getTroopsToAllocate());
         }
         gameScreen.setPlayers(players);
     }
