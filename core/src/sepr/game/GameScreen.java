@@ -1,5 +1,7 @@
 package sepr.game;
 
+import SaveLoad.Load;
+import SaveLoad.Save;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -185,7 +187,7 @@ public class GameScreen implements Screen, InputProcessor{
      *
      * @return gets the player object for the player who's turn it currently is
      */
-    private Player getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return players.get(turnOrder.get(currentPlayerPointer));
     }
 
@@ -202,7 +204,51 @@ public class GameScreen implements Screen, InputProcessor{
      * @return the map object for this game
      */
     public Map getMap() {
-        return map;
+        return this.map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
+    public HashMap<Integer, Sector> getSectors() {
+        return map.getSectors();
+    }
+
+    public TurnPhaseType getCurrentPhase() {
+        return currentPhase;
+    }
+
+    public void setCurrentPhase(TurnPhaseType currentPhase) {
+        this.currentPhase = currentPhase;
+    }
+
+    public HashMap<Integer, Player> getPlayers() {
+        return this.players;
+    }
+
+    public void setPlayers(HashMap<Integer, Player> players) {
+        this.players = players;
+    }
+
+    public List<Integer> getTurnOrder() {
+        return turnOrder;
+    }
+
+    public void setTurnOrder(List<Integer> turnOrder) {
+        this.turnOrder = turnOrder;
+    }
+
+    public int getCurrentPlayerPointer() {
+        return currentPlayerPointer;
+    }
+
+    public void setCurrentPlayerPointer(int currentPlayerPointer) {
+        this.currentPlayerPointer = currentPlayerPointer;
+    }
+
+    public HashMap<TurnPhaseType, Phase> getPhases() {
+        return phases;
     }
 
     /**
@@ -211,7 +257,6 @@ public class GameScreen implements Screen, InputProcessor{
      */
     protected void nextPhase() {
         this.phases.get(currentPhase).endPhase();
-
         switch (currentPhase) {
             case REINFORCEMENT:
                 currentPhase = TurnPhaseType.ATTACK;

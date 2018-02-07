@@ -14,7 +14,7 @@ public class PhaseReinforce extends Phase {
     }
 
     @Override
-    void enterPhase(Player player) {
+    public void enterPhase(Player player) {
         super.enterPhase(player);
         currentPlayer.addTroopsToAllocate(5); // players get a basic reinforcement of 5 troops every turn
         updateTroopReinforcementLabel();
@@ -23,7 +23,7 @@ public class PhaseReinforce extends Phase {
 
     @Override
     public void endPhase() {
-        currentPlayer.setTroopsToAllocate(0); // any unallocated units are removed
+        //currentPlayer.setTroopsToAllocate(0); // any unallocated units are removed --> Matt: I don't think we should do this, going to comment out for now
         super.endPhase();
     }
 

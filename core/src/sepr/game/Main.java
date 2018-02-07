@@ -1,5 +1,7 @@
 package sepr.game;
 
+import SaveLoad.Load;
+import SaveLoad.Save;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -38,8 +40,8 @@ public class Main extends Game implements ApplicationListener {
 		this.optionsScreen = new OptionsScreen(this, EntryPoint.MENU_SCREEN);
 		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
-		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN);
-		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN);
+		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN, this.gameScreen, this.gameSetupScreen);
+		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.minigameScreen = new MinigameScreen(this);
 
 		applyPreferences();
