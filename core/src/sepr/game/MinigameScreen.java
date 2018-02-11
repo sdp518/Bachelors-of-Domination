@@ -49,10 +49,10 @@ public class MinigameScreen implements Screen {
         this.slotTwoSpins = 0;
         this.slotThreeSpins = 0;
 
-        Texture slotOne = new Texture("uiComponents/minigame1.png");
-        Texture slotTwo = new Texture("uiComponents/minigame2.png");
-        Texture slotThree = new Texture("uiComponents/minigame3.png");
-        Texture slotFour = new Texture("uiComponents/minigame4.png");
+        Texture slotOne = new Texture("uiComponents/minigame/minigame1.png");
+        Texture slotTwo = new Texture("uiComponents/minigame/minigame2.png");
+        Texture slotThree = new Texture("uiComponents/minigame/minigame3.png");
+        Texture slotFour = new Texture("uiComponents/minigame/minigame4.png");
 
         a = new Image(slotOne);
         b = new Image(slotTwo);
@@ -152,6 +152,41 @@ public class MinigameScreen implements Screen {
 
     }
 
+    private void handleSpin() {
+        int one;
+        int two;
+        int three;
+
+        one = (slotOneSpins < 50 ? random.nextInt(4) : slotOneCurrent);
+        two = (slotTwoSpins < 100 ? random.nextInt(4) : slotTwoCurrent);
+        three = (slotThreeSpins < 150 ? random.nextInt(4) : slotThreeCurrent);
+        slotOneSpins ++;
+        slotTwoSpins ++;
+        slotThreeSpins ++;
+        slotOneCurrent = one;
+        slotTwoCurrent = two;
+        slotThreeCurrent = three;
+        this.slotMachine(one, two, three);
+
+        if (slotThreeSpins == 150){
+            isSpinning = false;
+            slotOneSpins = 0;
+            slotTwoSpins = 0;
+            slotThreeSpins = 0;
+            handleResult(one, two, three);
+        }
+
+    }
+
+    private void handleResult(int one, int two, int three) {
+        if ((one == two) && (two == three)) {
+            // MATCHED THREE
+        }
+        else if ((one == two) || (one == three) || (two == three)) {
+            // MATCHED TWO
+        }
+    }
+
     /**
      * change the input processing to be handled by this screen's stage
      */
@@ -166,29 +201,8 @@ public class MinigameScreen implements Screen {
         this.stage.act(Gdx.graphics.getDeltaTime());
         this.stage.draw();
 
-        if (isSpinning){
-            int one;
-            int two;
-            int three;
-
-            if (slotThreeSpins == 150){
-                isSpinning = false;
-                slotOneSpins = 0;
-                slotTwoSpins = 0;
-                slotThreeSpins = 0;
-            }
-            else {
-                one = (slotOneSpins < 50 ? random.nextInt(4) : slotOneCurrent);
-                two = (slotTwoSpins < 100 ? random.nextInt(4) : slotTwoCurrent);
-                three = (slotThreeSpins < 150 ? random.nextInt(4) : slotThreeCurrent);
-                slotOneSpins ++;
-                slotTwoSpins ++;
-                slotThreeSpins ++;
-                slotOneCurrent = (slotOneSpins==50?one:slotOneCurrent);
-                slotTwoCurrent = (slotTwoSpins==100?two:slotTwoCurrent);
-                slotThreeCurrent = (slotThreeSpins==150?three:slotThreeCurrent);
-                this.slotMachine(one, two, three);
-            }
+        if (isSpinning) {
+            handleSpin();
         }
 
         this.slotStage.draw();
