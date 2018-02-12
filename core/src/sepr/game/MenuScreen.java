@@ -92,6 +92,8 @@ public class MenuScreen implements Screen {
             }
         });
 
+        // TODO Matt fix this
+
         optionsBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
