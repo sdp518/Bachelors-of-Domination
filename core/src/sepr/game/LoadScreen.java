@@ -105,13 +105,12 @@ public class LoadScreen implements Screen{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 try {
-                    if (entryPoint == EntryPoint.MENU_SCREEN) {
-                    }
+                    if (entryPoint == EntryPoint.MENU_SCREEN) { }
                     Load.loadGame(gameScreen, main);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
-                    System.out.println("Nope");
+                    System.out.println("Load Unsuccessful");
                 }
             }
         });

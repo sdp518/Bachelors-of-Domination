@@ -139,8 +139,9 @@ public class GameScreen implements Screen, InputProcessor{
      * configure input so that input into the current phase's UI takes priority then unhandled input is handled by this class
      */
     private void updateInputProcessor() {
+        System.out.println("Input " + this.phases);
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(phases.get(currentPhase));
+        inputMultiplexer.addProcessor(this.phases.get(currentPhase));
         inputMultiplexer.addProcessor(this);
 
         Gdx.input.setInputProcessor(inputMultiplexer);
