@@ -3,9 +3,7 @@ package SaveLoad;
 import sepr.game.*;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class Data implements java.io.Serializable {
     private TurnPhaseType currentPhase;
