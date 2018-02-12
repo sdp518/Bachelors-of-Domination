@@ -49,23 +49,23 @@ public class MinigameScreen implements Screen {
         this.slotTwoSpins = 0;
         this.slotThreeSpins = 0;
 
-        Texture slotOne = new Texture("uiComponents/minigame/minigame1.png");
-        Texture slotTwo = new Texture("uiComponents/minigame/minigame2.png");
-        Texture slotThree = new Texture("uiComponents/minigame/minigame3.png");
-        Texture slotFour = new Texture("uiComponents/minigame/minigame4.png");
+        Texture imgOne = new Texture("uiComponents/minigame/minigame1.png");
+        Texture imgTwo = new Texture("uiComponents/minigame/minigame2.png");
+        Texture imgThree = new Texture("uiComponents/minigame/minigame3.png");
+        Texture imgFour = new Texture("uiComponents/minigame/minigame4.png");
 
-        a = new Image(slotOne);
-        b = new Image(slotTwo);
-        c = new Image(slotThree);
-        d = new Image(slotFour);
-        e = new Image(slotOne);
-        f = new Image(slotTwo);
-        g = new Image(slotThree);
-        h = new Image(slotFour);
-        i = new Image(slotOne);
-        j = new Image(slotTwo);
-        k = new Image(slotThree);
-        l = new Image(slotFour);
+        a = new Image(imgOne);
+        b = new Image(imgTwo);
+        c = new Image(imgThree);
+        d = new Image(imgFour);
+        e = new Image(imgOne);
+        f = new Image(imgTwo);
+        g = new Image(imgThree);
+        h = new Image(imgFour);
+        i = new Image(imgOne);
+        j = new Image(imgTwo);
+        k = new Image(imgThree);
+        l = new Image(imgFour);
 
         this.imagesSlotOne = new Image[] {a, b, c, d} ;
         this.imagesSlotTwo = new Image[] {e, f, g, h} ;
@@ -96,7 +96,12 @@ public class MinigameScreen implements Screen {
 
     }
 
-    // TODO Implement slotMachine()
+    /**
+     * takes the new values as parameters and sets up the UI of the individual slots
+     * @param selectOne the new value to display in slot one
+     * @param selectTwo the new value to display in slot two
+     * @param selectThree the new value to display in slot three
+     */
     private void slotMachine(int selectOne, int selectTwo, int selectThree) {
         if (slotStage.getActors().size != 0){
             slotStage.getActors().items[0].remove();
@@ -152,10 +157,11 @@ public class MinigameScreen implements Screen {
 
     }
 
+    /**
+     * handles the spin of the slot machine, using global flags to track state
+     */
     private void handleSpin() {
-        int one;
-        int two;
-        int three;
+        int one, two, three;
 
         one = (slotOneSpins < 50 ? random.nextInt(4) : slotOneCurrent);
         two = (slotTwoSpins < 100 ? random.nextInt(4) : slotTwoCurrent);
@@ -168,6 +174,7 @@ public class MinigameScreen implements Screen {
         slotThreeCurrent = three;
         this.slotMachine(one, two, three);
 
+        // if this was the final spin resets global flags and calls to handle result
         if (slotThreeSpins == 150){
             isSpinning = false;
             slotOneSpins = 0;
@@ -178,6 +185,12 @@ public class MinigameScreen implements Screen {
 
     }
 
+    /**
+     * calculates the result of the spin from the chosen values
+     * @param one the result from slot one
+     * @param two the result from slot two
+     * @param three the result from slot three
+     */
     private void handleResult(int one, int two, int three) {
         if ((one == two) && (two == three)) {
             // MATCHED THREE
