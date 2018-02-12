@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import javax.xml.soap.Text;
 import java.util.Random;
 
 public class MinigameScreen implements Screen {
@@ -30,6 +31,7 @@ public class MinigameScreen implements Screen {
     private int slotOneSpins, slotTwoSpins, slotThreeSpins;
     private int slotOneCurrent, slotTwoCurrent, slotThreeCurrent;
 
+    private Image slotMachine;
     private Image a, b, c, d, e, f, g, h, i, j, k, l;
 
     private Image[] imagesSlotOne, imagesSlotTwo, imagesSlotThree;
@@ -48,6 +50,8 @@ public class MinigameScreen implements Screen {
         this.slotOneSpins = 0;
         this.slotTwoSpins = 0;
         this.slotThreeSpins = 0;
+
+        this.slotMachine = new Image(new Texture("uiComponents/minigame/slotMachine.png"));
 
         Texture imgOne = new Texture("uiComponents/minigame/minigame1.png");
         Texture imgTwo = new Texture("uiComponents/minigame/minigame2.png");
@@ -108,13 +112,19 @@ public class MinigameScreen implements Screen {
         }
 
         Table slotTable = new Table();
-        slotTable.setDebug(false);
+        slotTable.setDebug(true);
         slotTable.setFillParent(true);
+
+        slotTable.row();
+        slotTable.add().expandX().height(180);
 
         slotTable.row().center().padBottom(100);
         slotTable.add(imagesSlotOne[selectOne]);
-        slotTable.add(imagesSlotTwo[selectTwo]).padLeft(40).padRight(40);
+        slotTable.add(imagesSlotTwo[selectTwo]).padLeft(300).padRight(300);
         slotTable.add(imagesSlotThree[selectThree]);
+
+        slotTable.row();
+        slotTable.add().expandX().expandY();
 
         slotStage.addActor(slotTable);
     }
@@ -140,20 +150,26 @@ public class MinigameScreen implements Screen {
         table.center();
         table.add(WidgetFactory.genMenusTopBar("MINIGAME")).colspan(2);
 
+        table.row();
+        table.add().expandX().height(30);
+
+        table.row();
+        table.add(slotMachine);
+
         /*table.row();
         table.add().expandX().height(150);
 
         table.row();
         table.add(slotMachine());*/
 
-        table.row();
+        /*table.row();
         table.add().expand();
 
         table.row().center();
-        table.add(spinButton);
+        table.add(spinButton);*/
 
         table.row();
-        table.add().expandX().height(60);
+        table.add().expandX().expandY();
 
     }
 
