@@ -95,7 +95,11 @@ public class LoadScreen implements Screen{
                         gameScreen.getSectors(),
                         gameScreen.getPlayers(),
                         gameScreen.getTurnOrder(),
-                        gameScreen.getCurrentPlayerPointer());
+                        gameScreen.getCurrentPlayerPointer(),
+                        gameScreen.isTurnTimerEnabled(),
+                        gameScreen.getMaxTurnTime(),
+                        gameScreen.getTurnTimeElapsed(),
+                        gameScreen.isPaused());
             }
         });
 

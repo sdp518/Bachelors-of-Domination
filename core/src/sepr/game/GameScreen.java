@@ -1,7 +1,5 @@
 package sepr.game;
 
-import SaveLoad.Load;
-import SaveLoad.Save;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -139,7 +137,6 @@ public class GameScreen implements Screen, InputProcessor{
      * configure input so that input into the current phase's UI takes priority then unhandled input is handled by this class
      */
     private void updateInputProcessor() {
-        System.out.println("Input " + this.phases);
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(this.phases.get(currentPhase));
         inputMultiplexer.addProcessor(this);
@@ -162,8 +159,15 @@ public class GameScreen implements Screen, InputProcessor{
      * @return time remaining in turn in seconds
      */
     private int getTurnTimeRemaining(){
+        System.out.println(getTurnTimeElapsed());
         return maxTurnTime - (int)((System.currentTimeMillis() - (turnTimeStart + pausedTime)) / 1000);
     }
+
+    public long getTurnTimeElapsed() {
+        return System.currentTimeMillis() - (turnTimeStart)  + pausedTime;
+    }
+
+    // TODO rework how the game time is stored as the above is not nice for saving, we'll talk tomorrow about it, Matt.
 
     /**
      * record the time at which the timer was paused
@@ -250,6 +254,38 @@ public class GameScreen implements Screen, InputProcessor{
 
     public HashMap<TurnPhaseType, Phase> getPhases() {
         return phases;
+    }
+
+    public void setTurnTimerEnabled(boolean turnTimerEnabled) {
+        this.turnTimerEnabled = turnTimerEnabled;
+    }
+
+    public boolean isTurnTimerEnabled() {
+        return this.turnTimerEnabled;
+    }
+
+    public void setMaxTurnTime(int maxTurnTime) {
+        this.maxTurnTime = maxTurnTime;
+    }
+
+    public int getMaxTurnTime() {
+        return maxTurnTime;
+    }
+
+    public void setTurnTimeStart(long turnTimeStart) {
+        this.turnTimeStart = turnTimeStart;
+    }
+
+    public long getTurnTimeStart() {
+        return turnTimeStart;
+    }
+
+    public void setIsPaused(boolean isPaused) {
+        this.isPaused = isPaused;
+    }
+
+    public boolean isPaused() {
+        return this.isPaused;
     }
 
     /**

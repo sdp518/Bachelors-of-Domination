@@ -1,12 +1,9 @@
 package sepr.game;
 
-import SaveLoad.Load;
-import SaveLoad.Save;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
@@ -43,7 +40,6 @@ public class Main extends Game implements ApplicationListener {
 		this.optionsScreen = new OptionsScreen(this, EntryPoint.MENU_SCREEN);
 		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
-		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.minigameScreen = new MinigameScreen(this);
 
@@ -124,6 +120,7 @@ public class Main extends Game implements ApplicationListener {
 	 * change the screen currently being displayed to the load screen
 	 */
 	public void setLoadScreen() {
+		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.setScreen(loadScreen);
 	}
 
