@@ -112,19 +112,24 @@ public class MinigameScreen implements Screen {
         }
 
         Table slotTable = new Table();
-        slotTable.setDebug(true);
+        slotTable.setDebug(false);
         slotTable.setFillParent(true);
 
         slotTable.row();
-        slotTable.add().expandX().height(180);
+        slotTable.add().expandX().height(180).colspan(3);
 
-        slotTable.row().center().padBottom(100);
+        slotTable.row().center();
+        slotTable.add(imagesSlotOne[selectOne]).padLeft(250);
+        slotTable.add(imagesSlotTwo[selectTwo]).padLeft(20).padRight(20);
+        slotTable.add(imagesSlotThree[selectThree]).padRight(250);
+
+        /*slotTable.row().center().padBottom(260);
         slotTable.add(imagesSlotOne[selectOne]);
-        slotTable.add(imagesSlotTwo[selectTwo]).padLeft(300).padRight(300);
-        slotTable.add(imagesSlotThree[selectThree]);
+        slotTable.add(imagesSlotTwo[selectTwo]).padLeft(20).padRight(20);
+        slotTable.add(imagesSlotThree[selectThree]);*/
 
         slotTable.row();
-        slotTable.add().expandX().expandY();
+        slotTable.add().expand().colspan(3);
 
         slotStage.addActor(slotTable);
     }
