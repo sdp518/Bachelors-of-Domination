@@ -10,10 +10,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -24,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.dermetfan.gdx.Typewriter;
 
-import javax.xml.soap.Text;
 import java.util.Random;
 
 public class MinigameScreen implements Screen {
@@ -40,15 +41,18 @@ public class MinigameScreen implements Screen {
     private int slotOneSpins, slotTwoSpins, slotThreeSpins;
     private int slotOneCurrent, slotTwoCurrent, slotThreeCurrent;
 
-    private Image slotMachine, launchBtn, launchBtnPressed, richard;
+    private Image slotMachine, launchBtn, launchBtnPressed;
     private Image a, b, c, d, e, f, g, h, i, j, k, l;
 
     private Image[] imagesSlotOne, imagesSlotTwo, imagesSlotThree;
 
-    private Typewriter typewriter = new Typewriter();
+    /*private Typewriter typewriter = new Typewriter();
     private BitmapFont font;
     private SpriteBatch batch;
-    private String richard1;
+    private String richard1;*/
+
+    private Image richardLaunch, richardFail;
+    private MoveToAction moveUp, moveDown;
 
 
     /**
@@ -76,11 +80,14 @@ public class MinigameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 isSpinning = true;
                 setupLaunchStage();
+                for (Action a : richardLaunch.getActions()) {
+                    richardLaunch.removeAction(a);
+                }
+                richardLaunch.addAction(moveDown);
             }
         });
 
         richardStage = new Stage();
-        richard = new Image(new Texture("uiComponents/minigame/richard.png"));
 
 
         Texture imgOne = new Texture("uiComponents/minigame/minigame1.png");
@@ -123,12 +130,11 @@ public class MinigameScreen implements Screen {
         this.table.setFillParent(true);
         this.table.setDebug(false);
 
-        batch = new SpriteBatch();
-        font = new BitmapFont(new FileHandle("font/Alte-DIN-Small.fnt"));
+        /*batch = new SpriteBatch();
+        font = new BitmapFont(new FileHandle("font/Alte-DIN-Big.fnt"));
         typewriter.getInterpolator().setInterpolation(Interpolation.linear);
         typewriter.getAppender().set(new CharSequence[] {"", ".", "..", "..."}, 1.5f / 4f);
-        richard1 = "Please press Launch to try your luck!";
-
+        richard1 = "Please press Launch to try your luck!";*/
 
         this.setupUi();
         this.slotMachine(random.nextInt(4), random.nextInt(4), random.nextInt(4));
@@ -159,15 +165,36 @@ public class MinigameScreen implements Screen {
     }
 
     private void setupRichardStage() {
-        SequenceAction richardSequence = new SequenceAction();
+        moveUp = new MoveToAction();
+        moveUp.setPosition(1150f,0f);
+        moveUp.setDuration(0.5f);
 
-        richard.setPosition(1150,-256);
-        richard.setOrigin(richard.getWidth()/2, richard.getHeight()/2);
-        richardStage.addActor(richard);
-        richardSequence.addAction(Actions.moveTo(1150,0,1));
-        richardSequence.addAction(Actions.delay(5f));
-        richardSequence.addAction(Actions.moveTo(1150,-256,1));
-        richard.addAction(richardSequence);
+        moveDown = new MoveToAction();
+        moveDown.setPosition(1150f,-256f);
+        moveDown.setDuration(0.5f);
+
+        SequenceAction richardLaunchSequence = new SequenceAction();
+
+        richardLaunch = new Image(new Texture("uiComponents/minigame/richardLaunch.png"));
+        richardFail = new Image(new Texture("uiComponents/minigame/richardFail.png"));
+
+        Image[] richards = new Image[]{richardLaunch, richardFail};
+
+        for (Image richard : richards){
+            richard.setPosition(1150,-256);
+            richard.setOrigin(richard.getWidth()/2, richard.getHeight()/2);
+            richardStage.addActor(richard);
+        }
+
+        richardLaunchSequence.addAction(moveUp);
+        richardLaunchSequence.addAction(Actions.delay(5f));
+        richardLaunchSequence.addAction(moveDown);
+        richardLaunch.addAction(richardLaunchSequence);
+
+        /*SequenceAction rfs = new SequenceAction();
+        rfs.addAction(Actions.delay(10f));
+        rfs.addAction(moveUp);
+        richardFail.addAction(rfs);*/
     }
 
     /**
@@ -281,9 +308,21 @@ public class MinigameScreen implements Screen {
     private void handleResult(int one, int two, int three) {
         if ((one == two) && (two == three)) {
             // MATCHED THREE
+            System.out.println("Matched 3!");
+            moveUp.reset();
+            //richardLaunch.addAction(moveUp);
         }
         else if ((one == two) || (one == three) || (two == three)) {
             // MATCHED TWO
+            System.out.println("Matched 2!");
+            moveUp.reset();
+            //richardLaunch.addAction(moveUp);
+        }
+        else {
+            // FAIL
+            System.out.println("FAIL :(");
+            moveUp.reset();
+            richardFail.addAction(moveUp);
         }
     }
 
@@ -315,7 +354,7 @@ public class MinigameScreen implements Screen {
         font.draw(batch,
                 // update the time and get the interpolated CharSequence with cursor
                 typewriter.updateAndType(richard1, delta),
-                1170f, 230f, 400f, 0, true);
+                1170f, 230f, 600f, 0, true);
         batch.end();*/
     }
 
