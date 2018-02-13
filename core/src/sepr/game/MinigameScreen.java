@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -24,14 +26,14 @@ public class MinigameScreen implements Screen {
     private Stage stage;
     private Table table;
 
-    private Stage slotStage;
+    private Stage slotStage, launchStage;
     private Random random;
 
     private boolean isSpinning;
     private int slotOneSpins, slotTwoSpins, slotThreeSpins;
     private int slotOneCurrent, slotTwoCurrent, slotThreeCurrent;
 
-    private Image slotMachine;
+    private Image slotMachine, launchBtn, launchBtnPressed;
     private Image a, b, c, d, e, f, g, h, i, j, k, l;
 
     private Image[] imagesSlotOne, imagesSlotTwo, imagesSlotThree;
@@ -52,6 +54,16 @@ public class MinigameScreen implements Screen {
         this.slotThreeSpins = 0;
 
         this.slotMachine = new Image(new Texture("uiComponents/minigame/slotMachine.png"));
+        this.launchBtn = new Image(new Texture("uiComponents/minigame/launchButton.png"));
+        this.launchBtnPressed = new Image(new Texture("uiComponents/minigame/launchButtonPressed.png"));
+
+        this.launchBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isSpinning = true;
+                setupLaunchStage();
+            }
+        });
 
         Texture imgOne = new Texture("uiComponents/minigame/minigame1.png");
         Texture imgTwo = new Texture("uiComponents/minigame/minigame2.png");
@@ -75,10 +87,10 @@ public class MinigameScreen implements Screen {
         this.imagesSlotTwo = new Image[] {e, f, g, h} ;
         this.imagesSlotThree = new Image[] {i, j, k, l} ;
 
-        //this.stage = new Stage();
+        this.stage = new Stage();
 
         //Temp for debug
-        this.stage = new Stage() {
+        this.launchStage = new Stage() {
             @Override
             public boolean keyUp(int keyCode) {
                 if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
@@ -98,6 +110,28 @@ public class MinigameScreen implements Screen {
         this.setupUi();
         this.slotMachine(random.nextInt(4), random.nextInt(4), random.nextInt(4));
 
+        setupLaunchStage();
+    }
+
+    private void setupLaunchStage() {
+        if (launchStage.getActors().size != 0){
+            launchStage.getActors().items[0].remove();
+        }
+
+        Table launchTable = new Table();
+        launchTable.setDebug(false);
+        launchTable.setFillParent(true);
+
+        if (isSpinning) {
+            launchTable.row().center();
+            launchTable.add(launchBtnPressed).colspan(3).padTop(500);
+        }
+        else {
+            launchTable.row().center();
+            launchTable.add(launchBtn).colspan(3).padTop(500);
+        }
+
+        launchStage.addActor(launchTable);
     }
 
     /**
@@ -123,11 +157,6 @@ public class MinigameScreen implements Screen {
         slotTable.add(imagesSlotTwo[selectTwo]).padLeft(20).padRight(20);
         slotTable.add(imagesSlotThree[selectThree]).padRight(250);
 
-        /*slotTable.row().center().padBottom(260);
-        slotTable.add(imagesSlotOne[selectOne]);
-        slotTable.add(imagesSlotTwo[selectTwo]).padLeft(20).padRight(20);
-        slotTable.add(imagesSlotThree[selectThree]);*/
-
         slotTable.row();
         slotTable.add().expand().colspan(3);
 
@@ -140,14 +169,14 @@ public class MinigameScreen implements Screen {
      */
     private void setupUi() {
 
-        final TextButton spinButton = WidgetFactory.genEndPhaseButton();
+        /*final TextButton spinButton = WidgetFactory.genEndPhaseButton();
         spinButton.setText("SPIN");
         spinButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 isSpinning = true;
             }
-        });
+        });*/
 
         // add the menu background
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
@@ -198,6 +227,7 @@ public class MinigameScreen implements Screen {
         // if this was the final spin resets global flags and calls to handle result
         if (slotThreeSpins == 150){
             isSpinning = false;
+            setupLaunchStage();
             slotOneSpins = 0;
             slotTwoSpins = 0;
             slotThreeSpins = 0;
@@ -226,7 +256,7 @@ public class MinigameScreen implements Screen {
      */
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(launchStage);
     }
 
     @Override
@@ -240,6 +270,7 @@ public class MinigameScreen implements Screen {
         }
 
         this.slotStage.draw();
+        this.launchStage.draw();
     }
 
     @Override
