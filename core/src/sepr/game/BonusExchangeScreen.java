@@ -49,7 +49,7 @@ public class BonusExchangeScreen implements Screen {
     /**
      * sets up the UI for the bonus exchange screen
      */
-    @SuppressWarnings("Duplicates") // As same code is present in other screens
+    //@SuppressWarnings("Duplicates") // As same code is present in other screens
     private void setupUi() {
 
         // add the menu background
