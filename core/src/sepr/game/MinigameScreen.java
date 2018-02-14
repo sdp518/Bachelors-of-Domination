@@ -36,7 +36,7 @@ public class MinigameScreen implements Screen {
 
     private Image[] imagesSlotOne, imagesSlotTwo, imagesSlotThree;
 
-    private Image richardLaunch, richardFail;
+    private Image richardLaunch, richardFail, richardGeese, richardThree, richardTwo;
     private MoveToAction moveUp, moveDown;
 
     private boolean gameFinished;
@@ -158,8 +158,12 @@ public class MinigameScreen implements Screen {
 
         richardLaunch = new Image(new Texture("uiComponents/minigame/richardLaunch.png"));
         richardFail = new Image(new Texture("uiComponents/minigame/richardFail.png"));
+        richardGeese = new Image(new Texture("uiComponents/minigame/richardGeese.png"));
+        richardThree = new Image(new Texture("uiComponents/minigame/richardThree.png"));
+        richardTwo = new Image(new Texture("uiComponents/minigame/richardTwo.png"));
 
-        Image[] richards = new Image[]{richardLaunch, richardFail};
+
+        Image[] richards = new Image[]{richardLaunch, richardFail, richardGeese, richardThree, richardTwo};
 
         for (Image richard : richards){
             richard.setPosition(1150,-256);
@@ -258,16 +262,22 @@ public class MinigameScreen implements Screen {
      * @param three the result from slot three
      */
     private void handleResult(int one, int two, int three) {
-        if ((one == two) && (two == three)) {
+        if ((one == two) && (two == three) && (one == 0)) {
+            // MATCHED GEESE
+            moveUp.reset();
+            richardGeese.addAction(moveUp);
+            gameFinished = true;
+        }
+        else if ((one == two) && (two == three)) {
             // MATCHED THREE
             moveUp.reset();
-            //richardLaunch.addAction(moveUp);
+            richardThree.addAction(moveUp);
             gameFinished = true;
         }
         else if ((one == two) || (one == three) || (two == three)) {
             // MATCHED TWO
             moveUp.reset();
-            //richardLaunch.addAction(moveUp);
+            richardTwo.addAction(moveUp);
             gameFinished = true;
         }
         else {
