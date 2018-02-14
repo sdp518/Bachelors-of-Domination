@@ -23,7 +23,7 @@ public class PhaseAttack extends Phase{
 
     private Random random; // random object for adding some unpredictability to the outcome of attacks
 
-    private int attacksRemaining;
+    //private int attacksRemaining;
 
     public PhaseAttack(GameScreen gameScreen) {
         super(gameScreen, TurnPhaseType.ATTACK);
@@ -37,7 +37,7 @@ public class PhaseAttack extends Phase{
 
         this.random = new Random();
 
-        this.attacksRemaining = 3;
+        //this.attacksRemaining = 3;
     }
 
     /**
@@ -109,11 +109,11 @@ public class PhaseAttack extends Phase{
             } else {
                 this.sound.playSound("attack_sound");
                 executeAttack();
-                this.attacksRemaining -= 1;
+                /*this.attacksRemaining -= 1;
                 if (attacksRemaining == 0){
                     attacksRemaining = 3;
                     gameScreen.nextPhase();
-                }
+                }*/
             }
             // reset attack
             attackingSector = null;
@@ -143,7 +143,7 @@ public class PhaseAttack extends Phase{
         super.endPhase();
         attackingSector = null;
         defendingSector = null;
-        attacksRemaining = 3;
+        //attacksRemaining = 3;
     }
 
     @Override
