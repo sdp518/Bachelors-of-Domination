@@ -102,7 +102,6 @@ public class MinigameScreen implements Screen {
         this.imagesSlotTwo = new Image[] {e, f, g, h} ;
         this.imagesSlotThree = new Image[] {i, j, k, l} ;
 
-        //Temp for debug
         this.launchStage = new Stage() {
             @Override
             public boolean keyUp(int keyCode) {
@@ -203,7 +202,6 @@ public class MinigameScreen implements Screen {
         slotStage.addActor(slotTable);
     }
 
-    // TODO Finish implementing setupUI()
     /**
      * sets up the UI for the load screen
      */
