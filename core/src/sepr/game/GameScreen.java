@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -159,7 +160,7 @@ public class GameScreen implements Screen, InputProcessor{
      * @return time remaining in turn in seconds
      */
     private int getTurnTimeRemaining(){
-        System.out.println(getTurnTimeElapsed());
+        //System.out.println(getTurnTimeElapsed());
         return maxTurnTime - (int)((System.currentTimeMillis() - (turnTimeStart + pausedTime)) / 1000);
     }
 
@@ -398,6 +399,14 @@ public class GameScreen implements Screen, InputProcessor{
         if (this.keysDown.get(Input.Keys.RIGHT)) {
             this.gameplayCamera.translate(4, 0, 0);
         }
+
+        //float effectiveViewportWidth = this.gameplayCamera.viewportWidth * this.gameplayCamera.zoom;
+        //float effectiveViewportHeight = this.gameplayCamera.viewportHeight * this.gameplayCamera.zoom;
+
+        this.gameplayCamera.position.x = MathUtils.clamp(this.gameplayCamera.position.x,
+                700, 1200);
+        this.gameplayCamera.position.y = MathUtils.clamp(this.gameplayCamera.position.y,
+                400, 700 );
 
     }
 

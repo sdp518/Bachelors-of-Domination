@@ -46,8 +46,8 @@ public class Main extends Game implements ApplicationListener {
         this.sounds = new Sounds();
 		applyPreferences();
 
-		//this.setMenuScreen();
-        this.setMinigameScreen();
+		this.setMenuScreen();
+        //this.setMinigameScreen();
 	}
 
     /**
@@ -172,7 +172,6 @@ public class Main extends Game implements ApplicationListener {
 		optionsScreen.dispose();
 		gameSetupScreen.dispose();
 		gameScreen.dispose();
-		loadScreen.dispose();
 		saveScreen.dispose();
 		inGameOptionsScreen.dispose();
 	}
