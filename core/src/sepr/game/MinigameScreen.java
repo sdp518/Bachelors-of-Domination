@@ -3,34 +3,24 @@ package sepr.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import net.dermetfan.gdx.Typewriter;
 
 import java.util.Random;
 
 public class MinigameScreen implements Screen {
 
-    private Main main;
+    private GameScreen gameScreen;
     private Stage stage;
     private Table table;
 
@@ -46,23 +36,22 @@ public class MinigameScreen implements Screen {
 
     private Image[] imagesSlotOne, imagesSlotTwo, imagesSlotThree;
 
-    /*private Typewriter typewriter = new Typewriter();
-    private BitmapFont font;
-    private SpriteBatch batch;
-    private String richard1;*/
-
     private Image richardLaunch, richardFail;
     private MoveToAction moveUp, moveDown;
+
+    private boolean gameFinished;
 
 
     /**
      *
-     * @param main for changing to different screens
+     * @param gameScreen for changing to different screens
      */
-    public MinigameScreen (final Main main) {
-        this.main = main;
+    public MinigameScreen (final GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
         this.stage = new Stage();
         this.random = new Random();
+
+        this.gameFinished = false;
 
         this.slotStage = new Stage();
 
@@ -116,7 +105,7 @@ public class MinigameScreen implements Screen {
         this.launchStage = new Stage() {
             @Override
             public boolean keyUp(int keyCode) {
-                if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                if ((keyCode == Input.Keys.ESCAPE) && (gameFinished)) { // change back to the menu screen if the player presses esc
                     Gdx.app.exit();
                 }
                 return super.keyUp(keyCode);
@@ -129,12 +118,6 @@ public class MinigameScreen implements Screen {
         this.stage.addActor(table);
         this.table.setFillParent(true);
         this.table.setDebug(false);
-
-        /*batch = new SpriteBatch();
-        font = new BitmapFont(new FileHandle("font/Alte-DIN-Big.fnt"));
-        typewriter.getInterpolator().setInterpolation(Interpolation.linear);
-        typewriter.getAppender().set(new CharSequence[] {"", ".", "..", "..."}, 1.5f / 4f);
-        richard1 = "Please press Launch to try your luck!";*/
 
         this.setupUi();
         this.slotMachine(random.nextInt(4), random.nextInt(4), random.nextInt(4));
@@ -173,8 +156,6 @@ public class MinigameScreen implements Screen {
         moveDown.setPosition(1150f,-256f);
         moveDown.setDuration(0.5f);
 
-        SequenceAction richardLaunchSequence = new SequenceAction();
-
         richardLaunch = new Image(new Texture("uiComponents/minigame/richardLaunch.png"));
         richardFail = new Image(new Texture("uiComponents/minigame/richardFail.png"));
 
@@ -186,15 +167,7 @@ public class MinigameScreen implements Screen {
             richardStage.addActor(richard);
         }
 
-        richardLaunchSequence.addAction(moveUp);
-        richardLaunchSequence.addAction(Actions.delay(5f));
-        richardLaunchSequence.addAction(moveDown);
-        richardLaunch.addAction(richardLaunchSequence);
-
-        /*SequenceAction rfs = new SequenceAction();
-        rfs.addAction(Actions.delay(10f));
-        rfs.addAction(moveUp);
-        richardFail.addAction(rfs);*/
+        richardLaunch.addAction(moveUp);
     }
 
     /**
@@ -232,15 +205,6 @@ public class MinigameScreen implements Screen {
      */
     private void setupUi() {
 
-        /*final TextButton spinButton = WidgetFactory.genEndPhaseButton();
-        spinButton.setText("SPIN");
-        spinButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                isSpinning = true;
-            }
-        });*/
-
         // add the menu background
         table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
 
@@ -252,18 +216,6 @@ public class MinigameScreen implements Screen {
 
         table.row();
         table.add(slotMachine);
-
-        /*table.row();
-        table.add().expandX().height(150);
-
-        table.row();
-        table.add(slotMachine());*/
-
-        /*table.row();
-        table.add().expand();
-
-        table.row().center();
-        table.add(spinButton);*/
 
         table.row();
         table.add().expandX().expandY();
@@ -308,21 +260,21 @@ public class MinigameScreen implements Screen {
     private void handleResult(int one, int two, int three) {
         if ((one == two) && (two == three)) {
             // MATCHED THREE
-            System.out.println("Matched 3!");
             moveUp.reset();
             //richardLaunch.addAction(moveUp);
+            gameFinished = true;
         }
         else if ((one == two) || (one == three) || (two == three)) {
             // MATCHED TWO
-            System.out.println("Matched 2!");
             moveUp.reset();
             //richardLaunch.addAction(moveUp);
+            gameFinished = true;
         }
         else {
-            // FAIL
-            System.out.println("FAIL :(");
+            // MATCHED NONE
             moveUp.reset();
             richardFail.addAction(moveUp);
+            gameFinished = true;
         }
     }
 
@@ -350,12 +302,6 @@ public class MinigameScreen implements Screen {
         richardStage.act();
         richardStage.draw();
 
-        /*batch.begin();
-        font.draw(batch,
-                // update the time and get the interpolated CharSequence with cursor
-                typewriter.updateAndType(richard1, delta),
-                1170f, 230f, 600f, 0, true);
-        batch.end();*/
     }
 
     @Override
@@ -381,7 +327,10 @@ public class MinigameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        launchStage.dispose();
+        slotStage.dispose();
+        richardStage.dispose();
     }
 
 }
