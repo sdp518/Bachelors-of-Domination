@@ -58,7 +58,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     // pause menu setup
     private Stage pauseMenuStage = new Stage();
-    private boolean isPaused;
+    private boolean gamePaused, timerPaused;
     private long pauseStartTime;
     private long pausedTime;
 
@@ -108,7 +108,7 @@ public class GameScreen implements Screen, InputProcessor{
         this.turnTimerEnabled = turnTimerEnabled;
         this.maxTurnTime = maxTurnTime;
 
-        this.map = new Map(this.players, allocateNeutralPlayer); // setup the game map and allocate the sectors
+        this.map = new Map(this.players, allocateNeutralPlayer, main, this); // setup the game map and allocate the sectors
 
         // create the game phases and add them to the phases hashmap
         this.phases = new HashMap<TurnPhaseType, Phase>();
@@ -159,7 +159,7 @@ public class GameScreen implements Screen, InputProcessor{
      * @return time remaining in turn in seconds
      */
     private int getTurnTimeRemaining(){
-        System.out.println(getTurnTimeElapsed());
+        //System.out.println(getTurnTimeElapsed());
         return maxTurnTime - (int)((System.currentTimeMillis() - (turnTimeStart + pausedTime)) / 1000);
     }
 
@@ -174,7 +174,18 @@ public class GameScreen implements Screen, InputProcessor{
      */
     public void pauseTimer(){
         this.pauseStartTime = System.currentTimeMillis();
+        this.timerPaused = true;
     }
+
+    /**
+     * resumes the timer
+     */
+    public void resumeTimer(){
+        pausedTime += (System.currentTimeMillis() - pauseStartTime);
+        pauseStartTime = 0;
+        this.timerPaused = false;
+    }
+
 
     /**
      * returns the player object corresponding to the passed id from the players hashmap
@@ -280,12 +291,12 @@ public class GameScreen implements Screen, InputProcessor{
         return turnTimeStart;
     }
 
-    public void setIsPaused(boolean isPaused) {
-        this.isPaused = isPaused;
+    public void setGamePaused(boolean gamePaused) {
+        this.gamePaused = gamePaused;
     }
 
-    public boolean isPaused() {
-        return this.isPaused;
+    public boolean isGamePaused() {
+        return this.gamePaused;
     }
 
     /**
@@ -506,7 +517,7 @@ public class GameScreen implements Screen, InputProcessor{
      */
     @Override
     public void show() {
-        if (isPaused){
+        if (gamePaused){
             Gdx.input.setInputProcessor(pauseMenuStage);
         }
         else {
@@ -537,18 +548,18 @@ public class GameScreen implements Screen, InputProcessor{
 
         gameplayBatch.end(); // stop rendering
 
-        if (isPaused) {
+        if (gamePaused) {
             pauseMenuStage.act();
             pauseMenuStage.draw();
         }
 
-        if (this.turnTimerEnabled && !this.isPaused) { // update the timer display, if it is enabled
+        if (this.turnTimerEnabled && !this.timerPaused) { // update the timer display, if it is enabled
             this.phases.get(currentPhase).setTimerValue(getTurnTimeRemaining());
         }
         this.phases.get(currentPhase).act(delta); // update the stage of the current phase
         this.phases.get(currentPhase).draw(); // draw the phase UI
 
-        if (this.turnTimerEnabled && (getTurnTimeRemaining() <= 0) && !this.isPaused) { // goto the next player's turn if the timer is enabled and they have run out of time
+        if (this.turnTimerEnabled && (getTurnTimeRemaining() <= 0) && !this.timerPaused) { // goto the next player's turn if the timer is enabled and they have run out of time
             nextPlayer();
         }
     }
@@ -576,17 +587,17 @@ public class GameScreen implements Screen, InputProcessor{
 
     @Override
     public void pause() {
-        isPaused = true;
+        this.pauseTimer();
+        gamePaused = true;
         Gdx.input.setInputProcessor(pauseMenuStage);
         this.displayPauseMenu();
     }
 
     @Override
     public void resume() {
-        if (isPaused) {
-            isPaused = false;
-            pausedTime += (System.currentTimeMillis() - pauseStartTime);
-            pauseStartTime = 0;
+        if (gamePaused) {
+            gamePaused = false;
+            this.resumeTimer();
             this.updateInputProcessor();
         }
     }
@@ -636,7 +647,6 @@ public class GameScreen implements Screen, InputProcessor{
         if (keycode == Input.Keys.ESCAPE) {
             main.sounds.playSound("menu_sound");
             //DialogFactory.leaveGameDialogBox(this, phases.get(currentPhase)); // confirm if the player wants to leave if escape is pressed
-            this.pauseTimer();
             this.pause();
         }
         return true;

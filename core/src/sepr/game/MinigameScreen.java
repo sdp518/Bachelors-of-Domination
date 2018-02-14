@@ -16,11 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.EventListener;
 import java.util.Random;
 
 public class MinigameScreen implements Screen {
 
-    private GameScreen gameScreen;
+    private Main main;
     private Stage stage;
     private Table table;
 
@@ -44,10 +45,10 @@ public class MinigameScreen implements Screen {
 
     /**
      *
-     * @param gameScreen for changing to different screens
+     * @param main for changing to different screens
      */
-    public MinigameScreen (final GameScreen gameScreen) {
-        this.gameScreen = gameScreen;
+    public MinigameScreen (final Main main) {
+        this.main = main;
         this.stage = new Stage();
         this.random = new Random();
 
@@ -106,7 +107,7 @@ public class MinigameScreen implements Screen {
             @Override
             public boolean keyUp(int keyCode) {
                 if ((keyCode == Input.Keys.ESCAPE) && (gameFinished)) { // change back to the menu screen if the player presses esc
-                    Gdx.app.exit();
+                    main.returnFromMinigame();
                 }
                 return super.keyUp(keyCode);
             }
@@ -161,7 +162,6 @@ public class MinigameScreen implements Screen {
         richardGeese = new Image(new Texture("uiComponents/minigame/richardGeese.png"));
         richardThree = new Image(new Texture("uiComponents/minigame/richardThree.png"));
         richardTwo = new Image(new Texture("uiComponents/minigame/richardTwo.png"));
-
 
         Image[] richards = new Image[]{richardLaunch, richardFail, richardGeese, richardThree, richardTwo};
 
@@ -247,6 +247,9 @@ public class MinigameScreen implements Screen {
         if (slotThreeSpins == 150){
             isSpinning = false;
             setupLaunchStage();
+            for (com.badlogic.gdx.scenes.scene2d.EventListener e : launchBtn.getListeners()) {
+                launchBtn.removeListener(e); // removes listener as you can only play once
+            }
             slotOneSpins = 0;
             slotTwoSpins = 0;
             slotThreeSpins = 0;

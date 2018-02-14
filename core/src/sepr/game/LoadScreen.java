@@ -99,7 +99,7 @@ public class LoadScreen implements Screen{
                         gameScreen.isTurnTimerEnabled(),
                         gameScreen.getMaxTurnTime(),
                         gameScreen.getTurnTimeElapsed(),
-                        gameScreen.isPaused());
+                        gameScreen.isGamePaused());
             }
         });
 
