@@ -60,7 +60,7 @@ public class Load {
             gameScreen.getPhases().get(gameScreen.getCurrentPhase()).enterPhase(gameScreen.getCurrentPlayer());
             gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());
             if (loadedSave.isTurnTimerEnabled()) {
-                gameScreen.setIsPaused(loadedSave.isPaused());
+                gameScreen.setGamePaused(loadedSave.isPaused());
                 gameScreen.setTurnTimeStart(System.currentTimeMillis() - loadedSave.getTurnTimeElapsed());
             }
             main.returnGameScreen();

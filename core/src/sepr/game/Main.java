@@ -23,7 +23,7 @@ public class Main extends Game implements ApplicationListener {
 	private GameSetupScreen gameSetupScreen;
 	private LoadScreen loadScreen;
 	private LoadScreen saveScreen;
-	private MinigameScreen minigameScreen;
+	//private MinigameScreen minigameScreen;
 	public  Sounds sounds;
 
 
@@ -41,7 +41,7 @@ public class Main extends Game implements ApplicationListener {
 		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
-		this.minigameScreen = new MinigameScreen(this.gameScreen);
+		//this.minigameScreen = new MinigameScreen(this.gameScreen);
 
         this.sounds = new Sounds();
 		applyPreferences();
@@ -53,7 +53,7 @@ public class Main extends Game implements ApplicationListener {
     /**
      * changes the screen currently being displayed to the menu
      */
-    public void setMinigameScreen() {
+    public void setMinigameScreen(MinigameScreen minigameScreen) {
         this.setScreen(minigameScreen);
     }
 
@@ -93,6 +93,15 @@ public class Main extends Game implements ApplicationListener {
 	public void returnGameScreen() {
 	    this.setScreen(gameScreen);
 		gameScreen.resetCameraPosition();
+	}
+
+	/**
+	 * returns to the game screen from the minigame
+	 */
+	public void returnFromMinigame() {
+		this.setScreen(gameScreen);
+		gameScreen.resetCameraPosition();
+		gameScreen.resumeTimer();
 	}
 
 	/**
