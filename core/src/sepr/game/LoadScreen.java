@@ -9,10 +9,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -77,20 +80,42 @@ public class LoadScreen implements Screen{
         Table saveTable = new Table();
         saveTable.setDebug(true);
 
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        Table saveOne, saveTwo, saveThree, saveFour;
+        saveOne = new Table();
+        saveTwo = new Table();
+        saveThree = new Table();
+        saveFour = new Table();
+        Table[] saveTables = new Table[] {saveOne, saveTwo, saveThree, saveFour};
 
-        style.up = new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,0, 1240, 208));
-        style.down = new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,208, 1240, 416));
-        style.font = WidgetFactory.getFontSmall();
+        for (final Table t : saveTables) {
+            t.setDebug(false);
+            t.setBackground(new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,0, 1240, 208)));
+            t.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    t.setBackground(new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,208, 1240, 208)));
+                }
+            });
+
+        }
+
+
+        /*ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle();
+
+        style.imageUp = new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,0, 1240, 208));
+        style.imageDown = new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,208, 1240, 208));
+        style.imageOver = new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,208, 1240, 208));
+
+        style.font = WidgetFactory.getFontSmall();*/
 
         saveTable.row();
-        saveTable.add(new TextButton("Save 1", style)).height(200).padBottom(20);
+        saveTable.add(saveOne).height(200).padBottom(20);
         saveTable.row();
-        saveTable.add(new TextButton("Save 2", style)).height(200).padBottom(20);
+        saveTable.add(saveTwo).height(200).padBottom(20);
         saveTable.row();
-        saveTable.add(new TextButton("Save 3", style)).height(200).padBottom(20);
+        saveTable.add(saveThree).height(200).padBottom(20);
         saveTable.row();
-        saveTable.add(new TextButton("Save 4", style)).height(200).padBottom(20);
+        saveTable.add(saveFour).height(200).padBottom(20);
 
         return saveTable;
 
@@ -112,7 +137,7 @@ public class LoadScreen implements Screen{
         table.row().padTop(60);
         table.add(setupSelectSaveTable());
 
-        TextButton saveButton = WidgetFactory.genEndPhaseButton();
+        TextButton saveButton = WidgetFactory.genStartGameButton();
         saveButton.setText("SAVE");
         saveButton.addListener(new ChangeListener() {
             @Override
@@ -129,7 +154,7 @@ public class LoadScreen implements Screen{
             }
         });
 
-        TextButton loadButton = WidgetFactory.genEndPhaseButton();
+        TextButton loadButton = WidgetFactory.genStartGameButton();
         loadButton.setText("LOAD");
         loadButton.addListener(new ChangeListener() {
             @Override
@@ -154,7 +179,6 @@ public class LoadScreen implements Screen{
         subTable.add(loadButton).fill().height(60).width(170);
 
         table.add(subTable).expandX();
-
 
         table.row();
         table.add().expand();
