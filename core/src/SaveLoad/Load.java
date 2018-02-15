@@ -43,6 +43,7 @@ public class Load {
         }
         if (loadedSave != null) {
             loadedSave.updatePlayers(gameScreen.getPlayers(), gameScreen);
+            System.out.println(gameScreen.getPlayers().get(1).getBonus());
             boolean allocateNeutralPlayer = false;
             if (gameScreen.getPlayers().keySet().contains(4)) {
                 allocateNeutralPlayer = true;
@@ -54,16 +55,15 @@ public class Load {
             loadedSave.updateSectors(gameScreen.getSectors(), gameScreen.getPlayers());
             gameScreen.setTurnOrder(loadedSave.getTurnOrder());
             gameScreen.setCurrentPlayerPointer(loadedSave.getCurrentPlayerPointer());
-            if (gameScreen.getCurrentPhase() == TurnPhaseType.REINFORCEMENT) {
+            if (loadedSave.getCurrentPhase() == TurnPhaseType.REINFORCEMENT) {
                 gameScreen.getCurrentPlayer().addTroopsToAllocate(-5);
             }
-            gameScreen.getPhases().get(gameScreen.getCurrentPhase()).enterPhase(gameScreen.getCurrentPlayer());
             gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());
             if (loadedSave.isTurnTimerEnabled()) {
-                gameScreen.setGamePaused(loadedSave.isPaused());
                 gameScreen.setTurnTimeStart(System.currentTimeMillis() - loadedSave.getTurnTimeElapsed());
             }
             main.returnGameScreen();
+            gameScreen.getPhases().get(gameScreen.getCurrentPhase()).enterPhase(gameScreen.getCurrentPlayer());
             System.out.println("Load Successful");
         } else {
             throw new IOException("Load Error");

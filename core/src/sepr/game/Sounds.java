@@ -11,9 +11,15 @@ class Sounds {
     private Sound attackSound;
     private Sound reinforceSound;
     private Sound moveSound;
+    private Sound slotMachineLaunch;
+    private Sound match2;
+    private Music slotMachineSpin;
     private float fxVolume;
     private Music music;
     private float musicVolume;
+    private Sound slotMachineFail;
+    private Sound match3;
+    private Sound slotMachineGeese;
 
     /** Constructor for Class.
      * Sets up sounds and music
@@ -25,6 +31,12 @@ class Sounds {
         this.attackSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/attack_sound.mp3"));
         this.reinforceSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/reinforce_sound.WAV"));
         this.moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/move_sound.WAV"));
+        this.slotMachineLaunch = Gdx.audio.newSound(Gdx.files.internal("Sounds/slot_machine_launch.WAV"));
+        this.match2 = Gdx.audio.newSound(Gdx.files.internal("Sounds/match_2.WAV"));
+        this.slotMachineSpin = Gdx.audio.newMusic(Gdx.files.internal("Sounds/slot_machine_spin.WAV"));
+        this.slotMachineFail = Gdx.audio.newSound(Gdx.files.internal("Sounds/slot_machine_fail.WAV"));
+        this.match3 = Gdx.audio.newSound(Gdx.files.internal("Sounds/match_3.WAV"));
+        this.slotMachineGeese = Gdx.audio.newSound(Gdx.files.internal("Sounds/slot_machine_geese.WAV"));
         setFxVolume(prefs.getFloat(OptionsScreen.FX_VOL_PREF));
         this.music = Gdx.audio.newMusic(Gdx.files.internal("music/bensound-epic.mp3"));
         setMusicVolume(prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF));
@@ -49,6 +61,25 @@ class Sounds {
         else if (soundToPlay.equals("move_sound")){
             moveSound.play(fxVolume);
         }
+        else if (soundToPlay.equals("slot_machine_launch")){
+            slotMachineLaunch.play(fxVolume);
+        }
+        else if (soundToPlay.equals("match_2")) {
+            match2.play(fxVolume);
+        }
+        else if (soundToPlay.equals("slot_machine_spin")) {
+            slotMachineSpin.setVolume(fxVolume);
+            slotMachineSpin.play();
+        }
+        else if (soundToPlay.equals("slot_machine_fail")) {
+            slotMachineFail.play(fxVolume);
+        }
+        else if (soundToPlay.equals("match_3")) {
+            match3.play(fxVolume);
+        }
+        else if (soundToPlay.equals("slot_machine_geese")) {
+            slotMachineGeese.play(fxVolume);
+        }
 
     }
 
@@ -69,5 +100,12 @@ class Sounds {
     public void setMusicVolume(float volume){
         this.musicVolume = volume;
         music.setVolume(this.musicVolume);
+    }
+
+    /**
+     * Stops the slot machine spinning sound when a result is produced
+     */
+    public void stopLooping() {
+        slotMachineSpin.stop();
     }
 }

@@ -46,6 +46,7 @@ public class LoadScreen implements Screen{
                 @Override
                 public boolean keyUp(int keyCode) {
                     if (keyCode == Input.Keys.ESCAPE) { // change back to the menu screen if the player presses esc
+                        main.sounds.playSound("menu_sound");
                         main.setMenuScreen();
                     }
                     return super.keyUp(keyCode);
@@ -57,6 +58,7 @@ public class LoadScreen implements Screen{
                 @Override
                 public boolean keyUp(int keyCode) {
                     if (keyCode == Input.Keys.ESCAPE) { // change back to the game screen if the player presses esc
+                        main.sounds.playSound("menu_sound");
                         main.returnGameScreen();
                     }
                     return super.keyUp(keyCode);
