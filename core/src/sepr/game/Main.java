@@ -23,7 +23,7 @@ public class Main extends Game implements ApplicationListener {
 	private GameSetupScreen gameSetupScreen;
 	private LoadScreen loadScreen;
 	private LoadScreen saveScreen;
-	private MinigameScreen minigameScreen;
+	//private MinigameScreen minigameScreen;
 	public  Sounds sounds;
 
 
@@ -41,13 +41,13 @@ public class Main extends Game implements ApplicationListener {
 		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
-		this.minigameScreen = new MinigameScreen(this);
+		//this.minigameScreen = new MinigameScreen(this);
 
         this.sounds = new Sounds();
 		applyPreferences();
 
-		//this.setMenuScreen();
-        this.setMinigameScreen(minigameScreen);
+		this.setMenuScreen();
+        //this.setMinigameScreen(minigameScreen);
 	}
 
     /**

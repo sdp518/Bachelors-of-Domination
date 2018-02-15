@@ -269,12 +269,14 @@ public class MinigameScreen implements Screen {
     private void handleResult(int one, int two, int three) {
         if ((one == two) && (two == three) && (one == 0)) {
             // MATCHED GEESE
+            main.sounds.playSound("slot_machine_geese");
             moveUp.reset();
             richardGeese.addAction(moveUp);
             gameFinished = true;
         }
         else if ((one == two) && (two == three)) {
             // MATCHED THREE
+            main.sounds.playSound("match_3");
             moveUp.reset();
             richardThree.addAction(moveUp);
             gameFinished = true;
@@ -288,6 +290,7 @@ public class MinigameScreen implements Screen {
         }
         else {
             // MATCHED NONE
+            main.sounds.playSound("slot_machine_fail");
             moveUp.reset();
             richardFail.addAction(moveUp);
             gameFinished = true;
