@@ -48,11 +48,11 @@ public class DialogFactory {
      *
      * @param stage to draw the box onto
      */
-    public static void minigameDialogBox(Stage stage, final Main main) {
+    public static void minigameDialogBox(Stage stage, final Main main, final GameScreen gameScreen) {
         Dialog dialog = new Dialog("Congratulations!", DialogFactory.skin) {
             protected void result(Object object) {
                 // calls the minigame
-                main.setMinigameScreen(new MinigameScreen(main));
+                main.setMinigameScreen(new MinigameScreen(main, gameScreen));
             }
         };
         dialog.text("You've captured the Pro-Vice Chancellor! Try your luck at the slot machine");
@@ -120,17 +120,17 @@ public class DialogFactory {
      * @param newOwner name of the player who now controls the sector
      * @param sectorName name of the sector being taken
      * @param stage to draw the box onto
-     * @param map to start the minigame
+     * @param gameScreen to start the minigame
      */
-    public static void sectorOwnerChangeDialog(String prevOwner, String newOwner, String sectorName, final Stage stage, final Map map) {
+    public static void sectorOwnerChangeDialog(String prevOwner, String newOwner, String sectorName, final Stage stage, final GameScreen gameScreen) {
         Dialog dialog = new Dialog("Sector owner change", DialogFactory.skin) {
             protected void result(Object object) {
-                // Checks if map is null as minigame shouldn't start unless defender won (parameter used as flag)
-                if (map != null) {
+                // Checks if gameScreen is null as minigame shouldn't start unless defender won (parameter used as flag)
+                if (gameScreen != null) {
                     // TODO Decide probability
                     if (random.nextInt(5) == 1) {
                         // MINIGAME
-                        map.startMinigame(stage);
+                        gameScreen.startMinigame(stage);
                     }
                 }
             }
@@ -151,9 +151,9 @@ public class DialogFactory {
      * @param newOwner name of the player who now controls the sector
      * @param sectorName name of the sector being taken
      * @param stage The stage to draw the box onto
-     * @param map to start the minigame
+     * @param gameScreen to start the minigame
      */
-    public static void attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, final int[] troopsMoved, String prevOwner, String newOwner, String sectorName, final Stage stage, final Map map) {
+    public static void attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, final int[] troopsMoved, String prevOwner, String newOwner, String sectorName, final Stage stage, final GameScreen gameScreen) {
         final Slider slider = new Slider(1, (maxTroops - 1), 1, false, DialogFactory.skin); // slider max value is (maxTroops - 1) as must leave at least one troop on attacking sector
         slider.setValue(1); // must move at least one troop so set initial value to 1
         final Label sliderValue = new Label("1", DialogFactory.skin); // label to display the slider value
@@ -170,9 +170,9 @@ public class DialogFactory {
                 // set number of troops to move to the value of the slider when the dialog is closed
                 troopsMoved[0] = (int)slider.getValue();
                 // TODO Decide probability
-                if (random.nextInt(5) == 1) {
+                if (true) {
                     // MINIGAME
-                    map.startMinigame(stage);
+                    gameScreen.startMinigame(stage);
                 }
             }
         };

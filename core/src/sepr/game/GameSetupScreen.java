@@ -499,7 +499,7 @@ public class GameSetupScreen implements Screen{
         HashMap<Integer, Player> x = generatePlayerHashmaps();
 
         // TODO Find suitable value
-        int MAX_TURN_TIME = 120;
+        int MAX_TURN_TIME = 20;
         main.setGameScreen(x, turnTimerSwitch.isChecked(), MAX_TURN_TIME, neutralPlayerSwitch.isChecked());
     }
 

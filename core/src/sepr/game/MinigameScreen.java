@@ -22,6 +22,7 @@ import java.util.Random;
 public class MinigameScreen implements Screen {
 
     private Main main;
+    private GameScreen gameScreen;
     private Stage stage;
     private Table table;
 
@@ -47,8 +48,9 @@ public class MinigameScreen implements Screen {
      *
      * @param main for changing to different screens
      */
-    public MinigameScreen (final Main main) {
+    public MinigameScreen (final Main main, final GameScreen gameScreen) {
         this.main = main;
+        this.gameScreen = gameScreen;
         this.stage = new Stage();
         this.random = new Random();
 
@@ -267,18 +269,24 @@ public class MinigameScreen implements Screen {
             // MATCHED GEESE
             moveUp.reset();
             richardGeese.addAction(moveUp);
+            gameScreen.getCurrentPlayer().changeBonus(7);
+            gameScreen.updateBonus();
             gameFinished = true;
         }
         else if ((one == two) && (two == three)) {
             // MATCHED THREE
             moveUp.reset();
             richardThree.addAction(moveUp);
+            gameScreen.getCurrentPlayer().changeBonus(5);
+            gameScreen.updateBonus();
             gameFinished = true;
         }
         else if ((one == two) || (one == three) || (two == three)) {
             // MATCHED TWO
             moveUp.reset();
             richardTwo.addAction(moveUp);
+            gameScreen.getCurrentPlayer().changeBonus(2);
+            gameScreen.updateBonus();
             gameFinished = true;
         }
         else {

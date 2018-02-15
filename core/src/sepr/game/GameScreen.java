@@ -329,7 +329,9 @@ public class GameScreen implements Screen, InputProcessor{
      * increments the currentPlayerPointer and resets it to 0 if it now exceeds the number of players in the list
      */
     private void nextPlayer() {
-        currentPlayerPointer++;
+        this.currentPlayerPointer++;
+        System.out.println(currentPlayerPointer);
+        System.out.println(turnOrder.size());
         if (currentPlayerPointer == turnOrder.size()) { // reached end of players, reset to 0
             currentPlayerPointer = 0;
         }
@@ -340,6 +342,9 @@ public class GameScreen implements Screen, InputProcessor{
             this.turnTimeStart = System.currentTimeMillis();
             this.pausedTime = 0;
         }
+        this.updateInputProcessor(); // phase changed so update input handling
+        this.phases.get(currentPhase).enterPhase(getCurrentPlayer()); // setup the new phase for the current player
+        removeEliminatedPlayers(); // check no players have been eliminated
     }
 
     /**
@@ -392,6 +397,15 @@ public class GameScreen implements Screen, InputProcessor{
         } else { // more than one player in turn order so no winner found therefore throw error
             throw new RuntimeException("Game Over called but more than one player in turn order");
         }
+    }
+
+    public void startMinigame(Stage stage) {
+        this.pauseTimer();
+        DialogFactory.minigameDialogBox(stage, main, this);
+    }
+
+    public void updateBonus() {
+        this.phases.get(this.currentPhase).setBonusLabel(this.getCurrentPlayer().getBonus());
     }
 
     /**

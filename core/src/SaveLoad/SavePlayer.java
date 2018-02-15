@@ -18,6 +18,7 @@ public class SavePlayer implements java.io.Serializable {
     private int troopsToAllocate; // how many troops the player has to allocate at the start of their next reinforcement phase
     private float[] sectorColour; // what colour to shade sectors owned by the player
     private PlayerType playerType; // Human or Neutral player
+    private int bonus; // the bonus held by the player
 
     /**
      * Constructor which takes the plain player class and transforms it to serializable.
@@ -33,6 +34,7 @@ public class SavePlayer implements java.io.Serializable {
                                         player.getSectorColour().b,
                                         player.getSectorColour().a};
         this.playerType = player.getPlayerType();
+        this.bonus = player.getBonus();
     }
 
     /**
@@ -82,5 +84,12 @@ public class SavePlayer implements java.io.Serializable {
      */
     public PlayerType getPlayerType() {
         return playerType;
+    }
+
+    /**
+     * @return the bonus allocated to the player
+     */
+    public int getBonus() {
+        return this.bonus;
     }
 }
