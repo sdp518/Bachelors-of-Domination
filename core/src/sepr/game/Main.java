@@ -140,6 +140,10 @@ public class Main extends Game implements ApplicationListener {
 		this.setScreen(saveScreen);
 	}
 
+	public void updateSaveScreen(LoadScreen saveScreen) {
+		this.saveScreen = saveScreen;
+	}
+
 	/**
 	 * Applies the players options preferences
 	 * Sets the

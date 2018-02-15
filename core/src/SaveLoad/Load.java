@@ -14,14 +14,15 @@ import java.nio.file.Paths;
  * Then sets up the GameScreen class as well as updating it with all of the data saved.
  */
 public class Load {
-    public static void loadGame(GameScreen gameScreen, Main main) throws IOException{
+    public static void loadGame(String fileName, GameScreen gameScreen, Main main) throws IOException{
         Path currentRelativePath = Paths.get("");
         String currentWorkingDir = currentRelativePath.toAbsolutePath().toString();
-        String fileName = currentWorkingDir + "\\saves\\TestSave.data";
+        String filePath = currentWorkingDir + "\\saves\\" + fileName;
         ObjectInputStream ois = null;
         Data loadedSave = null;
         try {
-            ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileName)));
+            int test;
+            ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filePath)));
             loadedSave = (Data) ois.readObject();
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
@@ -43,7 +44,6 @@ public class Load {
         }
         if (loadedSave != null) {
             loadedSave.updatePlayers(gameScreen.getPlayers(), gameScreen);
-            System.out.println(gameScreen.getPlayers().get(1).getBonus());
             boolean allocateNeutralPlayer = false;
             if (gameScreen.getPlayers().keySet().contains(4)) {
                 allocateNeutralPlayer = true;
@@ -58,6 +58,7 @@ public class Load {
             if (loadedSave.getCurrentPhase() == TurnPhaseType.REINFORCEMENT) {
                 gameScreen.getCurrentPlayer().addTroopsToAllocate(-5);
             }
+            gameScreen.updateBonus();
             gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());
             if (loadedSave.isTurnTimerEnabled()) {
                 gameScreen.setTurnTimeStart(System.currentTimeMillis() - loadedSave.getTurnTimeElapsed());

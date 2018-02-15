@@ -1,5 +1,6 @@
 package sepr.game;
 
+import SaveLoad.Data;
 import SaveLoad.Load;
 import SaveLoad.Save;
 import com.badlogic.gdx.Gdx;
@@ -7,7 +8,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -18,6 +18,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 public class LoadScreen implements Screen{
 
@@ -30,6 +36,8 @@ public class LoadScreen implements Screen{
     private EntryPoint entryPoint;
 
     private Texture selectSaveBox;
+
+    private String fileName;
 
     /**
      *
@@ -89,16 +97,53 @@ public class LoadScreen implements Screen{
         bigStyle.font = WidgetFactory.getFontSmall();
 
         Table[] saveTables = new Table[] {new Table(), new Table(), new Table(), new Table()};
-
-        for (final Table t : saveTables) {
+        List<Boolean> clickedTables = Arrays.asList(new Boolean[]{false,false,false,false});
+        for (int i = 0; i < saveTables.length; i++) {
+            Path currentRelativePath = Paths.get("");
+            String currentWorkingDir = currentRelativePath.toAbsolutePath().toString();
+            String loadFileName = currentWorkingDir + "\\saves\\"+ i + ".data";
+            ObjectInputStream ois = null;
+            Data loadedSave = null;
+            try {
+                ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(loadFileName)));
+                loadedSave = (Data) ois.readObject();
+            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            } finally {
+                if (ois != null) {
+                    try {
+                        ois.close();
+                    } catch (IOException e) {
+                    }
+                }
+            }
+            if ((loadedSave == null) && (this.entryPoint == EntryPoint.MENU_SCREEN)) {
+                continue;
+            }
+            final int thisTableNo = i;
+            Table t = saveTables[i];
             t.setDebug(false);
             t.setTouchable(Touchable.enabled);
             t.setBackground(new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,0, 1240, 208)));
             t.addListener(new ClickListener() {
+                private Table[] allTables = saveTables;
+                private List<Boolean> clickedSave = clickedTables;
+                private int tableNo = thisTableNo;
 
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    // IDEK
+                    for(int i = 0; i < clickedSave.size(); i++) {
+                        clickedSave.set(i, false);
+                        allTables[i].setBackground(new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0, 0, 1240, 208)));
+                    }
+                    clickedSave.set(tableNo, true);
+                    allTables[tableNo].setBackground(new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,208, 1240, 208)));
+                    fileName = Integer.toString(tableNo) + ".data";
                 }
 
                 @Override
@@ -110,39 +155,50 @@ public class LoadScreen implements Screen{
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
 //                    super.exit(event, x, y, pointer, toActor);
-                    t.setBackground(new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,0, 1240, 208)));
+                    if (!clickedSave.get(tableNo)) {
+                        t.setBackground(new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0, 0, 1240, 208)));
+                    }
                 }
             });
-
             // TODO Matt save data needs to be read into the below
 
             // if save in slot
             //
+            if (loadedSave != null) {
+                Player player1 = loadedSave.getFullPlayers().get(0);
+                Player player2 = loadedSave.getFullPlayers().get(1);
+                t.row().left();
+                t.add(new Image(WidgetFactory.genCollegeLogoDrawable(player1.getCollegeName()))).width(150).height(120).padRight(10).padLeft(10);
+                t.add(new Label("V", smallStyle));
+                t.add(new Image(WidgetFactory.genCollegeLogoDrawable(player2.getCollegeName()))).width(150).height(120).padRight(10).padLeft(10);
+                if (((loadedSave.getFullPlayers().size() > 2) && (!loadedSave.getFullPlayers().containsKey(4)))
+                    || ((loadedSave.getFullPlayers().size() > 3) && (loadedSave.getFullPlayers().containsKey(4)))){
+                    Integer[] keys = loadedSave.getFullPlayers().keySet().toArray(new Integer[loadedSave.getFullPlayers().size()]);
+                    for (int j = 2; j < loadedSave.getFullPlayers().size(); j++) {
+                        t.add(new Label("V", smallStyle));
+                        t.add(new Image(WidgetFactory.genCollegeLogoDrawable(loadedSave.getFullPlayers().get(keys[j]).getCollegeName()))).width(150).height(120).padRight(10).padLeft(10);
+                    }
+                }
+                t.row().left();
+                t.add(new Label(player1.getPlayerName(), bigStyle)).center();
+                t.add();
+                t.add(new Label(player2.getPlayerName(), bigStyle)).center();
 
-            t.row().left();
-            t.add(new Image(WidgetFactory.genCollegeLogoDrawable(GameSetupScreen.CollegeName.UNI_OF_YORK))).width(150).height(120).padRight(10).padLeft(10);
-            t.add(new Label("V", smallStyle));
-            t.add(new Image(WidgetFactory.genCollegeLogoDrawable(GameSetupScreen.CollegeName.HES_EAST))).width(150).height(120).padRight(10).padLeft(10);
+                if (((loadedSave.getFullPlayers().size() > 2) && (!loadedSave.getFullPlayers().containsKey(4)))
+                        || ((loadedSave.getFullPlayers().size() > 3) && (loadedSave.getFullPlayers().containsKey(4)))){
+                    Integer[] keys = loadedSave.getFullPlayers().keySet().toArray(new Integer[loadedSave.getFullPlayers().size()]);
+                    for (int j = 2; j < loadedSave.getFullPlayers().size(); j++) {
+                        t.add();
+                        t.add(new Label(loadedSave.getFullPlayers().get(keys[j]).getPlayerName(), bigStyle)).center();
+                    }
+                }
 
-            // if three or four players loop once or twice respectively
-//            t.add(new Label("V", smallStyle));
-//            t.add(new Image(WidgetFactory.genCollegeLogoDrawable(GameSetupScreen.CollegeName.HES_EAST))).width(150).height(120).padRight(10).padLeft(10);
-
-            t.row().left();
-            t.add(new Label("Player 1", bigStyle)).center();
-            t.add();
-            t.add(new Label("Player 2", bigStyle)).center();
-
-            // if three or four players loop once or twice respectively
-//            t.add();
-//            t.add(new Label("Player 2", bigStyle)).center();
-
-            // if no save in slot
-            //
+                // if no save in slot
+                //
 
 //            t.row().center();
 //            t.add(new Label("EMPTY SAVE SLOT", smallStyle));
-
+            }
             stage.addActor(t);
 
             saveTable.row();
@@ -180,7 +236,8 @@ public class LoadScreen implements Screen{
         saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Save.saveGame(gameScreen.getCurrentPhase(),
+                Save.saveGame(fileName,
+                        gameScreen.getCurrentPhase(),
                         gameScreen.getSectors(),
                         gameScreen.getPlayers(),
                         gameScreen.getTurnOrder(),
@@ -189,6 +246,8 @@ public class LoadScreen implements Screen{
                         gameScreen.getMaxTurnTime(),
                         gameScreen.getTurnTimeElapsed(),
                         gameScreen.isGamePaused());
+                main.updateSaveScreen(new LoadScreen(main, EntryPoint.GAME_SCREEN, gameScreen, gameSetupScreen));
+                main.setSaveScreen();
             }
         });
 
@@ -199,7 +258,7 @@ public class LoadScreen implements Screen{
             public void changed(ChangeEvent event, Actor actor) {
                 try {
                     if (entryPoint == EntryPoint.MENU_SCREEN) { }
-                    Load.loadGame(gameScreen, main);
+                    Load.loadGame(fileName, gameScreen, main);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();

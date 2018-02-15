@@ -176,6 +176,7 @@ public abstract class Phase extends Stage {
         playerNameLabel.setText(new StringBuilder((CharSequence) currentPlayer.getPlayerName())); // change the bottom bar label to the players name
         collegeLogo.setDrawable(WidgetFactory.genCollegeLogoDrawable(player.getCollegeName()));
         updateTroopReinforcementLabel();
+        gameScreen.updateBonus();
     }
 
     /**

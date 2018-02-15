@@ -15,7 +15,8 @@ import java.util.List;
  * Starts by setting the file name, then writing the data object to file.
  */
 public class Save {
-    public static void saveGame(TurnPhaseType currentPhase,
+    public static void saveGame(String fileName,
+                                TurnPhaseType currentPhase,
                                 HashMap<Integer, Sector> sectors,
                                 HashMap<Integer, Player> players,
                                 List<Integer> turnOrder,
@@ -26,7 +27,7 @@ public class Save {
                                 boolean isPaused) {
         Path currentRelativePath = Paths.get("");
         String currentWorkingDir = currentRelativePath.toAbsolutePath().toString();
-        String fileName = currentWorkingDir + "\\saves\\TestSave.data";
+        String filePath = currentWorkingDir + "\\saves\\" + fileName;
         Data thisSave = new Data(currentPhase,
                 sectors,
                 players,
@@ -38,7 +39,7 @@ public class Save {
                 isPaused);
         ObjectOutputStream oos = null;
         try {
-            oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)));
+            oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filePath)));
             oos.writeObject(thisSave);
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
