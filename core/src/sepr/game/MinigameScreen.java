@@ -70,6 +70,7 @@ public class MinigameScreen implements Screen {
         this.launchBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                main.sounds.playSound("slot_machine_launch");
                 isSpinning = true;
                 setupLaunchStage();
                 for (Action a : richardLaunch.getActions()) {
@@ -108,6 +109,7 @@ public class MinigameScreen implements Screen {
             @Override
             public boolean keyUp(int keyCode) {
                 if ((keyCode == Input.Keys.ESCAPE) && (gameFinished)) { // change back to the menu screen if the player presses esc
+                    main.sounds.playSound("menu_sound");
                     main.returnFromMinigame();
                 }
                 return super.keyUp(keyCode);
@@ -231,6 +233,7 @@ public class MinigameScreen implements Screen {
      */
     private void handleSpin() {
         int one, two, three;
+        main.sounds.playSound("slot_machine_spin");
 
         one = (slotOneSpins < 50 ? random.nextInt(4) : slotOneCurrent);
         two = (slotTwoSpins < 100 ? random.nextInt(4) : slotTwoCurrent);
@@ -245,6 +248,7 @@ public class MinigameScreen implements Screen {
 
         // if this was the final spin resets global flags and calls to handle result
         if (slotThreeSpins == 150){
+            main.sounds.stopLooping();
             isSpinning = false;
             setupLaunchStage();
             for (com.badlogic.gdx.scenes.scene2d.EventListener e : launchBtn.getListeners()) {
@@ -267,6 +271,7 @@ public class MinigameScreen implements Screen {
     private void handleResult(int one, int two, int three) {
         if ((one == two) && (two == three) && (one == 0)) {
             // MATCHED GEESE
+            main.sounds.playSound("slot_machine_geese");
             moveUp.reset();
             richardGeese.addAction(moveUp);
             gameScreen.getCurrentPlayer().changeBonus(7);
@@ -275,6 +280,7 @@ public class MinigameScreen implements Screen {
         }
         else if ((one == two) && (two == three)) {
             // MATCHED THREE
+            main.sounds.playSound("match_3");
             moveUp.reset();
             richardThree.addAction(moveUp);
             gameScreen.getCurrentPlayer().changeBonus(5);
@@ -283,6 +289,7 @@ public class MinigameScreen implements Screen {
         }
         else if ((one == two) || (one == three) || (two == three)) {
             // MATCHED TWO
+            main.sounds.playSound("match_2");
             moveUp.reset();
             richardTwo.addAction(moveUp);
             gameScreen.getCurrentPlayer().changeBonus(2);
@@ -291,6 +298,7 @@ public class MinigameScreen implements Screen {
         }
         else {
             // MATCHED NONE
+            main.sounds.playSound("slot_machine_fail");
             moveUp.reset();
             richardFail.addAction(moveUp);
             gameFinished = true;
