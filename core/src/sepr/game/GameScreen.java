@@ -309,9 +309,12 @@ public class GameScreen implements Screen, InputProcessor{
         switch (currentPhase) {
             case REINFORCEMENT:
                 currentPhase = TurnPhaseType.ATTACK;
+                DialogFactory.basicDialogBox("Phase Ended!", "The reinforcement phase has now ended. Moving to attack phase...", phases.get(currentPhase));
+
                 break;
             case ATTACK:
                 currentPhase = TurnPhaseType.MOVEMENT;
+                DialogFactory.basicDialogBox("Phase Ended!", "The attack phase has now ended. Moving to movement phase...", phases.get(currentPhase));
                 break;
             case MOVEMENT:
                 currentPhase = TurnPhaseType.REINFORCEMENT;
@@ -320,7 +323,9 @@ public class GameScreen implements Screen, InputProcessor{
         }
 
         this.updateInputProcessor(); // phase changed so update input handling
-        this.phases.get(currentPhase).enterPhase(getCurrentPlayer()); // setup the new phase for the current player
+        if (currentPhase != TurnPhaseType.REINFORCEMENT) {
+            this.phases.get(currentPhase).enterPhase(getCurrentPlayer()); // setup the new phase for the current player
+        }
         removeEliminatedPlayers(); // check no players have been eliminated
     }
 
