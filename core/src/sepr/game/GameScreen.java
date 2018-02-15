@@ -330,8 +330,6 @@ public class GameScreen implements Screen, InputProcessor{
      */
     private void nextPlayer() {
         this.currentPlayerPointer++;
-        System.out.println(currentPlayerPointer);
-        System.out.println(turnOrder.size());
         if (currentPlayerPointer == turnOrder.size()) { // reached end of players, reset to 0
             currentPlayerPointer = 0;
         }
