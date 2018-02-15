@@ -26,6 +26,8 @@ public class LoadScreen implements Screen{
 
     private EntryPoint entryPoint;
 
+    private Texture selectSaveBox;
+
     /**
      *
      * @param main for changing to different screens
@@ -59,6 +61,8 @@ public class LoadScreen implements Screen{
             };
         }
 
+        this.selectSaveBox = new Texture("uiComponents/selectSaveBttn.png");
+
         this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
         this.stage.addActor(table);
@@ -70,7 +74,26 @@ public class LoadScreen implements Screen{
 
     // TODO Implement setupSelectSaveTable()
     private Table setupSelectSaveTable() {
-        return null;
+        Table saveTable = new Table();
+        saveTable.setDebug(true);
+
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+
+        style.up = new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,0, 1240, 208));
+        style.down = new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,208, 1240, 416));
+        style.font = WidgetFactory.getFontSmall();
+
+        saveTable.row();
+        saveTable.add(new TextButton("Save 1", style)).height(200).padBottom(20);
+        saveTable.row();
+        saveTable.add(new TextButton("Save 2", style)).height(200).padBottom(20);
+        saveTable.row();
+        saveTable.add(new TextButton("Save 3", style)).height(200).padBottom(20);
+        saveTable.row();
+        saveTable.add(new TextButton("Save 4", style)).height(200).padBottom(20);
+
+        return saveTable;
+
     }
 
     // TODO Finish implementing setupUI()
@@ -85,6 +108,9 @@ public class LoadScreen implements Screen{
 
         table.center();
         table.add(WidgetFactory.genMenusTopBar("LOAD GAME")).colspan(2);
+
+        table.row().padTop(60);
+        table.add(setupSelectSaveTable());
 
         TextButton saveButton = WidgetFactory.genEndPhaseButton();
         saveButton.setText("SAVE");
@@ -119,10 +145,15 @@ public class LoadScreen implements Screen{
             }
         });
 
-        table.row();
-        table.add(saveButton).fill().height(60).width(170);
-        table.row();
-        table.add(loadButton).fill().height(60).width(170);
+        Table subTable = new Table();
+        subTable.setDebug(true);
+
+        subTable.row();
+        subTable.add(saveButton).fill().height(60).width(170).padBottom(20);
+        subTable.row();
+        subTable.add(loadButton).fill().height(60).width(170);
+
+        table.add(subTable).expandX();
 
 
         table.row();
