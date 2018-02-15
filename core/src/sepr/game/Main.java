@@ -1,12 +1,9 @@
 package sepr.game;
 
-import SaveLoad.Load;
-import SaveLoad.Save;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 
 import java.util.HashMap;
@@ -26,7 +23,7 @@ public class Main extends Game implements ApplicationListener {
 	private GameSetupScreen gameSetupScreen;
 	private LoadScreen loadScreen;
 	private LoadScreen saveScreen;
-	private MinigameScreen minigameScreen;
+	//private MinigameScreen minigameScreen;
 	public  Sounds sounds;
 
 
@@ -43,9 +40,8 @@ public class Main extends Game implements ApplicationListener {
 		this.optionsScreen = new OptionsScreen(this, EntryPoint.MENU_SCREEN);
 		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
-		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
-		this.minigameScreen = new MinigameScreen(this);
+		//this.minigameScreen = new MinigameScreen(this.gameScreen);
 
         this.sounds = new Sounds();
 		applyPreferences();
@@ -57,7 +53,7 @@ public class Main extends Game implements ApplicationListener {
     /**
      * changes the screen currently being displayed to the menu
      */
-    public void setMinigameScreen() {
+    public void setMinigameScreen(MinigameScreen minigameScreen) {
         this.setScreen(minigameScreen);
     }
 
@@ -100,6 +96,15 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
+	 * returns to the game screen from the minigame
+	 */
+	public void returnFromMinigame() {
+		this.setScreen(gameScreen);
+		gameScreen.resetCameraPosition();
+		//gameScreen.resumeTimer();
+	}
+
+	/**
 	 * change the screen currently being displayed to the options screen
 	 */
 	public void setOptionsScreen() {
@@ -124,6 +129,7 @@ public class Main extends Game implements ApplicationListener {
 	 * change the screen currently being displayed to the load screen
 	 */
 	public void setLoadScreen() {
+		this.loadScreen = new LoadScreen(this, EntryPoint.MENU_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.setScreen(loadScreen);
 	}
 
@@ -175,7 +181,6 @@ public class Main extends Game implements ApplicationListener {
 		optionsScreen.dispose();
 		gameSetupScreen.dispose();
 		gameScreen.dispose();
-		loadScreen.dispose();
 		saveScreen.dispose();
 		inGameOptionsScreen.dispose();
 	}
