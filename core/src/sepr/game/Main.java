@@ -25,6 +25,7 @@ public class Main extends Game implements ApplicationListener {
 	private LoadScreen saveScreen;
 	private MinigameScreen minigameScreen;
 	public  Sounds sounds;
+	private BonusExchangeScreen bonusExchangeScreen;
 
 
 	/**
@@ -42,12 +43,14 @@ public class Main extends Game implements ApplicationListener {
 		this.gameSetupScreen = new GameSetupScreen(this);
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.minigameScreen = new MinigameScreen(this.gameScreen);
+		this.bonusExchangeScreen = new BonusExchangeScreen(this, gameScreen);
 
         this.sounds = new Sounds();
 		applyPreferences();
 
-		this.setMenuScreen();
+		//this.setMenuScreen();
         //this.setMinigameScreen();
+        this.setBonusExchangeScreen();
 	}
 
     /**
@@ -55,6 +58,13 @@ public class Main extends Game implements ApplicationListener {
      */
     public void setMinigameScreen() {
         this.setScreen(minigameScreen);
+    }
+
+    /**
+     * changes the screen currently being displayed to the menu
+     */
+    public void setBonusExchangeScreen() {
+        this.setScreen(bonusExchangeScreen);
     }
 
 	/**

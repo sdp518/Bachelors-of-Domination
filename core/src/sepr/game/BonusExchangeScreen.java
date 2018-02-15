@@ -6,8 +6,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -53,12 +55,23 @@ public class BonusExchangeScreen implements Screen {
     private void setupUi() {
 
         // add the menu background
-        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/menuBackground.png"))));
+        table.background(new TextureRegionDrawable(new TextureRegion(new Texture("uiComponents/bonusExchange/background.png"))));
 
-        table.center();
+        table.center().top();
         table.add(WidgetFactory.genMenusTopBar("PIZZA EXCHANGE")).colspan(2);
 
+        table.row();
+        table.add().expand();
 
+        table.row().bottom();
+        table.add(WidgetFactory.genBottomBar("RETURN", new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
+                main.returnGameScreen();
+            }
+
+        })).colspan(2);
 
     }
 
