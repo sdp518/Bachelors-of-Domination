@@ -33,6 +33,16 @@ public class Player implements java.io.Serializable{
         this.bonus = 0;
     }
 
+    /**
+     * creates a player object with the specified properties
+     *
+     * @param id player's unique identifier
+     * @param collegeName display name for this player
+     * @param troopsToAllocate the amount of troops the player has to allocate
+     * @param sectorColour colour that the sectors owned by this player are coloured
+     * @param playerType is this player a Human, AI or Neutral AI
+     * @param playerName player's name to be displayed
+     */
     public Player(int id, GameSetupScreen.CollegeName collegeName, int troopsToAllocate, Color sectorColour, PlayerType playerType, String playerName) {
         this.id = id;
         this.collegeName = collegeName;
