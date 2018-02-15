@@ -8,6 +8,11 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Class Load to handle all functions associated with loading the save file to be playable.
+ * Starts by retrieving the file name, then reading the object stored into a variable.
+ * Then sets up the GameScreen class as well as updating it with all of the data saved.
+ */
 public class Load {
     public static void loadGame(GameScreen gameScreen, Main main) throws IOException{
         Path currentRelativePath = Paths.get("");
@@ -38,8 +43,14 @@ public class Load {
         }
         if (loadedSave != null) {
             loadedSave.updatePlayers(gameScreen.getPlayers(), gameScreen);
-            gameScreen.setupGame(gameScreen.getPlayers(), false, 0 , true);
-            gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());
+            boolean allocateNeutralPlayer = false;
+            if (gameScreen.getPlayers().keySet().contains(4)) {
+                allocateNeutralPlayer = true;
+            }
+            gameScreen.setupGame(gameScreen.getPlayers(),
+                    loadedSave.isTurnTimerEnabled(),
+                    loadedSave.getMaxTurnTime(),
+                    allocateNeutralPlayer);
             loadedSave.updateSectors(gameScreen.getSectors(), gameScreen.getPlayers());
             gameScreen.setTurnOrder(loadedSave.getTurnOrder());
             gameScreen.setCurrentPlayerPointer(loadedSave.getCurrentPlayerPointer());
@@ -47,8 +58,13 @@ public class Load {
                 gameScreen.getCurrentPlayer().addTroopsToAllocate(-5);
             }
             gameScreen.getPhases().get(gameScreen.getCurrentPhase()).enterPhase(gameScreen.getCurrentPlayer());
-            System.out.println("Load Successful");
+            gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());
+            if (loadedSave.isTurnTimerEnabled()) {
+                gameScreen.setGamePaused(loadedSave.isPaused());
+                gameScreen.setTurnTimeStart(System.currentTimeMillis() - loadedSave.getTurnTimeElapsed());
+            }
             main.returnGameScreen();
+            System.out.println("Load Successful");
         } else {
             throw new IOException("Load Error");
         }

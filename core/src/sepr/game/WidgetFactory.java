@@ -387,11 +387,11 @@ public class WidgetFactory {
      */
     public static TextButton genEndPhaseButton(){
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-        style.up = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,0, 348, 123));
-        style.down = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,123, 348, 123));
+        style.up = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,0, 340, 120));
+        style.down = new TextureRegionDrawable(new TextureRegion(endPhaseBtnTexture, 0,120, 340, 120));
         style.font = fontSmall;
 
-        return new TextButton("END PHASE", style);
+        return new TextButton("    END PHASE", style);
     }
 
     /**
@@ -409,7 +409,6 @@ public class WidgetFactory {
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.pauseTimer();
                 gameScreen.pause();
             }
         });
@@ -508,5 +507,14 @@ public class WidgetFactory {
     public static BitmapFont getFontSmall() {
         FileHandle alteDinSmall = new FileHandle("font/Alte-DIN-Small.fnt");
         return new BitmapFont(alteDinSmall);
+    }
+
+    /**
+     *
+     * @return a new instance of the big font
+     */
+    public static BitmapFont getFontBig() {
+        FileHandle alteDinBig = new FileHandle("font/Alte-DIN-Big.fnt");
+        return new BitmapFont(alteDinBig);
     }
 }

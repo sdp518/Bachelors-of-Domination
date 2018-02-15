@@ -26,12 +26,15 @@ public abstract class Phase extends Stage {
 
     private Label.LabelStyle playerNameStyle; // store style for updating player name colour with player's colour
 
+    private Label bonusLabel;
     private Label playerNameLabel; // displays the name of the current player in their college's colour colour
     private Label reinforcementLabel; // label showing how many troops the player has to allocate in their next reinforcement phase
     private Label turnTimerLabel; // displays how much time the player has left
     private Image collegeLogo; // ui component for displaying the logo of the current players college
+    private Image pizza;
 
     private static Texture gameHUDBottomBarLeftPartTexture;
+    private static Texture gameHUDTopBarRightPartTexture;
     public Sounds sound;
 
     /**
@@ -52,6 +55,7 @@ public abstract class Phase extends Stage {
         this.table.setDebug(false); // enable table drawing for ui debug
 
         gameHUDBottomBarLeftPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Left-Part.png");
+        gameHUDTopBarRightPartTexture = new Texture("uiComponents/Top-Right-Bonus-Section.png");
 
         this.setupUi();
         this.sound = new Sounds();
@@ -72,7 +76,9 @@ public abstract class Phase extends Stage {
         Table bottomBarLeftPart = genGameHUDBottomBarLeftPart();
 
         table.top().center();
-        table.add(WidgetFactory.genGameHUDTopBar(turnPhase, gameScreen)).colspan(2).expandX().height(60).width(910);
+        table.add(WidgetFactory.genGameHUDTopBar(turnPhase, gameScreen)).colspan(2).expandX().height(60).width(910).top().padLeft(200);
+        table.top().right();
+        table.add(genGameHUDTopBarRightPart()).height(120).width(200);
 
         table.row();
         table.add(new Table()).expand();
@@ -84,11 +90,30 @@ public abstract class Phase extends Stage {
         subTable.add(bottomBarRightPart).bottom().expandX().fillX().height(60);
 
         table.row();
-        table.add(subTable).expandX().fill();
+        table.add(subTable).expandX().fill().colspan(2);
         table.bottom().right();
-        table.add(endPhaseButton).fill().height(60).width(170);
+        table.add(endPhaseButton).fillX().height(60).width(180).bottom().right();
 
         setBottomBarText(null);
+    }
+
+    private Table genGameHUDTopBarRightPart(){
+        this.pizza = new Image(new Texture("uiComponents/pizza.png"));
+
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = WidgetFactory.getFontBig();
+
+        // TODO Get bonus to display
+        bonusLabel = new Label("6", style);
+
+        Table table = new Table();
+        table.setDebug(false);
+        table.background(new TextureRegionDrawable(new TextureRegion(gameHUDTopBarRightPartTexture)));
+        table.row().padBottom(20).center();
+        table.add(pizza).width(75).height(75).padRight(20);
+        table.add(bonusLabel);
+
+        return table;
     }
 
     /**
@@ -101,7 +126,6 @@ public abstract class Phase extends Stage {
 
         // load fonts
         style.font = WidgetFactory.getFontSmall();
-
         playerNameStyle.font = WidgetFactory.getFontSmall();
 
         playerNameLabel = new Label("", playerNameStyle);
