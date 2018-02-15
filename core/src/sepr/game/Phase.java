@@ -104,7 +104,7 @@ public abstract class Phase extends Stage {
         style.font = WidgetFactory.getFontBig();
 
         // TODO Get bonus to display
-        bonusLabel = new Label("6", style);
+        bonusLabel = new Label("0", style);
 
         Table table = new Table();
         table.setDebug(false);
@@ -225,4 +225,8 @@ public abstract class Phase extends Stage {
      * @param batch
      */
     protected abstract void visualisePhase(SpriteBatch batch);
+
+    public void setBonusLabel(int bonus) {
+        this.bonusLabel.setText(Integer.toString(bonus));
+    }
 }

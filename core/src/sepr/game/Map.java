@@ -231,18 +231,13 @@ public class Map {
 
             attacker.addTroopsToAllocate(sectors.get(defendingSectorId).getReinforcementsProvided());
             sectors.get(defendingSectorId).setOwner(attacker);
-            DialogFactory.attackSuccessDialogBox(sectors.get(defendingSectorId).getReinforcementsProvided(), sectors.get(attackingSectorId).getUnitsInSector(), unitsToMove, defender.getPlayerName(), attacker.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage, this);
+            DialogFactory.attackSuccessDialogBox(sectors.get(defendingSectorId).getReinforcementsProvided(), sectors.get(attackingSectorId).getUnitsInSector(), unitsToMove, defender.getPlayerName(), attacker.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage, gameScreen);
 
         } else if (sectors.get(defendingSectorId).getUnitsInSector() == 0 && sectors.get(attackingSectorId).getUnitsInSector() == 1) { // territory conquered but only one attacker remaining so can't move troops onto it
-            DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage, this);
+            DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage, gameScreen);
             sectors.get(defendingSectorId).setOwner(neutral);
         }
         return true;
-    }
-
-    public void startMinigame(Stage stage) {
-        gameScreen.pauseTimer();
-        DialogFactory.minigameDialogBox(stage, main);
     }
 
     /**
