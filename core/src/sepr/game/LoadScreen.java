@@ -96,8 +96,8 @@ public class LoadScreen implements Screen{
         Label.LabelStyle bigStyle = new Label.LabelStyle();
         bigStyle.font = WidgetFactory.getFontSmall();
 
-        final Table[] saveTables = new Table[] {new Table(), new Table(), new Table(), new Table()};
-        final List<Boolean> clickedTables = Arrays.asList(new Boolean[]{false,false,false,false});
+        Table[] saveTables = new Table[] {new Table(), new Table(), new Table(), new Table()};
+        List<Boolean> clickedTables = Arrays.asList(new Boolean[]{false,false,false,false});
         for (int i = 0; i < saveTables.length; i++) {
             Path currentRelativePath = Paths.get("");
             String currentWorkingDir = currentRelativePath.toAbsolutePath().toString();
@@ -125,8 +125,8 @@ public class LoadScreen implements Screen{
             if ((loadedSave == null) && (this.entryPoint == EntryPoint.MENU_SCREEN)) {
                 continue;
             }
-            final int thisTableNo = i;
-            final Table t = saveTables[i];
+            int thisTableNo = i;
+            Table t = saveTables[i];
             t.setDebug(false);
             t.setTouchable(Touchable.enabled);
             t.setBackground(new TextureRegionDrawable(new TextureRegion(selectSaveBox, 0,0, 1240, 208)));
