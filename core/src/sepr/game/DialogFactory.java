@@ -170,7 +170,7 @@ public class DialogFactory {
                 // set number of troops to move to the value of the slider when the dialog is closed
                 troopsMoved[0] = (int)slider.getValue();
                 // TODO Decide probability
-                if (true) {
+                if (random.nextInt(5) == 1) {
                     // MINIGAME
                     gameScreen.startMinigame(stage);
                 }

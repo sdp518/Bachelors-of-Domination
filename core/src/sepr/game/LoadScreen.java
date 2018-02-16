@@ -125,7 +125,7 @@ public class LoadScreen implements Screen{
             if ((loadedSave == null) && (this.entryPoint == EntryPoint.MENU_SCREEN)) {
                 continue;
             }
-            final int thisTableNo = i;
+            int thisTableNo = i;
             Table t = saveTables[i];
             t.setDebug(false);
             t.setTouchable(Touchable.enabled);
@@ -160,13 +160,10 @@ public class LoadScreen implements Screen{
                     }
                 }
             });
-            // TODO Matt save data needs to be read into the below
 
-            // if save in slot
-            //
             if (loadedSave != null) {
                 Integer[] keys = loadedSave.getFullPlayers().keySet().toArray(new Integer[loadedSave.getFullPlayers().size()]);
-                Player player1 = loadedSave.getFullPlayers().get(0);
+                Player player1 = loadedSave.getFullPlayers().get(keys[0]);
                 t.row().left();
                 t.add(new Image(WidgetFactory.genCollegeLogoDrawable(player1.getCollegeName()))).width(150).height(120).padRight(10).padLeft(10);
                 for (int j = 1; j < loadedSave.getFullPlayers().size(); j++) {
@@ -180,11 +177,9 @@ public class LoadScreen implements Screen{
                     t.add(new Label(loadedSave.getFullPlayers().get(keys[j]).getPlayerName(), bigStyle)).center();
                 }
 
-                // if no save in slot
-                //
-
-//            t.row().center();
-//            t.add(new Label("EMPTY SAVE SLOT", smallStyle));
+            } else {
+            t.row().center();
+            t.add(new Label("EMPTY SAVE SLOT", smallStyle));
             }
             stage.addActor(t);
 
@@ -255,7 +250,7 @@ public class LoadScreen implements Screen{
         });
 
         Table subTable = new Table();
-        subTable.setDebug(true);
+        subTable.setDebug(false);
 
         if (entryPoint != EntryPoint.MENU_SCREEN) {
             subTable.row();
