@@ -396,6 +396,7 @@ public class GameScreen implements Screen, InputProcessor{
         } else if (turnOrder.size() == 1){ // winner is player id at index 0 in turn order
             int winnerId = turnOrder.get(0); // winner will be the only player in the turn order list
             DialogFactory.gameOverDialog(players.get(winnerId).getPlayerName(), players.get(winnerId).getCollegeName().getCollegeName(), main, phases.get(currentPhase));
+            main.sounds.playSound("win_sound");
 
         } else { // more than one player in turn order so no winner found therefore throw error
             throw new RuntimeException("Game Over called but more than one player in turn order");
@@ -404,6 +405,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     public void startMinigame(Stage stage) {
         this.pauseTimer();
+        main.sounds.playSound("pvc_sound");
         DialogFactory.minigameDialogBox(stage, main, this);
     }
 
@@ -476,6 +478,7 @@ public class GameScreen implements Screen, InputProcessor{
         saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 main.setSaveScreen();
             }
         });
@@ -484,6 +487,7 @@ public class GameScreen implements Screen, InputProcessor{
         optionsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 main.setInGameOptionsScreen();
             }
         });
@@ -492,6 +496,7 @@ public class GameScreen implements Screen, InputProcessor{
         resumeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 resume();
             }
         });
@@ -500,6 +505,7 @@ public class GameScreen implements Screen, InputProcessor{
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
                 DialogFactory.leaveGameDialogBox(GameScreen.this, pauseMenuStage);
             }
         });
