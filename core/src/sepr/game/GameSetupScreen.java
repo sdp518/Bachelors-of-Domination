@@ -385,7 +385,7 @@ public class GameSetupScreen implements Screen{
      *
      * @return HashMap of Players derived from the Setup Screen
      */
-    private HashMap<Integer, Player> generatePlayerHashmaps() {
+    private HashMap<Integer, Player> generatePlayerHashmaps(boolean isNeutral) {
         HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 
         // setup Human and AI players
@@ -397,7 +397,9 @@ public class GameSetupScreen implements Screen{
         }
 
         // setup neutral player
-        players.put(GameScreen.NEUTRAL_PLAYER_ID, Player.createNeutralPlayer(GameScreen.NEUTRAL_PLAYER_ID));
+        if (isNeutral) {
+            players.put(GameScreen.NEUTRAL_PLAYER_ID, Player.createNeutralPlayer(GameScreen.NEUTRAL_PLAYER_ID));
+        }
         return players;
     }
 
@@ -496,8 +498,7 @@ public class GameSetupScreen implements Screen{
      * Method starts the game
      */
     private void startGame() {
-        HashMap<Integer, Player> x = generatePlayerHashmaps();
-
+        HashMap<Integer, Player> x = generatePlayerHashmaps(neutralPlayerSwitch.isChecked());
         // TODO Find suitable value
         int MAX_TURN_TIME = 300;
         main.setGameScreen(x, turnTimerSwitch.isChecked(), MAX_TURN_TIME, neutralPlayerSwitch.isChecked());

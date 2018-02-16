@@ -165,32 +165,19 @@ public class LoadScreen implements Screen{
             // if save in slot
             //
             if (loadedSave != null) {
+                Integer[] keys = loadedSave.getFullPlayers().keySet().toArray(new Integer[loadedSave.getFullPlayers().size()]);
                 Player player1 = loadedSave.getFullPlayers().get(0);
-                Player player2 = loadedSave.getFullPlayers().get(1);
                 t.row().left();
                 t.add(new Image(WidgetFactory.genCollegeLogoDrawable(player1.getCollegeName()))).width(150).height(120).padRight(10).padLeft(10);
-                t.add(new Label("V", smallStyle));
-                t.add(new Image(WidgetFactory.genCollegeLogoDrawable(player2.getCollegeName()))).width(150).height(120).padRight(10).padLeft(10);
-                if (((loadedSave.getFullPlayers().size() > 2) && (!loadedSave.getFullPlayers().containsKey(4)))
-                    || ((loadedSave.getFullPlayers().size() > 3) && (loadedSave.getFullPlayers().containsKey(4)))){
-                    Integer[] keys = loadedSave.getFullPlayers().keySet().toArray(new Integer[loadedSave.getFullPlayers().size()]);
-                    for (int j = 2; j < loadedSave.getFullPlayers().size(); j++) {
-                        t.add(new Label("V", smallStyle));
-                        t.add(new Image(WidgetFactory.genCollegeLogoDrawable(loadedSave.getFullPlayers().get(keys[j]).getCollegeName()))).width(150).height(120).padRight(10).padLeft(10);
-                    }
+                for (int j = 1; j < loadedSave.getFullPlayers().size(); j++) {
+                    t.add(new Label("V", smallStyle));
+                    t.add(new Image(WidgetFactory.genCollegeLogoDrawable(loadedSave.getFullPlayers().get(keys[j]).getCollegeName()))).width(150).height(120).padRight(10).padLeft(10);
                 }
                 t.row().left();
                 t.add(new Label(player1.getPlayerName(), bigStyle)).center();
-                t.add();
-                t.add(new Label(player2.getPlayerName(), bigStyle)).center();
-
-                if (((loadedSave.getFullPlayers().size() > 2) && (!loadedSave.getFullPlayers().containsKey(4)))
-                        || ((loadedSave.getFullPlayers().size() > 3) && (loadedSave.getFullPlayers().containsKey(4)))){
-                    Integer[] keys = loadedSave.getFullPlayers().keySet().toArray(new Integer[loadedSave.getFullPlayers().size()]);
-                    for (int j = 2; j < loadedSave.getFullPlayers().size(); j++) {
-                        t.add();
-                        t.add(new Label(loadedSave.getFullPlayers().get(keys[j]).getPlayerName(), bigStyle)).center();
-                    }
+                for (int j = 1; j < loadedSave.getFullPlayers().size(); j++) {
+                    t.add();
+                    t.add(new Label(loadedSave.getFullPlayers().get(keys[j]).getPlayerName(), bigStyle)).center();
                 }
 
                 // if no save in slot
