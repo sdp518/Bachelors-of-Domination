@@ -48,9 +48,9 @@ public class Main extends Game implements ApplicationListener {
         this.sounds = new Sounds();
 		applyPreferences();
 
-		//this.setMenuScreen();
+		this.setMenuScreen();
         //this.setMinigameScreen();
-        this.setBonusExchangeScreen();
+        //this.setBonusExchangeScreen();
 	}
 
     /**

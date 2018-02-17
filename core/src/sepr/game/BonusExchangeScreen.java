@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -20,6 +23,10 @@ public class BonusExchangeScreen implements Screen {
     private Table table;
     private GameScreen gameScreen;
 
+    int pizzaAmount;
+    int studentAmount;
+    Label studentLabel;
+
     /**
      *
      * @param main for changing to different screens
@@ -27,6 +34,8 @@ public class BonusExchangeScreen implements Screen {
     public BonusExchangeScreen (final Main main, GameScreen gameScreen) {
         this.main = main;
         this.gameScreen = gameScreen;
+
+        this.studentAmount = 0;
 
         this.stage = new Stage() {
             @Override
@@ -42,9 +51,70 @@ public class BonusExchangeScreen implements Screen {
         this.table = new Table();
         this.stage.addActor(table);
         this.table.setFillParent(true);
-        this.table.setDebug(false);
+        this.table.setDebug(true);
         this.setupUi();
 
+    }
+
+    private Table setupSubTable() {
+        Table subTable = new Table();
+        subTable.setDebug(true);
+
+        Table btnTable = new Table();
+        btnTable.setDebug(false);
+
+        Button btnUp = WidgetFactory.genPizzaUpButton();
+        Button btnDown = WidgetFactory.genPizzaDownButton();
+
+        btnUp.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                studentAmount++;
+            }
+        });
+
+        btnDown.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (studentAmount > 0) {
+                    studentAmount--;
+                }
+            }
+        });
+
+        btnTable.row();
+        btnTable.add(btnUp);
+        btnTable.row();
+        btnTable.add(btnDown);
+
+        Image arrow = new Image(new Texture("uiComponents/bonusExchange/arrow.png"));
+        Image studentIcon = new Image(new Texture("uiComponents/bonusExchange/studentIcon.png"));
+        Image pizzaSlice = new Image(new Texture("uiComponents/bonusExchange/pizzaSlice.png"));
+
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = WidgetFactory.getFontBig();
+
+        studentLabel = new Label("x0", style);
+
+        Button convertButton = WidgetFactory.genConvertButton();
+        convertButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                main.sounds.playSound("menu_sound");
+                // CONVERT
+            }
+        });
+
+        subTable.row();
+        subTable.add(btnTable).padRight(20);
+        subTable.add(pizzaSlice);
+        subTable.add(arrow);
+        subTable.add(studentIcon);
+        subTable.add(studentLabel);
+        subTable.row().padTop(180);
+        subTable.add(convertButton).height(60).width(420).colspan(5).center();
+
+        return subTable;
     }
 
     // TODO Finish implementing setupUI()
@@ -60,8 +130,9 @@ public class BonusExchangeScreen implements Screen {
         table.center().top();
         table.add(WidgetFactory.genMenusTopBar("PIZZA EXCHANGE")).colspan(2);
 
-        table.row();
-        table.add().expand();
+        table.row().expand();
+        table.add().width(Gdx.graphics.getWidth()/2);
+        table.add(setupSubTable()).width(Gdx.graphics.getWidth()/2).padTop(40);
 
         table.row().bottom();
         table.add(WidgetFactory.genBottomBar("RETURN", new ChangeListener() {
@@ -85,6 +156,7 @@ public class BonusExchangeScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        studentLabel.setText("x" + Integer.toString(studentAmount));
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.stage.act(Gdx.graphics.getDeltaTime());
         this.stage.draw();

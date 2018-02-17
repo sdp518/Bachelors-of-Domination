@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import sun.net.www.content.image.png;
 
 /**
  * class that generates widgets for using in the UI
@@ -55,6 +56,9 @@ public class WidgetFactory {
     private static Texture uniOfYorkLogoTexture;
     private static Texture vanbrughLogoTexture;
     private static Texture wentworthLogoTexture;
+
+    private static Texture btnUp;
+    private static Texture btnDown;
 
     private static BitmapFont fontBig;
     private static BitmapFont fontSmall;
@@ -103,6 +107,10 @@ public class WidgetFactory {
         uniOfYorkLogoTexture = new Texture("logos/uni-of-york-logo.png");
         vanbrughLogoTexture = new Texture("logos/vanbrugh-logo.png");
         wentworthLogoTexture = new Texture("logos/wentworth-logo.png");
+
+        btnUp = new Texture("uiComponents/bonusExchange/buttonUp.png");
+        btnDown = new Texture("uiComponents/bonusExchange/buttonDown.png");
+
     }
 
     /**
@@ -383,6 +391,19 @@ public class WidgetFactory {
 
     /**
      *
+     * @return a button with the text CONVERT
+     */
+    public static TextButton genConvertButton() {
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture, 0, 0, 723, 123));
+        style.down = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture, 0, 123, 723, 123));
+        style.font = fontSmall;
+
+        return new TextButton("Convert",style);
+    }
+
+    /**
+     *
      * @return a button with the text END PHASE
      */
     public static TextButton genEndPhaseButton(){
@@ -508,5 +529,38 @@ public class WidgetFactory {
     public static BitmapFont getFontSmall() {
         FileHandle alteDinSmall = new FileHandle("font/Alte-DIN-Small.fnt");
         return new BitmapFont(alteDinSmall);
+    }
+
+    /**
+     *
+     * @return a new instance of the small font
+     */
+    public static BitmapFont getFontBig() {
+        FileHandle alteDinBig = new FileHandle("font/Alte-DIN-Big.fnt");
+        return new BitmapFont(alteDinBig);
+    }
+
+    /**
+     *
+     * @return up arrow button for changing the amount of pizza to be exchanged
+     */
+    public static Button genPizzaUpButton() {
+        Button.ButtonStyle style = new Button.ButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(btnUp, 0, 0, 54, 52));
+        style.down = new TextureRegionDrawable(new TextureRegion(btnUp, 0, 52, 54, 52));
+
+        return new Button(style);
+    }
+
+    /**
+     *
+     * @return down arrow button for changing the amount of pizza to be exchanged
+     */
+    public static Button genPizzaDownButton() {
+        Button.ButtonStyle style = new Button.ButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(btnDown, 0, 0, 54, 52));
+        style.down = new TextureRegionDrawable(new TextureRegion(btnDown, 0, 52, 54, 52));
+
+        return new Button(style);
     }
 }
