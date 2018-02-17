@@ -377,6 +377,7 @@ public class GameScreen implements Screen, InputProcessor{
                 playerNames[i] = players.get(playerIdsToRemove.get(i)).getPlayerName();
             }
 
+            main.sounds.playSound("player_eliminated");
             DialogFactory.playersOutDialog(playerNames, phases.get(currentPhase)); // display which players have been eliminated
         }
 

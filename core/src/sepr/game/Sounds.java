@@ -24,6 +24,7 @@ class Sounds {
     private Sound attackSound2;
     private Sound winSound;
     private Sound pvcSound;
+    private Sound playerEliminated;
 
     /** Constructor for Class.
      * Sets up sounds and music
@@ -44,6 +45,7 @@ class Sounds {
         this.winSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/win_sound.WAV"));
         this.attackSound2 = Gdx.audio.newSound(Gdx.files.internal("Sounds/attack_sound2.WAV"));
         this.pvcSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/pvc_sound.WAV"));
+        this.playerEliminated = Gdx.audio.newSound(Gdx.files.internal("Sounds/player_eliminated.WAV"));
         setFxVolume(prefs.getFloat(OptionsScreen.FX_VOL_PREF));
         this.music = Gdx.audio.newMusic(Gdx.files.internal("music/bensound-epic.mp3"));
         setMusicVolume(prefs.getFloat(OptionsScreen.MUSIC_VOL_PREF));
@@ -99,6 +101,9 @@ class Sounds {
         }
         else if (soundToPlay.equals("pvc_sound")) {
             pvcSound.play(fxVolume);
+        }
+        else if (soundToPlay.equals("player_eliminated")) {
+            playerEliminated.play(fxVolume);
         }
 
     }

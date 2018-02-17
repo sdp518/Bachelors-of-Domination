@@ -39,6 +39,10 @@ public class LoadScreen implements Screen{
 
     private String fileName;
 
+    private Stage loadingWidgetStage;
+    private boolean isLoading;
+    private boolean loadingWidgetDrawn;
+
     /**
      *
      * @param main for changing to different screens
@@ -76,6 +80,10 @@ public class LoadScreen implements Screen{
 
         this.selectSaveBox = new Texture("uiComponents/selectSaveBttn.png");
 
+        this.loadingWidgetStage = new Stage();
+        this.isLoading = false;
+        this.loadingWidgetDrawn = false;
+
         this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
         this.stage.addActor(table);
@@ -83,6 +91,19 @@ public class LoadScreen implements Screen{
         this.table.setDebug(false);
         this.setupUi();
 
+    }
+
+    /**
+     * sets up loading widget to be shown when game starts
+     */
+    @SuppressWarnings("Duplicates")
+    private void showLoadingWidget() {
+        isLoading = true;
+        Table table = new Table();
+        table.setDebug(false);
+        table.setFillParent(true);
+        table.add(new Image(new Texture("uiComponents/loadingBox.png")));
+        loadingWidgetStage.addActor(table);
     }
 
     // TODO Implement setupSelectSaveTable()
@@ -238,14 +259,7 @@ public class LoadScreen implements Screen{
         loadButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                try {
-                    if (entryPoint == EntryPoint.MENU_SCREEN) { }
-                    Load.loadGame(fileName, gameScreen, main);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
-                    System.out.println("Load Unsuccessful");
-                }
+                showLoadingWidget();
             }
         });
 
@@ -291,14 +305,30 @@ public class LoadScreen implements Screen{
      */
     @Override
     public void show() {
+        isLoading = false;
+        loadingWidgetDrawn = false;
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
+        if (loadingWidgetDrawn) {
+            try {
+                if (entryPoint == EntryPoint.MENU_SCREEN) { }
+                Load.loadGame(fileName, gameScreen, main);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+                System.out.println("Load Unsuccessful");
+            }
+        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.stage.act(Gdx.graphics.getDeltaTime());
         this.stage.draw();
+        if (isLoading) {
+            loadingWidgetStage.draw();
+            loadingWidgetDrawn = true;
+        }
     }
 
     @Override

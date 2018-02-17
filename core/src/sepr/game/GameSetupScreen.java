@@ -549,6 +549,7 @@ public class GameSetupScreen implements Screen{
     /**
      * sets up loading widget to be shown when game starts
      */
+    @SuppressWarnings("Duplicates")
     private void showLoadingWidget() {
         isLoading = true;
         Table table = new Table();
