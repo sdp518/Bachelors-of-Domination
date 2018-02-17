@@ -14,14 +14,15 @@ import java.nio.file.Paths;
  * Then sets up the GameScreen class as well as updating it with all of the data saved.
  */
 public class Load {
-    public static void loadGame(GameScreen gameScreen, Main main) throws IOException{
+    public static void loadGame(String fileName, GameScreen gameScreen, Main main) throws IOException{
         Path currentRelativePath = Paths.get("");
         String currentWorkingDir = currentRelativePath.toAbsolutePath().toString();
-        String fileName = currentWorkingDir + "\\saves\\TestSave.data";
+        String filePath = currentWorkingDir + "\\saves\\" + fileName;
         ObjectInputStream ois = null;
         Data loadedSave = null;
         try {
-            ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileName)));
+            int test;
+            ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filePath)));
             loadedSave = (Data) ois.readObject();
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
@@ -54,16 +55,16 @@ public class Load {
             loadedSave.updateSectors(gameScreen.getSectors(), gameScreen.getPlayers());
             gameScreen.setTurnOrder(loadedSave.getTurnOrder());
             gameScreen.setCurrentPlayerPointer(loadedSave.getCurrentPlayerPointer());
-            if (gameScreen.getCurrentPhase() == TurnPhaseType.REINFORCEMENT) {
+            if (loadedSave.getCurrentPhase() == TurnPhaseType.REINFORCEMENT) {
                 gameScreen.getCurrentPlayer().addTroopsToAllocate(-5);
             }
-            gameScreen.getPhases().get(gameScreen.getCurrentPhase()).enterPhase(gameScreen.getCurrentPlayer());
+            gameScreen.updateBonus();
             gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());
             if (loadedSave.isTurnTimerEnabled()) {
-                gameScreen.setIsPaused(loadedSave.isPaused());
                 gameScreen.setTurnTimeStart(System.currentTimeMillis() - loadedSave.getTurnTimeElapsed());
             }
             main.returnGameScreen();
+            gameScreen.getPhases().get(gameScreen.getCurrentPhase()).enterPhase(gameScreen.getCurrentPlayer());
             System.out.println("Load Successful");
         } else {
             throw new IOException("Load Error");

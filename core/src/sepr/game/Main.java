@@ -23,7 +23,7 @@ public class Main extends Game implements ApplicationListener {
 	private GameSetupScreen gameSetupScreen;
 	private LoadScreen loadScreen;
 	private LoadScreen saveScreen;
-	private MinigameScreen minigameScreen;
+	//private MinigameScreen minigameScreen;
 	public  Sounds sounds;
 	private BonusExchangeScreen bonusExchangeScreen;
 
@@ -41,22 +41,22 @@ public class Main extends Game implements ApplicationListener {
 		this.optionsScreen = new OptionsScreen(this, EntryPoint.MENU_SCREEN);
 		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
+		//this.minigameScreen = new MinigameScreen(this);
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
-		this.minigameScreen = new MinigameScreen(this.gameScreen);
 		this.bonusExchangeScreen = new BonusExchangeScreen(this, gameScreen);
 
         this.sounds = new Sounds();
 		applyPreferences();
 
 		this.setMenuScreen();
-        //this.setMinigameScreen();
+        //this.setMinigameScreen(minigameScreen);
         //this.setBonusExchangeScreen();
 	}
 
     /**
      * changes the screen currently being displayed to the menu
      */
-    public void setMinigameScreen() {
+    public void setMinigameScreen(MinigameScreen minigameScreen) {
         this.setScreen(minigameScreen);
     }
 
@@ -93,6 +93,7 @@ public class Main extends Game implements ApplicationListener {
 	 */
 	public void setGameScreen(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime, boolean allocateNeutralPlayer) {
 		gameScreen.setupGame(players, turnTimerEnabled, maxTurnTime, allocateNeutralPlayer);
+		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.setScreen(gameScreen);
 		gameScreen.startGame();
 	}
@@ -103,6 +104,15 @@ public class Main extends Game implements ApplicationListener {
 	public void returnGameScreen() {
 	    this.setScreen(gameScreen);
 		gameScreen.resetCameraPosition();
+	}
+
+	/**
+	 * returns to the game screen from the minigame
+	 */
+	public void returnFromMinigame() {
+		this.setScreen(gameScreen);
+		gameScreen.resetCameraPosition();
+		gameScreen.resumeTimer();
 	}
 
 	/**
@@ -139,6 +149,10 @@ public class Main extends Game implements ApplicationListener {
 	 */
 	public void setSaveScreen() {
 		this.setScreen(saveScreen);
+	}
+
+	public void updateSaveScreen(LoadScreen saveScreen) {
+		this.saveScreen = saveScreen;
 	}
 
 	/**

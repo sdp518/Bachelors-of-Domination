@@ -117,6 +117,22 @@ public class Data implements java.io.Serializable {
         return this.players;
     }
 
+    public HashMap<Integer, Player> getFullPlayers() {
+        HashMap<Integer,Player> fullPlayers = new HashMap<Integer, Player>();
+        Integer[] keys = this.players.keySet().toArray(new Integer[this.players.size()]);
+        for(int i = 0; i < keys.length; i++) {
+            SavePlayer smallPlayer = this.players.get(keys[i]);
+            fullPlayers.put(keys[i], new Player(smallPlayer.getId(),
+                    smallPlayer.getCollegeName(),
+                    smallPlayer.getTroopsToAllocate(),
+                    smallPlayer.getSectorColor(),
+                    smallPlayer.getPlayerType(),
+                    smallPlayer.getPlayerName()));
+            fullPlayers.get(keys[i]).changeBonus(smallPlayer.getBonus());
+        }
+        return fullPlayers;
+    }
+
     /**
      * Overwrites the setup players with the list of players that were playing the saved game.
      * @param players the HashMap of players to be updated with the HashMap of players that were saved.
@@ -141,6 +157,7 @@ public class Data implements java.io.Serializable {
                     smallPlayer.getSectorColor(),
                     smallPlayer.getPlayerType(),
                     smallPlayer.getPlayerName()));
+            players.get(keys[i]).changeBonus(smallPlayer.getBonus());
         }
         gameScreen.setPlayers(players);
     }

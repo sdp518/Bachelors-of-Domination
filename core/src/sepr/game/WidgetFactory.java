@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import sun.net.www.content.image.png;
 
 /**
  * class that generates widgets for using in the UI
@@ -430,7 +429,6 @@ public class WidgetFactory {
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.pauseTimer();
                 gameScreen.pause();
             }
         });
@@ -533,7 +531,7 @@ public class WidgetFactory {
 
     /**
      *
-     * @return a new instance of the small font
+     * @return a new instance of the big font
      */
     public static BitmapFont getFontBig() {
         FileHandle alteDinBig = new FileHandle("font/Alte-DIN-Big.fnt");

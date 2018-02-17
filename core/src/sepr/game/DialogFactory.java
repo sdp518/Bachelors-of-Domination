@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.StringBuilder;
 
+import java.util.Random;
+
 /**
  * class that produces reusable dialog windows for displaying information to the player and receiving input from them
  */
@@ -18,8 +20,11 @@ public class DialogFactory {
 
     private static Skin skin; // skin shared by all dialog windows for a uniform aesthetic
 
+    private static Random random;
+
     public DialogFactory() {
         skin = new Skin(Gdx.files.internal("dialogBox/skin/uiskin.json"));
+        random = new Random();
     }
 
     /**
@@ -34,6 +39,24 @@ public class DialogFactory {
         Dialog dialog = new Dialog(title, DialogFactory.skin);
         dialog.text(message);
         dialog.button("Ok", "0");
+        dialog.show(stage);
+    }
+
+    /**
+     * creates a dialog telling the user that they've captured the PVC
+     * the minigame is started when the user presses the ok button
+     *
+     * @param stage to draw the box onto
+     */
+    public static void minigameDialogBox(Stage stage, final Main main, final GameScreen gameScreen) {
+        Dialog dialog = new Dialog("Congratulations!", DialogFactory.skin) {
+            protected void result(Object object) {
+                // calls the minigame
+                main.setMinigameScreen(new MinigameScreen(main, gameScreen));
+            }
+        };
+        dialog.text("You've captured the Pro-Vice Chancellor! Try your luck at the slot machine");
+        dialog.button("Play", "0");
         dialog.show(stage);
     }
 
@@ -97,9 +120,25 @@ public class DialogFactory {
      * @param newOwner name of the player who now controls the sector
      * @param sectorName name of the sector being taken
      * @param stage to draw the box onto
+     * @param gameScreen to start the minigame
      */
-    public static void sectorOwnerChangeDialog(String prevOwner, String newOwner, String sectorName, Stage stage) {
-        basicDialogBox("Sector Owner Change", newOwner + " gained " + sectorName + " from " + prevOwner, stage);
+    public static void sectorOwnerChangeDialog(String prevOwner, String newOwner, String sectorName, final Stage stage, final GameScreen gameScreen) {
+        Dialog dialog = new Dialog("Sector owner change", DialogFactory.skin) {
+            protected void result(Object object) {
+                // Checks if gameScreen is null as minigame shouldn't start unless defender won (parameter used as flag)
+                if (gameScreen != null) {
+                    // TODO Decide probability
+                    if (random.nextInt(5) == 1) {
+                        // MINIGAME
+                        gameScreen.startMinigame(stage);
+                    }
+                }
+            }
+        };
+
+        dialog.text(newOwner + " gained " + sectorName + " from " + prevOwner);
+        dialog.button("Ok", "0");
+        dialog.show(stage);
     }
 
     /**
@@ -112,8 +151,9 @@ public class DialogFactory {
      * @param newOwner name of the player who now controls the sector
      * @param sectorName name of the sector being taken
      * @param stage The stage to draw the box onto
+     * @param gameScreen to start the minigame
      */
-    public static void attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, final int[] troopsMoved, String prevOwner, String newOwner, String sectorName, Stage stage) {
+    public static void attackSuccessDialogBox(Integer bonusTroops, Integer maxTroops, final int[] troopsMoved, String prevOwner, String newOwner, String sectorName, final Stage stage, final GameScreen gameScreen) {
         final Slider slider = new Slider(1, (maxTroops - 1), 1, false, DialogFactory.skin); // slider max value is (maxTroops - 1) as must leave at least one troop on attacking sector
         slider.setValue(1); // must move at least one troop so set initial value to 1
         final Label sliderValue = new Label("1", DialogFactory.skin); // label to display the slider value
@@ -129,6 +169,11 @@ public class DialogFactory {
             protected void result(Object object) {
                 // set number of troops to move to the value of the slider when the dialog is closed
                 troopsMoved[0] = (int)slider.getValue();
+                // TODO Decide probability
+                if (random.nextInt(5) == 1) {
+                    // MINIGAME
+                    gameScreen.startMinigame(stage);
+                }
             }
         };
 

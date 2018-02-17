@@ -23,7 +23,7 @@ public class PhaseAttack extends Phase{
 
     private Random random; // random object for adding some unpredictability to the outcome of attacks
 
-    private int attacksRemaining;
+    //private int attacksRemaining;
 
     public PhaseAttack(GameScreen gameScreen) {
         super(gameScreen, TurnPhaseType.ATTACK);
@@ -37,7 +37,7 @@ public class PhaseAttack extends Phase{
 
         this.random = new Random();
 
-        this.attacksRemaining = 3;
+        //this.attacksRemaining = 3;
     }
 
     /**
@@ -66,31 +66,39 @@ public class PhaseAttack extends Phase{
         }
         numOfAttackers = new int[1];
         numOfAttackers[0] = -1;
-        DialogFactory.attackDialog(attackingSector.getUnitsInSector(), defendingSector.getUnitsInSector(), numOfAttackers, this);
+        DialogFactory.attackDialog(attackingSector.getUnitsInSector() - 1, defendingSector.getUnitsInSector(), numOfAttackers, this);
     }
 
     /**
      * carries out attack once number of attackers has been set using the dialog
      */
     private void executeAttack() {
-        int attackers = numOfAttackers[0];
-        int defenders = defendingSector.getUnitsInSector();
+        int attackersLost = 0;
+        int defendersLost = 0;
+        int count = 0;
+        while ((attackersLost == 0) && (defendersLost == 0) && (count < 10)) {
+            int attackers = numOfAttackers[0];
+            int defenders = defendingSector.getUnitsInSector();
 
-        float propAttack = (float)attackers / (float)(attackers + defenders); // proportion of troops that are attackers
-        float propDefend = (float)defenders / (float)(attackers + defenders); // proportion of troops that are defenders
+            float propAttack = (float) attackers / (float) (attackers + defenders); // proportion of troops that are attackers
+            float propDefend = (float) defenders / (float) (attackers + defenders); // proportion of troops that are defenders
 
-        // calculate the proportion of attackers and defenders lost
-        float propAttackersLost = (float)Math.max(0, Math.min(1, 0.02 * Math.exp(5 * propDefend) + 0.1 + (-0.125 + random.nextFloat()/4)));
-        float propDefendersLost = (float)Math.max(0, Math.min(1, 0.02 * Math.exp(5 * propAttack) + 0.15 + (-0.125 + random.nextFloat()/4)));
+            // calculate the proportion of attackers and defenders lost
+            float propAttackersLost = (float) Math.max(0, Math.min(1, 0.02 * Math.exp(5 * propDefend) + 0.1 + (-0.125 + random.nextFloat() / 4)));
+            float propDefendersLost = (float) Math.max(0, Math.min(1, 0.02 * Math.exp(5 * propAttack) + 0.15 + (-0.125 + random.nextFloat() / 4)));
 
-        if (propAttack == 1) { // if attacking an empty sector then no attackers will be lost
-            propAttackersLost = 0;
-            propDefendersLost = 1;
+            if (propAttack == 1) { // if attacking an empty sector then no attackers will be lost
+                propAttackersLost = 0;
+                propDefendersLost = 1;
+            }
+
+            attackersLost = (int) (attackers * propAttackersLost);
+            defendersLost = (int) (defenders * propDefendersLost);
+            count++;
         }
-
-        int attackersLost = (int)(attackers * propAttackersLost);
-        int defendersLost = (int)(defenders * propDefendersLost);
-
+        if (count >= 10) {
+            attackersLost = 1;
+        }
         // apply the attack to the map
         if (gameScreen.getMap().attackSector(attackingSector.getId(), defendingSector.getId(), attackersLost, defendersLost, gameScreen.getPlayerById(attackingSector.getOwnerId()), gameScreen.getPlayerById(defendingSector.getOwnerId()), gameScreen.getPlayerById(gameScreen.NEUTRAL_PLAYER_ID), this)) {
             updateTroopReinforcementLabel();
@@ -109,11 +117,11 @@ public class PhaseAttack extends Phase{
             } else {
                 this.sound.playSound("attack_sound");
                 executeAttack();
-                this.attacksRemaining -= 1;
+                /*this.attacksRemaining -= 1;
                 if (attacksRemaining == 0){
                     attacksRemaining = 3;
                     gameScreen.nextPhase();
-                }
+                }*/
             }
             // reset attack
             attackingSector = null;
@@ -143,7 +151,7 @@ public class PhaseAttack extends Phase{
         super.endPhase();
         attackingSector = null;
         defendingSector = null;
-        attacksRemaining = 3;
+        //attacksRemaining = 3;
     }
 
     @Override

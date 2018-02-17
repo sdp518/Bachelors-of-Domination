@@ -12,6 +12,7 @@ public class Player implements java.io.Serializable{
     private int troopsToAllocate; // how many troops the player has to allocate at the start of their next reinforcement phase
     private Color sectorColour; // what colour to shade sectors owned by the player
     private PlayerType playerType; // Human or Neutral player
+    private int bonus; // bonus allocated to the player
 
     /**
      * creates a player object with the specified properties
@@ -29,8 +30,19 @@ public class Player implements java.io.Serializable{
         this.sectorColour = sectorColour;
         this.playerType = playerType;
         this.playerName = playerName;
+        this.bonus = 0;
     }
 
+    /**
+     * creates a player object with the specified properties
+     *
+     * @param id player's unique identifier
+     * @param collegeName display name for this player
+     * @param troopsToAllocate the amount of troops the player has to allocate
+     * @param sectorColour colour that the sectors owned by this player are coloured
+     * @param playerType is this player a Human, AI or Neutral AI
+     * @param playerName player's name to be displayed
+     */
     public Player(int id, GameSetupScreen.CollegeName collegeName, int troopsToAllocate, Color sectorColour, PlayerType playerType, String playerName) {
         this.id = id;
         this.collegeName = collegeName;
@@ -38,6 +50,7 @@ public class Player implements java.io.Serializable{
         this.sectorColour = sectorColour;
         this.playerType = playerType;
         this.playerName = playerName;
+        this.bonus = 0;
     }
 
     /**
@@ -120,5 +133,26 @@ public class Player implements java.io.Serializable{
      */
     public void addTroopsToAllocate(int troopsToAllocate) {
         this.troopsToAllocate += troopsToAllocate;
+    }
+
+    /**
+     * changes the bonus allocated to the player by a given amount
+     * @param bonusChange amount to change bonus by
+     */
+    public void changeBonus(int bonusChange) {
+        if ((bonusChange < 0) && (Math.abs(bonusChange) > this.bonus)) {
+            throw new IllegalArgumentException("Subtracting this amount would put the bonus below 0");
+        }
+        else {
+            this.bonus += bonusChange;
+        }
+
+    }
+
+    /**
+     * @return the bonus allocated to the player
+     */
+    public int getBonus() {
+        return this.bonus;
     }
 }
