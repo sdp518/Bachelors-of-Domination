@@ -28,7 +28,7 @@ public class Map {
     private BitmapFont font; // font for rendering sector unit data
     private GlyphLayout layout = new GlyphLayout();
 
-    private Texture troopCountOverlay = new Texture("uiComponents/troopCountOverlay.png");
+    private Texture troopCountOverlay;
 
     private int[] unitsToMove; // units to move from an attacking to conquered sector, 3 index array : [0] amount to move; [1] source sector id ; [2] target sector id
 
@@ -46,12 +46,18 @@ public class Map {
         this.main = main;
         this.gameScreen = gameScreen;
         random = new Random();
+        this.troopCountOverlay = new Texture("uiComponents/troopCountOverlay.png");
 
-        this.loadSectors();
+        this.sectors = this.loadSectors();
         font = WidgetFactory.getFontSmall();
 
         particles = new ArrayList<UnitChangeParticle>();
         this.allocateSectors(players, allocateNeutralPlayer);
+    }
+
+    //Used in testing, to be removed before final release.
+    public Map() {
+        this.sectors = this.loadSectors();
     }
 
     /**
@@ -75,8 +81,8 @@ public class Map {
     /**
      * load the sector properties from the sectorProperties.csv file into the sectors hashmap
      */
-    private void loadSectors() {
-        this.sectors = new HashMap<Integer, Sector>();
+    private HashMap<Integer, Sector> loadSectors() {
+        HashMap<Integer, Sector> sectors = new HashMap<Integer, Sector>();
 
         String csvFile = "mapData/sectorProperties.csv";
         String line = "";
@@ -85,13 +91,14 @@ public class Map {
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
                 Sector temp = sectorDataToSector(line.split(","));
-                this.sectors.put(temp.getId(), temp);
+                sectors.put(temp.getId(), temp);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace(); // csv file no present
         } catch (IOException e) {
             e.printStackTrace(); // error occurred whilst reading the file
         }
+        return sectors;
     }
 
     /**

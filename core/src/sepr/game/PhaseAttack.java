@@ -66,7 +66,7 @@ public class PhaseAttack extends Phase{
         }
         numOfAttackers = new int[1];
         numOfAttackers[0] = -1;
-        DialogFactory.attackDialog(attackingSector.getUnitsInSector(), defendingSector.getUnitsInSector(), numOfAttackers, this);
+        DialogFactory.attackDialog(attackingSector.getUnitsInSector() - 1, defendingSector.getUnitsInSector(), numOfAttackers, this);
     }
 
     /**
