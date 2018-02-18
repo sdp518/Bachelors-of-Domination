@@ -97,7 +97,12 @@ public class PhaseAttack extends Phase{
             count++;
         }
         if (count >= 10) {
-            attackersLost = 1;
+            if (defendingSector.getUnitsInSector() == 1) { // fixes 3v1 & 2v1 100% loss chance
+                defendersLost = 1;
+                attackersLost = 0;
+            }
+            else
+                attackersLost = 1;
         }
         // apply the attack to the map
         if (gameScreen.getMap().attackSector(attackingSector.getId(), defendingSector.getId(), attackersLost, defendersLost, gameScreen.getPlayerById(attackingSector.getOwnerId()), gameScreen.getPlayerById(defendingSector.getOwnerId()), gameScreen.getPlayerById(gameScreen.NEUTRAL_PLAYER_ID), this)) {

@@ -6,7 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import java.util.Random;
 
-/** Deals with all audio **/
+/** NEW CLASS Deals with all audio **/
 class Sounds {
     private Sound menuSound;
     private Sound attackSound;
@@ -61,7 +61,7 @@ class Sounds {
         if (soundToPlay.equals("menu_sound")){
             menuSound.play(fxVolume);
         }
-        else if (soundToPlay.equals("attack_sound")){
+        else if (soundToPlay.equals("attack_sound")){ // adds 2% proc chance for "secret" attack sound
             Random rand = new Random();
             int chance = rand.nextInt(50);
             if (chance == 10){
