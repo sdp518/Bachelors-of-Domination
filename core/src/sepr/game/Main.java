@@ -104,6 +104,7 @@ public class Main extends Game implements ApplicationListener {
 	public void returnGameScreen() {
 	    this.setScreen(gameScreen);
 		gameScreen.resetCameraPosition();
+		gameScreen.resume();
 	}
 
 	/**

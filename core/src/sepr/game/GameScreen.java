@@ -165,7 +165,8 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     public long getTurnTimeElapsed() {
-        return System.currentTimeMillis() - (turnTimeStart)  + pausedTime;
+        pausedTime += (System.currentTimeMillis() - pauseStartTime);
+        return (System.currentTimeMillis() - (turnTimeStart + pausedTime));
     }
 
     // TODO rework how the game time is stored as the above is not nice for saving, we'll talk tomorrow about it, Matt.
@@ -185,6 +186,13 @@ public class GameScreen implements Screen, InputProcessor{
         pausedTime += (System.currentTimeMillis() - pauseStartTime);
         pauseStartTime = 0;
         this.timerPaused = false;
+    }
+
+    /**
+     * resets the paused time, called before returning after load
+     */
+    public void resetPausedTime(){
+        pausedTime = 0;
     }
 
 
@@ -476,7 +484,7 @@ public class GameScreen implements Screen, InputProcessor{
      * adds the pause menu to the pause menu stage
      */
     private void displayPauseMenu() {
-        TextButton saveButton = WidgetFactory.genPauseMenuButton("SAVE");
+        TextButton saveButton = WidgetFactory.genPauseMenuButton("SAVE/LOAD");
         saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
