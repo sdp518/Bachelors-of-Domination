@@ -163,7 +163,6 @@ public class Main extends Game implements ApplicationListener {
 	 *      FX Volume
 	 *      Screen Resolution
 	 *      Fullscreen
-	 *      Colourblind Mode
 	 * A default setting should be applied for any missing preferences
 	 */
 	public void applyPreferences() {

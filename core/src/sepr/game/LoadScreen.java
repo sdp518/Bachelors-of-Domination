@@ -80,7 +80,6 @@ public class LoadScreen implements Screen{
 
         this.selectSaveBox = new Texture("uiComponents/selectSaveBttn.png");
 
-        this.fileName = null;
         this.loadingWidgetStage = new Stage();
         this.isLoading = false;
         this.loadingWidgetDrawn = false;
@@ -260,7 +259,7 @@ public class LoadScreen implements Screen{
         loadButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                validateLoad();
+                showLoadingWidget();
             }
         });
 
@@ -299,15 +298,6 @@ public class LoadScreen implements Screen{
             })).colspan(2);
         }
 
-    }
-
-    private void validateLoad() {
-        if (fileName == null) {
-            DialogFactory.basicDialogBox("Error!", "No save selected", stage);
-        }
-        else {
-            showLoadingWidget();
-        }
     }
 
     /**
