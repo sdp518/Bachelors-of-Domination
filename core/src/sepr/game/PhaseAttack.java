@@ -25,8 +25,8 @@ public class PhaseAttack extends Phase{
 
     //private int attacksRemaining;
 
-    public PhaseAttack(GameScreen gameScreen) {
-        super(gameScreen, TurnPhaseType.ATTACK);
+    public PhaseAttack(GameScreen gameScreen, Main main) {
+        super(gameScreen, TurnPhaseType.ATTACK, main);
 
         this.arrow = new TextureRegion(new Texture(Gdx.files.internal("uiComponents/arrow.png")));
         this.attackingSector = null;

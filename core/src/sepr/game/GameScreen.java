@@ -113,9 +113,9 @@ public class GameScreen implements Screen, InputProcessor{
 
         // create the game phases and add them to the phases hashmap
         this.phases = new HashMap<TurnPhaseType, Phase>();
-        this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this));
-        this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this));
-        this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this));
+        this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, main));
+        this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, main));
+        this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this, main));
 
         gameSetup = true; // game is now setup
     }

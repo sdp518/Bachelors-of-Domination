@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 public class PhaseReinforce extends Phase {
     private int[] allocateUnits; // 2 index array storing : [0] number of troops to allocate ; [1] id of sector to allocate to
 
-    public PhaseReinforce(GameScreen gameScreen) {
-        super(gameScreen, TurnPhaseType.REINFORCEMENT);
+    public PhaseReinforce(GameScreen gameScreen, Main main) {
+        super(gameScreen, TurnPhaseType.REINFORCEMENT, main);
     }
 
     @Override

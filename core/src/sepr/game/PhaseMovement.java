@@ -20,9 +20,9 @@ public class PhaseMovement extends Phase {
     private Vector2 arrowTailPosition; // Vector x,y for the base of the arrow
     private Vector2 arrowHeadPosition; // Vector x,y for the point of the arrow
 
-    public PhaseMovement(GameScreen gameScreen) {
+    public PhaseMovement(GameScreen gameScreen, Main main) {
 
-        super(gameScreen, TurnPhaseType.MOVEMENT);
+        super(gameScreen, TurnPhaseType.MOVEMENT, main);
         this.arrow = new TextureRegion(new Texture(Gdx.files.internal("uiComponents/arrow.png")));
         this.sourceSector = null;
         this.targetSector = null;

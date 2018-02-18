@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.EventListener;
 import java.util.Random;
 
 public class MinigameScreen implements Screen {
@@ -110,7 +109,7 @@ public class MinigameScreen implements Screen {
             public boolean keyUp(int keyCode) {
                 if ((keyCode == Input.Keys.ESCAPE) && (gameFinished)) { // change back to the menu screen if the player presses esc
                     main.sounds.playSound("menu_sound");
-                    main.returnFromMinigame();
+                    main.returnGameScreenUnpaused();
                 }
                 return super.keyUp(keyCode);
             }

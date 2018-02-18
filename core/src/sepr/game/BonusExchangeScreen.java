@@ -25,6 +25,7 @@ public class BonusExchangeScreen implements Screen {
 
     int pizzaAmount;
     int studentAmount;
+    Label pizzaLabel;
     Label studentLabel;
 
     /**
@@ -35,13 +36,14 @@ public class BonusExchangeScreen implements Screen {
         this.main = main;
         this.gameScreen = gameScreen;
 
+        this.pizzaAmount = gameScreen.getCurrentPlayer().getBonus();
         this.studentAmount = 0;
 
         this.stage = new Stage() {
             @Override
             public boolean keyUp(int keyCode) {
                 if (keyCode == Input.Keys.ESCAPE) { // change back to the game screen if the player presses esc
-                    main.returnGameScreen();
+                    main.returnGameScreenUnpaused();
                 }
                 return super.keyUp(keyCode);
             }
@@ -51,14 +53,14 @@ public class BonusExchangeScreen implements Screen {
         this.table = new Table();
         this.stage.addActor(table);
         this.table.setFillParent(true);
-        this.table.setDebug(true);
+        this.table.setDebug(false);
         this.setupUi();
 
     }
 
     private Table setupSubTable() {
         Table subTable = new Table();
-        subTable.setDebug(true);
+        subTable.setDebug(false);
 
         Table btnTable = new Table();
         btnTable.setDebug(false);
@@ -69,7 +71,9 @@ public class BonusExchangeScreen implements Screen {
         btnUp.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                studentAmount++;
+                if (studentAmount != pizzaAmount){
+                    studentAmount++;
+                }
             }
         });
 
@@ -94,24 +98,25 @@ public class BonusExchangeScreen implements Screen {
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = WidgetFactory.getFontBig();
 
+        pizzaLabel = new Label("x" + Integer.toString(pizzaAmount), style);
         studentLabel = new Label("x0", style);
 
         Button convertButton = WidgetFactory.genConvertButton();
         convertButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                main.sounds.playSound("menu_sound");
-                // CONVERT
+                convert();
             }
         });
 
         subTable.row();
-        subTable.add(btnTable).padRight(20);
         subTable.add(pizzaSlice);
-        subTable.add(arrow);
+        subTable.add(pizzaLabel);
+        subTable.add(arrow).padLeft(20).padRight(20);
         subTable.add(studentIcon);
-        subTable.add(studentLabel);
-        subTable.row().padTop(180);
+        subTable.add(studentLabel).padLeft(10);
+        subTable.add(btnTable).padLeft(40);
+        subTable.row().padTop(210);
         subTable.add(convertButton).height(60).width(420).colspan(5).center();
 
         return subTable;
@@ -139,11 +144,28 @@ public class BonusExchangeScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 main.sounds.playSound("menu_sound");
-                main.returnGameScreen();
+                main.returnGameScreenUnpaused();
             }
 
         })).colspan(2);
 
+    }
+
+    /**
+     * converts the selected amount of pizzas to students
+     */
+    private void convert() {
+        if (studentAmount == 0){
+            DialogFactory.basicDialogBox("No pizza selected!","You must select how much pizza to convert", stage);
+        }
+        else {
+            main.sounds.playSound("menu_sound");
+            gameScreen.getCurrentPlayer().addTroopsToAllocate(studentAmount);
+            gameScreen.getCurrentPlayer().changeBonus((-1 * studentAmount));
+            gameScreen.getPhases().get(gameScreen.getCurrentPhase()).updateTroopReinforcementLabel();
+            gameScreen.updateBonus();
+            DialogFactory.convertedDialogBox(stage, main, studentAmount);
+        }
     }
 
     /**
@@ -156,6 +178,7 @@ public class BonusExchangeScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        pizzaLabel.setText("x" + Integer.toString((pizzaAmount - studentAmount)));
         studentLabel.setText("x" + Integer.toString(studentAmount));
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.stage.act(Gdx.graphics.getDeltaTime());

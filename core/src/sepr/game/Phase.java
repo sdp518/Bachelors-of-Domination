@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  * base class for handling phase specific input
  */
 public abstract class Phase extends Stage {
+    Main main;
     GameScreen gameScreen;
     Player currentPlayer;
 
@@ -42,10 +43,11 @@ public abstract class Phase extends Stage {
      * @param gameScreen for accessing the map and additional game properties
      * @param turnPhase type of phase this is
      */
-    public Phase(GameScreen gameScreen, TurnPhaseType turnPhase) {
+    public Phase(GameScreen gameScreen, TurnPhaseType turnPhase, Main main) {
         this.setViewport(new ScreenViewport());
 
         this.gameScreen = gameScreen;
+        this.main = main;
 
         this.turnPhase = turnPhase;
 
@@ -98,7 +100,7 @@ public abstract class Phase extends Stage {
     }
 
     private Table genGameHUDTopBarRightPart(){
-        this.pizza = new Image(new Texture("uiComponents/pizza.png"));
+        this.pizza = new Image(new Texture("uiComponents/bonusExchange/pizzaSlice.png"));
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = WidgetFactory.getFontBig();
@@ -106,12 +108,36 @@ public abstract class Phase extends Stage {
         // TODO Get bonus to display
         bonusLabel = new Label("0", style);
 
+        TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
+        btnStyle.font = WidgetFactory.getFontSmall();
+        TextButton exchangeButton = new TextButton("EXCHANGE", btnStyle);
+
+        exchangeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (gameScreen.getCurrentPlayer().getBonus() == 0){
+                    DialogFactory.basicDialogBox("Not enough Pizza!",
+                            "You don't have any pizza to convert but keep playing" +
+                                    " and you might come across some...",
+                            gameScreen.getPhases().get(gameScreen.getCurrentPhase()));
+                }
+                else {
+                    main.sounds.playSound("menu_sound");
+                    gameScreen.pauseTimer();
+                    main.setBonusExchangeScreen(new BonusExchangeScreen(main, gameScreen));
+                }
+
+            }
+        });
+
         Table table = new Table();
         table.setDebug(false);
         table.background(new TextureRegionDrawable(new TextureRegion(gameHUDTopBarRightPartTexture)));
-        table.row().padBottom(20).center();
+        table.row();
         table.add(pizza).width(75).height(75).padRight(20);
         table.add(bonusLabel);
+        table.row();
+        table.add(exchangeButton).colspan(2).padBottom(20);
 
         return table;
     }
