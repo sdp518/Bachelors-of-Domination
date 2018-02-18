@@ -2,11 +2,13 @@ package SaveLoad;
 
 import sepr.game.GameScreen;
 import sepr.game.Main;
+import sepr.game.Player;
 import sepr.game.TurnPhaseType;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 /**
  * Class Load to handle all functions associated with loading the save file to be playable.
@@ -43,12 +45,12 @@ public class Load {
             }
         }
         if (loadedSave != null) {
-            loadedSave.updatePlayers(gameScreen.getPlayers(), gameScreen);
+            HashMap<Integer, Player> players = loadedSave.getFullPlayers();
             boolean allocateNeutralPlayer = false;
-            if (gameScreen.getPlayers().keySet().contains(4)) {
+            if (players.keySet().contains(4)) {
                 allocateNeutralPlayer = true;
             }
-            gameScreen.setupGame(gameScreen.getPlayers(),
+            gameScreen.setupGame(players,
                     loadedSave.isTurnTimerEnabled(),
                     loadedSave.getMaxTurnTime(),
                     allocateNeutralPlayer);

@@ -9,6 +9,10 @@ buildscript {
     }
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -71,6 +75,9 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "net.dermetfan.libgdx-utils:libgdx-utils:$gdxUtilsVersion"
+
+        testCompile "junit:junit:4.12"
+        testCompile "org.mockito:mockito-core:2.2.7"
     }
 }
 

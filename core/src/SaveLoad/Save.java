@@ -27,6 +27,9 @@ public class Save {
                                 boolean isPaused) {
         Path currentRelativePath = Paths.get("");
         String currentWorkingDir = currentRelativePath.toAbsolutePath().toString();
+        if (!currentWorkingDir.contains("assets")) {
+            currentWorkingDir += "\\assets";
+        }
         String filePath = currentWorkingDir + "\\saves\\" + fileName;
         Data thisSave = new Data(currentPhase,
                 sectors,
@@ -49,13 +52,13 @@ public class Save {
             System.out.println("Sorry something went wrong! Try restarting the application."); //Not a good error message, need to mitigate this.
         } finally {
             if (oos != null) {
+                System.out.println("Save Successful");
                 try {
                     oos.close();
                 } catch (IOException e) {
 
                 }
             }
-            System.out.println("Save Successful");
         }
     }
 }

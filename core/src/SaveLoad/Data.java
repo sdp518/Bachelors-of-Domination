@@ -136,7 +136,7 @@ public class Data implements java.io.Serializable {
     /**
      * Overwrites the setup players with the list of players that were playing the saved game.
      * @param players the HashMap of players to be updated with the HashMap of players that were saved.
-     * @param gameScreen the GameScreen being rewritten with the saved data.
+     * //@param gameScreen the GameScreen being rewritten with the saved data.
      */
     public void updatePlayers(HashMap<Integer, Player> players, GameScreen gameScreen) {
         Integer[] keys;
