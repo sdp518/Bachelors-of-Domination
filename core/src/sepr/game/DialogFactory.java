@@ -145,7 +145,6 @@ public class DialogFactory {
             protected void result(Object object) {
                 // Checks if gameScreen is null as minigame shouldn't start unless defender won (parameter used as flag)
                 if (gameScreen != null) {
-                    // TODO Decide probability
                     if (random.nextInt(5) == 1) {
                         // MINIGAME
                         gameScreen.startMinigame(stage);
@@ -187,7 +186,6 @@ public class DialogFactory {
             protected void result(Object object) {
                 // set number of troops to move to the value of the slider when the dialog is closed
                 troopsMoved[0] = (int)slider.getValue();
-                // TODO Decide probability
                 if (random.nextInt(5) == 1) {
                     // MINIGAME
                     gameScreen.startMinigame(stage);

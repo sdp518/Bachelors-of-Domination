@@ -31,6 +31,7 @@ public class BonusExchangeScreen implements Screen {
     /**
      *
      * @param main for changing to different screens
+     * @param gameScreen for accessing current player and converting pizza
      */
     public BonusExchangeScreen (final Main main, GameScreen gameScreen) {
         this.main = main;
@@ -58,6 +59,11 @@ public class BonusExchangeScreen implements Screen {
 
     }
 
+    /**
+     * sets up UI elements for selecting what you want to convert
+     *
+     * @return table containing UI elements
+     */
     private Table setupSubTable() {
         Table subTable = new Table();
         subTable.setDebug(false);
@@ -122,7 +128,6 @@ public class BonusExchangeScreen implements Screen {
         return subTable;
     }
 
-    // TODO Finish implementing setupUI()
     /**
      * sets up the UI for the bonus exchange screen
      */

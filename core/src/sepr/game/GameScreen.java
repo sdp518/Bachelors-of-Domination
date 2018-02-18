@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sun.xml.internal.bind.v2.TODO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -168,8 +169,6 @@ public class GameScreen implements Screen, InputProcessor{
         pausedTime += (System.currentTimeMillis() - pauseStartTime);
         return (System.currentTimeMillis() - (turnTimeStart + pausedTime));
     }
-
-    // TODO rework how the game time is stored as the above is not nice for saving, we'll talk tomorrow about it, Matt.
 
     /**
      * record the time at which the timer was paused

@@ -106,7 +106,11 @@ public class LoadScreen implements Screen{
         loadingWidgetStage.addActor(table);
     }
 
-    // TODO Implement setupSelectSaveTable()
+    /**
+     * sets up table displaying saves
+     *
+     * @return table displaying saves
+     */
     private Table setupSelectSaveTable() {
         Table saveTable = new Table();
         saveTable.setDebug(false);
@@ -212,7 +216,6 @@ public class LoadScreen implements Screen{
 
     }
 
-    // TODO Finish implementing setupUI()
     /**
      * sets up the UI for the load screen
      */
@@ -314,7 +317,6 @@ public class LoadScreen implements Screen{
     public void render(float delta) {
         if (loadingWidgetDrawn) {
             try {
-                if (entryPoint == EntryPoint.MENU_SCREEN) { }
                 Load.loadGame(fileName, gameScreen, main);
             } catch (Exception e) {
                 System.out.println(e.getMessage());

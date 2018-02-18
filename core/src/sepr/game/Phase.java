@@ -111,7 +111,6 @@ public abstract class Phase extends Stage {
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = WidgetFactory.getFontBig();
 
-        // TODO Get bonus to display
         bonusLabel = new Label("0", style);
 
         TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
