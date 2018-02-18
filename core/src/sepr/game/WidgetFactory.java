@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -31,7 +30,6 @@ public class WidgetFactory {
     private static Texture offSwitchTexture;
 
     private static Texture gameHUDBottomBarRightPartTexture;
-    private static Texture gameHUDTopBarTexture;
     private static Texture endPhaseBtnTexture;
 
     private static Texture playerLabelTexture;
@@ -55,6 +53,9 @@ public class WidgetFactory {
     private static Texture uniOfYorkLogoTexture;
     private static Texture vanbrughLogoTexture;
     private static Texture wentworthLogoTexture;
+
+    private static Texture btnUp;
+    private static Texture btnDown;
 
     private static BitmapFont fontBig;
     private static BitmapFont fontSmall;
@@ -89,7 +90,6 @@ public class WidgetFactory {
         menusTopBarRightTexture = new Texture("uiComponents/MenusTopBarRight.png");
 
         gameHUDBottomBarRightPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Right-Part.png");
-        gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
         endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png");
 
         pauseMenuBtnTexture = new Texture("uiComponents/pauseMenuButton.png");
@@ -103,6 +103,10 @@ public class WidgetFactory {
         uniOfYorkLogoTexture = new Texture("logos/uni-of-york-logo.png");
         vanbrughLogoTexture = new Texture("logos/vanbrugh-logo.png");
         wentworthLogoTexture = new Texture("logos/wentworth-logo.png");
+
+        btnUp = new Texture("uiComponents/bonusExchange/buttonUp.png");
+        btnDown = new Texture("uiComponents/bonusExchange/buttonDown.png");
+
     }
 
     /**
@@ -383,6 +387,19 @@ public class WidgetFactory {
 
     /**
      *
+     * @return a button with the text CONVERT
+     */
+    public static TextButton genConvertButton() {
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture, 0, 0, 723, 123));
+        style.down = new TextureRegionDrawable(new TextureRegion(startGameBtnTexture, 0, 123, 723, 123));
+        style.font = fontSmall;
+
+        return new TextButton("Convert",style);
+    }
+
+    /**
+     *
      * @return a button with the text END PHASE
      */
     public static TextButton genEndPhaseButton(){
@@ -393,53 +410,6 @@ public class WidgetFactory {
 
         return new TextButton("    END PHASE", style);
     }
-
-    /**
-     * creates a table containing the components to make up the top bar of the HUD
-     *
-     * @param turnPhase the phase this bar is for
-     * @param gameScreen for creating the leave game dialog
-     * @return the top bar of the HUD for the specified phase
-     */
-    public static Table genGameHUDTopBar(TurnPhaseType turnPhase, final GameScreen gameScreen) {
-        TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
-        btnStyle.font = fontSmall;
-        TextButton exitButton = new TextButton("PAUSE", btnStyle);
-
-        exitButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.pause();
-            }
-        });
-
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = fontSmall;
-
-        String text = "";
-        switch (turnPhase) {
-            case REINFORCEMENT:
-                text = "REINFORCEMENT  -  Attack  -  Movement";
-                break;
-            case ATTACK:
-                text = "Reinforcement  -  ATTACK  -  Movement";
-                break;
-            case MOVEMENT:
-                text = "Reinforcement  -  Attack  -  MOVEMENT";
-                break;
-        }
-
-        Label label = new Label(text, style);
-        label.setAlignment(Align.center);
-
-        Table table = new Table();
-        table.background(new TextureRegionDrawable(new TextureRegion(gameHUDTopBarTexture)));
-        table.left().add(exitButton).padRight(190).padLeft(20);
-        table.add(label).height(60);
-
-        return table;
-    }
-
 
     /**
      * creates a selector widget with the options specified by the passed string array
@@ -516,5 +486,29 @@ public class WidgetFactory {
     public static BitmapFont getFontBig() {
         FileHandle alteDinBig = new FileHandle("font/Alte-DIN-Big.fnt");
         return new BitmapFont(alteDinBig);
+    }
+
+    /**
+     *
+     * @return up arrow button for changing the amount of pizza to be exchanged
+     */
+    public static Button genPizzaUpButton() {
+        Button.ButtonStyle style = new Button.ButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(btnUp, 0, 0, 54, 52));
+        style.down = new TextureRegionDrawable(new TextureRegion(btnUp, 0, 52, 54, 52));
+
+        return new Button(style);
+    }
+
+    /**
+     *
+     * @return down arrow button for changing the amount of pizza to be exchanged
+     */
+    public static Button genPizzaDownButton() {
+        Button.ButtonStyle style = new Button.ButtonStyle();
+        style.up = new TextureRegionDrawable(new TextureRegion(btnDown, 0, 0, 54, 52));
+        style.down = new TextureRegionDrawable(new TextureRegion(btnDown, 0, 52, 54, 52));
+
+        return new Button(style);
     }
 }

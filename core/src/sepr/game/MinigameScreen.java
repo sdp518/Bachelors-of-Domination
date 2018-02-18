@@ -16,9 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.EventListener;
 import java.util.Random;
 
+/**
+ * NEW
+ * Implements the minigame for capturing the PVC
+ */
 public class MinigameScreen implements Screen {
 
     private Main main;
@@ -30,10 +33,10 @@ public class MinigameScreen implements Screen {
     private Random random;
 
     private boolean isSpinning;
-    private int slotOneSpins, slotTwoSpins, slotThreeSpins;
-    private int slotOneCurrent, slotTwoCurrent, slotThreeCurrent;
+    private int slotOneSpins, slotTwoSpins, slotThreeSpins; // store the number of times each wheel should spin
+    private int slotOneCurrent, slotTwoCurrent, slotThreeCurrent; // store the current value of each wheel
 
-    private Image slotMachine, launchBtn, launchBtnPressed;
+    private Image slotMachine, launchBtn, launchBtnPressed; // assets for the slot machine
     private Image a, b, c, d, e, f, g, h, i, j, k, l;
 
     private Image[] imagesSlotOne, imagesSlotTwo, imagesSlotThree;
@@ -41,7 +44,7 @@ public class MinigameScreen implements Screen {
     private Image richardLaunch, richardFail, richardGeese, richardThree, richardTwo;
     private MoveToAction moveUp, moveDown;
 
-    private boolean gameFinished;
+    private boolean gameFinished; // stores whether the game has finished
 
 
     /**
@@ -110,7 +113,7 @@ public class MinigameScreen implements Screen {
             public boolean keyUp(int keyCode) {
                 if ((keyCode == Input.Keys.ESCAPE) && (gameFinished)) { // change back to the menu screen if the player presses esc
                     main.sounds.playSound("menu_sound");
-                    main.returnFromMinigame();
+                    main.returnGameScreenUnpaused();
                 }
                 return super.keyUp(keyCode);
             }
@@ -178,6 +181,7 @@ public class MinigameScreen implements Screen {
     }
 
     /**
+     * NEW
      * takes the new values as parameters and sets up the UI of the individual slots
      * @param selectOne the new value to display in slot one
      * @param selectTwo the new value to display in slot two
@@ -207,6 +211,7 @@ public class MinigameScreen implements Screen {
     }
 
     /**
+     * NEW
      * sets up the UI for the load screen
      */
     private void setupUi() {
@@ -229,6 +234,7 @@ public class MinigameScreen implements Screen {
     }
 
     /**
+     * NEW
      * handles the spin of the slot machine, using global flags to track state
      */
     private void handleSpin() {
@@ -263,6 +269,7 @@ public class MinigameScreen implements Screen {
     }
 
     /**
+     * NEW
      * calculates the result of the spin from the chosen values
      * @param one the result from slot one
      * @param two the result from slot two

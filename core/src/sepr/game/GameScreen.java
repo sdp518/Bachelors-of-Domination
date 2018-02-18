@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sun.xml.internal.bind.v2.TODO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,9 +114,9 @@ public class GameScreen implements Screen, InputProcessor{
 
         // create the game phases and add them to the phases hashmap
         this.phases = new HashMap<TurnPhaseType, Phase>();
-        this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this));
-        this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this));
-        this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this));
+        this.phases.put(TurnPhaseType.REINFORCEMENT, new PhaseReinforce(this, main));
+        this.phases.put(TurnPhaseType.ATTACK, new PhaseAttack(this, main));
+        this.phases.put(TurnPhaseType.MOVEMENT, new PhaseMovement(this, main));
 
         gameSetup = true; // game is now setup
     }
@@ -165,10 +166,9 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     public long getTurnTimeElapsed() {
-        return System.currentTimeMillis() - (turnTimeStart)  + pausedTime;
+        pausedTime += (System.currentTimeMillis() - pauseStartTime);
+        return (System.currentTimeMillis() - (turnTimeStart + pausedTime));
     }
-
-    // TODO rework how the game time is stored as the above is not nice for saving, we'll talk tomorrow about it, Matt.
 
     /**
      * record the time at which the timer was paused
@@ -185,6 +185,13 @@ public class GameScreen implements Screen, InputProcessor{
         pausedTime += (System.currentTimeMillis() - pauseStartTime);
         pauseStartTime = 0;
         this.timerPaused = false;
+    }
+
+    /**
+     * resets the paused time, called before returning after load
+     */
+    public void resetPausedTime(){
+        pausedTime = 0;
     }
 
 
@@ -377,7 +384,8 @@ public class GameScreen implements Screen, InputProcessor{
                 playerNames[i] = players.get(playerIdsToRemove.get(i)).getPlayerName();
             }
 
-            main.sounds.playSound("player_eliminated");
+            if (!isGameOver())
+                main.sounds.playSound("player_eliminated");
             DialogFactory.playersOutDialog(playerNames, phases.get(currentPhase)); // display which players have been eliminated
         }
 
@@ -476,7 +484,7 @@ public class GameScreen implements Screen, InputProcessor{
      * adds the pause menu to the pause menu stage
      */
     private void displayPauseMenu() {
-        TextButton saveButton = WidgetFactory.genPauseMenuButton("SAVE");
+        TextButton saveButton = WidgetFactory.genPauseMenuButton("SAVE/LOAD");
         saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

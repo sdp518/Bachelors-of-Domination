@@ -61,6 +61,24 @@ public class DialogFactory {
     }
 
     /**
+     * creates a dialog telling the user how many pizzas they've converted to students
+     * returns to the gameScreen upon pressing ok
+     *
+     * @param stage to draw the box onto
+     */
+    public static void convertedDialogBox(Stage stage, final Main main, int converted) {
+        Dialog dialog = new Dialog("Conversion Successful!", DialogFactory.skin) {
+            protected void result(Object object) {
+                // returns to the gameScreen
+                main.returnGameScreenUnpaused();
+            }
+        };
+        dialog.text("You've converted " + converted + " pizzas to students! You will be able to allocate these students to sectors on your next reinforcement phase");
+        dialog.button("Ok", "0");
+        dialog.show(stage);
+    }
+
+    /**
      * creates a dialog box displaying which players turn it is next and how many troops they have to allocate
      * the dialog displays until the okay button is pressed then it quickly fades away
      *
@@ -127,7 +145,6 @@ public class DialogFactory {
             protected void result(Object object) {
                 // Checks if gameScreen is null as minigame shouldn't start unless defender won (parameter used as flag)
                 if (gameScreen != null) {
-                    // TODO Decide probability
                     if (random.nextInt(5) == 1) {
                         // MINIGAME
                         gameScreen.startMinigame(stage);
@@ -169,7 +186,6 @@ public class DialogFactory {
             protected void result(Object object) {
                 // set number of troops to move to the value of the slider when the dialog is closed
                 troopsMoved[0] = (int)slider.getValue();
-                // TODO Decide probability
                 if (random.nextInt(5) == 1) {
                     // MINIGAME
                     gameScreen.startMinigame(stage);

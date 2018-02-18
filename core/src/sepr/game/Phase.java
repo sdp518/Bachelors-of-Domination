@@ -11,12 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
  * base class for handling phase specific input
  */
 public abstract class Phase extends Stage {
+    Main main;
     GameScreen gameScreen;
     Player currentPlayer;
 
@@ -35,17 +37,20 @@ public abstract class Phase extends Stage {
 
     private static Texture gameHUDBottomBarLeftPartTexture;
     private static Texture gameHUDTopBarRightPartTexture;
-    public Sounds sound;
+    private static Texture gameHUDTopBarTexture;
+
+    private Label labelText;
 
     /**
      *
      * @param gameScreen for accessing the map and additional game properties
      * @param turnPhase type of phase this is
      */
-    public Phase(GameScreen gameScreen, TurnPhaseType turnPhase) {
+    public Phase(GameScreen gameScreen, TurnPhaseType turnPhase, Main main) {
         this.setViewport(new ScreenViewport());
 
         this.gameScreen = gameScreen;
+        this.main = main;
 
         this.turnPhase = turnPhase;
 
@@ -56,9 +61,9 @@ public abstract class Phase extends Stage {
 
         gameHUDBottomBarLeftPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Left-Part.png");
         gameHUDTopBarRightPartTexture = new Texture("uiComponents/Top-Right-Bonus-Section.png");
+        gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
 
         this.setupUi();
-        this.sound = new Sounds();
     }
 
     /**
@@ -76,7 +81,7 @@ public abstract class Phase extends Stage {
         Table bottomBarLeftPart = genGameHUDBottomBarLeftPart();
 
         table.top().center();
-        table.add(WidgetFactory.genGameHUDTopBar(turnPhase, gameScreen)).colspan(2).expandX().height(60).width(910).top().padLeft(200);
+        table.add(this.genGameHUDTopBar()).colspan(2).expandX().height(60).width(910).top().padLeft(200);
         table.top().right();
         table.add(genGameHUDTopBarRightPart()).height(120).width(200);
 
@@ -98,20 +103,43 @@ public abstract class Phase extends Stage {
     }
 
     private Table genGameHUDTopBarRightPart(){
-        this.pizza = new Image(new Texture("uiComponents/pizza.png"));
+        this.pizza = new Image(new Texture("uiComponents/bonusExchange/pizzaSlice.png"));
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = WidgetFactory.getFontBig();
 
-        // TODO Get bonus to display
         bonusLabel = new Label("0", style);
+
+        TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
+        btnStyle.font = WidgetFactory.getFontSmall();
+        TextButton exchangeButton = new TextButton("EXCHANGE", btnStyle);
+
+        exchangeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (gameScreen.getCurrentPlayer().getBonus() == 0){
+                    DialogFactory.basicDialogBox("Not enough Pizza!",
+                            "You don't have any pizza to convert but keep playing" +
+                                    " and you might come across some...",
+                            gameScreen.getPhases().get(gameScreen.getCurrentPhase()));
+                }
+                else {
+                    main.sounds.playSound("menu_sound");
+                    gameScreen.pauseTimer();
+                    main.setBonusExchangeScreen(new BonusExchangeScreen(main, gameScreen));
+                }
+
+            }
+        });
 
         Table table = new Table();
         table.setDebug(false);
         table.background(new TextureRegionDrawable(new TextureRegion(gameHUDTopBarRightPartTexture)));
-        table.row().padBottom(20).center();
+        table.row();
         table.add(pizza).width(75).height(75).padRight(20);
         table.add(bonusLabel);
+        table.row();
+        table.add(exchangeButton).colspan(2).padBottom(20);
 
         return table;
     }
@@ -177,6 +205,70 @@ public abstract class Phase extends Stage {
         collegeLogo.setDrawable(WidgetFactory.genCollegeLogoDrawable(player.getCollegeName()));
         updateTroopReinforcementLabel();
         gameScreen.updateBonus();
+        this.updatePhaseLabelColour();
+    }
+
+    /**
+     * creates a table containing the components to make up the top bar of the HUD
+     *
+     * @return the top bar of the HUD for the specified phase
+     */
+    public Table genGameHUDTopBar() {
+        TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
+        btnStyle.font = WidgetFactory.getFontSmall();
+        TextButton exitButton = new TextButton("PAUSE", btnStyle);
+
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.pause();
+            }
+        });
+
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = WidgetFactory.getFontSmall();
+
+        String text = "";
+        String pre = "";
+        String post = "";
+        switch (turnPhase) {
+            case REINFORCEMENT:
+                text = "REINFORCEMENT";
+                post = "  -  Attack  -  Movement";
+                break;
+            case ATTACK:
+                pre = "Reinforcement  -  ";
+                text = "ATTACK";
+                post = "  -  Movement";
+                break;
+            case MOVEMENT:
+                pre = "Reinforcement  -  Attack  -  ";
+                text = "MOVEMENT";
+                break;
+        }
+
+        Label labelPre = new Label(pre, style);
+        labelPre.setAlignment(Align.center);
+
+        labelText = new Label(text, style);
+        labelText.setAlignment(Align.center);
+        labelText.setColor(gameScreen.getCurrentPlayer().getSectorColour());
+
+        Label labelPost = new Label(post, style);
+        labelPost.setAlignment(Align.center);
+
+        Table table = new Table();
+        table.background(new TextureRegionDrawable(new TextureRegion(gameHUDTopBarTexture)));
+        table.left().add(exitButton).padRight(190).padLeft(20);
+        table.add(labelPre).height(60);
+        table.add(labelText).height(60);
+        table.add(labelPost).height(60);
+
+        return table;
+    }
+
+    private void updatePhaseLabelColour() {
+        labelText.setColor(gameScreen.getCurrentPlayer().getSectorColour());
     }
 
     /**
@@ -199,7 +291,7 @@ public abstract class Phase extends Stage {
      * method for tidying up phase for next player to use
      */
     public void endPhase () {
-        this.sound.playSound("menu_sound");
+        main.sounds.playSound("menu_sound");
         this.currentPlayer = null;
     }
 

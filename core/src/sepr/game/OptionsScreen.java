@@ -25,7 +25,6 @@ import java.util.Set;
  *      FX Volume
  *      Resolution Selector
  *      Fullscreen On/Off
- *      Colourblind mode On/Off
  */
 public class OptionsScreen implements Screen {
     // names for accessing different preferences in the preferences file
@@ -35,7 +34,6 @@ public class OptionsScreen implements Screen {
     public static final String RESOLUTION_WIDTH_PREF = "screenWidth";
     public static final String RESOLUTION_HEIGHT_PREF = "screenHeight";
     public static final String FULLSCREEN_PREF = "fullscreen";
-    public static final String COLOURBLIND_PREF = "colourblind";
 
     private Main main;
     private Stage stage;
@@ -46,7 +44,6 @@ public class OptionsScreen implements Screen {
     private Slider fxSlider;
     private SelectBox<String> resolutionSelector;
     private CheckBox fullscreenSwitch;
-    private CheckBox colourblindModeSwitch;
 
     private EntryPoint entryPoint;
 
@@ -120,7 +117,6 @@ public class OptionsScreen implements Screen {
         fxSlider = WidgetFactory.genStyledSlider();
         resolutionSelector = WidgetFactory.genStyledSelectBox(getPossibleResolutions());
         fullscreenSwitch = WidgetFactory.genOnOffSwitch();
-        colourblindModeSwitch = WidgetFactory.genOnOffSwitch();
 
         // setup labels
         Label musicVolumeLabel = WidgetFactory.genMenuLabel("MUSIC VOLUME");
@@ -131,8 +127,6 @@ public class OptionsScreen implements Screen {
         resolutionSelectorLabel.setAlignment(Align.center);
         Label fullscreenSwitchLabel = WidgetFactory.genMenuLabel("FULLSCREEN");
         fullscreenSwitchLabel.setAlignment(Align.center);
-        Label colourblindModeSwitchLabel = WidgetFactory.genMenuLabel("COLOURBLIND MODE");
-        colourblindModeSwitchLabel.setAlignment(Align.center);
 
         // add the setup widgets to a table
         Table table = new Table();
@@ -159,12 +153,6 @@ public class OptionsScreen implements Screen {
         table.add(fullscreenSwitchLabel).height(60).width(420).pad(20);
         table.right();
         table.add(fullscreenSwitch).padLeft(150);
-
-        table.row();
-        table.left();
-        table.add(colourblindModeSwitchLabel).height(60).width(420).pad(20);
-        table.right();
-        table.add(colourblindModeSwitch).padLeft(150);
 
         TextButton acceptButton = WidgetFactory.genBasicButton("CONFIRM CHANGES");
         acceptButton.addListener(new ChangeListener() {
@@ -244,7 +232,6 @@ public class OptionsScreen implements Screen {
         prefs.putInteger(RESOLUTION_HEIGHT_PREF, screenHeight);
 
         prefs.putBoolean(FULLSCREEN_PREF, fullscreenSwitch.isChecked());
-        prefs.putBoolean(COLOURBLIND_PREF, colourblindModeSwitch.isChecked());
 
         prefs.flush(); // save the updated preferences to file
         main.applyPreferences(); // apply the changes to the game
@@ -266,7 +253,6 @@ public class OptionsScreen implements Screen {
         }
 
         fullscreenSwitch.setChecked(prefs.getBoolean(OptionsScreen.FULLSCREEN_PREF, Gdx.graphics.isFullscreen()));
-        colourblindModeSwitch.setChecked(prefs.getBoolean(OptionsScreen.COLOURBLIND_PREF, false));
 
     }
 

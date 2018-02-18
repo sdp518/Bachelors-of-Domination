@@ -6,23 +6,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-/**
+/** NEW CLASS (class existed following changeover though was not implemented)
  * handles input, updating and rendering for the movement phase
- * not implemented
  */
 public class PhaseMovement extends Phase {
 
     private TextureRegion arrow; // TextureRegion for rendering movement visualisation
-    private Sector sourceSector;
-    private Sector targetSector;
-    private int[] movedUnits;
+    private Sector sourceSector; // Stores the sector that units are being moved from
+    private Sector targetSector; // Stores the sector that units are being moved to
+    private int[] movedUnits; // Stores the number of units being moved
 
     private Vector2 arrowTailPosition; // Vector x,y for the base of the arrow
     private Vector2 arrowHeadPosition; // Vector x,y for the point of the arrow
 
-    public PhaseMovement(GameScreen gameScreen) {
+    public PhaseMovement(GameScreen gameScreen, Main main) {
 
-        super(gameScreen, TurnPhaseType.MOVEMENT);
+        super(gameScreen, TurnPhaseType.MOVEMENT, main);
         this.arrow = new TextureRegion(new Texture(Gdx.files.internal("uiComponents/arrow.png")));
         this.sourceSector = null;
         this.targetSector = null;
@@ -32,6 +31,7 @@ public class PhaseMovement extends Phase {
     }
 
     /**
+     * NEW (Copied across from phaseAttack)
      * Creates an arrow between coordinates
      * @param gameplayBatch The main sprite batch
      * @param startX Base of the arrow x
@@ -47,6 +47,7 @@ public class PhaseMovement extends Phase {
     }
 
     /**
+     * NEW
      * creates a dialog asking the player how many units they want to move
      *
      * @throws RuntimeException if the source sector or target sector are set to null
@@ -60,21 +61,28 @@ public class PhaseMovement extends Phase {
         DialogFactory.moveUnitsDialog(sourceSector.getUnitsInSector() - 1, movedUnits, targetSector,this);
     }
 
+    /**
+     * NEW
+     * Applies the movement to the map
+     */
     private void moveUnits() {
-        // apply the move to the map
         if (gameScreen.getMap().executeMove(sourceSector.getId(), targetSector.getId(), movedUnits[0])) {
             updateTroopReinforcementLabel();
         }
     }
 
+    /**
+     * NEW
+     * Detects when a move is being initiated
+     */
     @Override
     public void phaseAct() {
         if (sourceSector != null && targetSector != null && movedUnits[0] != -1) {
             if (movedUnits[0] == 0) {
-                this.sound.playSound("menu_sound");
+                main.sounds.playSound("menu_sound");
                 // cancel move
             } else {
-                this.sound.playSound("move_sound");
+                main.sounds.playSound("move_sound");
                 moveUnits();
             }
             // reset move
@@ -84,6 +92,11 @@ public class PhaseMovement extends Phase {
         }
     }
 
+    /**
+     * NEW (Copied across from phaseAttack)
+     * render graphics specific to the attack phase
+     * @param batch the sprite batch to render to
+     */
     @Override
     protected void visualisePhase(SpriteBatch batch) {
         if (this.sourceSector != null) { // If moving
@@ -96,6 +109,14 @@ public class PhaseMovement extends Phase {
         }
     }
 
+    /**
+     * NEW (Copied across from phaseAttack)
+     * @param screenX the x position of the mouse
+     * @param screenY the y position of the mouse
+     * @param pointer pointer to the event
+     * @param button the button clicked on the mouse
+     * @return if the event has been handled
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (super.touchDown(screenX, screenY, pointer, button)) {
@@ -105,7 +126,7 @@ public class PhaseMovement extends Phase {
     }
 
     /**
-     *
+     * NEW (Copied across from phase attack)
      * @param screenX mouse x position on screen when clicked
      * @param screenY mouse y position on screen when clicked
      * @param pointer pointer to the event
@@ -122,7 +143,7 @@ public class PhaseMovement extends Phase {
 
         int sectorId = gameScreen.getMap().detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
         if (sectorId != -1) { // If selected a sector
-            this.sound.playSound("menu_sound");
+            main.sounds.playSound("menu_sound");
             Sector selected = gameScreen.getMap().getSectorById(sectorId); // Current sector
             boolean notAlreadySelected = this.sourceSector == null && this.targetSector == null; // T/F if the move sequence is complete
 

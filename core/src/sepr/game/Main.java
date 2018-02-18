@@ -25,6 +25,7 @@ public class Main extends Game implements ApplicationListener {
 	private LoadScreen saveScreen;
 	//private MinigameScreen minigameScreen;
 	public  Sounds sounds;
+	//private BonusExchangeScreen bonusExchangeScreen;
 
 
 	/**
@@ -41,12 +42,15 @@ public class Main extends Game implements ApplicationListener {
 		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
 		//this.minigameScreen = new MinigameScreen(this);
+		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
+		//this.bonusExchangeScreen = new BonusExchangeScreen(this, gameScreen);
 
         this.sounds = new Sounds();
 		applyPreferences();
 
 		this.setMenuScreen();
         //this.setMinigameScreen(minigameScreen);
+        //this.setBonusExchangeScreen(new BonusExchangeScreen(this, gameScreen));
 	}
 
     /**
@@ -54,6 +58,13 @@ public class Main extends Game implements ApplicationListener {
      */
     public void setMinigameScreen(MinigameScreen minigameScreen) {
         this.setScreen(minigameScreen);
+    }
+
+    /**
+     * changes the screen currently being displayed to the menu
+     */
+    public void setBonusExchangeScreen(BonusExchangeScreen bonusExchangeScreen) {
+        this.setScreen(bonusExchangeScreen);
     }
 
 	/**
@@ -93,12 +104,13 @@ public class Main extends Game implements ApplicationListener {
 	public void returnGameScreen() {
 	    this.setScreen(gameScreen);
 		gameScreen.resetCameraPosition();
+		gameScreen.resume();
 	}
 
 	/**
 	 * returns to the game screen from the minigame
 	 */
-	public void returnFromMinigame() {
+	public void returnGameScreenUnpaused() {
 		this.setScreen(gameScreen);
 		gameScreen.resetCameraPosition();
 		gameScreen.resumeTimer();
@@ -151,7 +163,6 @@ public class Main extends Game implements ApplicationListener {
 	 *      FX Volume
 	 *      Screen Resolution
 	 *      Fullscreen
-	 *      Colourblind Mode
 	 * A default setting should be applied for any missing preferences
 	 */
 	public void applyPreferences() {

@@ -63,10 +63,12 @@ public class Load {
             gameScreen.updateBonus();
             gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());
             if (loadedSave.isTurnTimerEnabled()) {
+                System.out.println("On load: " + loadedSave.getTurnTimeElapsed() / 1000);
                 gameScreen.setTurnTimeStart(System.currentTimeMillis() - loadedSave.getTurnTimeElapsed());
             }
             main.returnGameScreen();
             gameScreen.getPhases().get(gameScreen.getCurrentPhase()).enterPhase(gameScreen.getCurrentPlayer());
+            gameScreen.resetPausedTime(); // To reset pausedTime to 0 now load is finished
             System.out.println("Load Successful");
         } else {
             throw new IOException("Load Error");
