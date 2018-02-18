@@ -8,16 +8,13 @@ import java.util.Random;
 
 /** NEW CLASS Deals with all audio **/
 class Sounds {
-    private Sound menuSound;
+    private Sound menuSound; // variables storing sounds used in the game
     private Sound attackSound;
     private Sound reinforceSound;
     private Sound moveSound;
     private Sound slotMachineLaunch;
     private Sound match2;
-    private Music slotMachineSpin;
-    private float fxVolume;
-    private Music music;
-    private float musicVolume;
+    private Music slotMachineSpin; // implemented as music since it is a long sound but is actually a sound effect
     private Sound slotMachineFail;
     private Sound match3;
     private Sound slotMachineGeese;
@@ -25,8 +22,12 @@ class Sounds {
     private Sound winSound;
     private Sound pvcSound;
     private Sound playerEliminated;
+    private float fxVolume; // the volume of the sound effects
+    private Music music; // variable storing the music
+    private float musicVolume; // the volume of the music
 
-    /** Constructor for Class.
+    /** NEW
+     * Constructor for Class.
      * Sets up sounds and music
      * Gets and sets volume for sounds and music
      */
@@ -54,6 +55,7 @@ class Sounds {
     }
 
     /**
+     * NEW
      * Plays the sound with the passed name
      * @param soundToPlay The name of the sound to play, for clarity this this corresponds to the file name
      */
@@ -109,6 +111,7 @@ class Sounds {
     }
 
     /**
+     * NEW
      * Sets the volume for Sound FX
      * @param volume the volume to set, should be a float between 0 and 1 where 1 is max volume
      *               and 0 is silent
@@ -118,6 +121,7 @@ class Sounds {
     }
 
     /**
+     * NEW
      * Sets the volume for music
      * @param volume the volume to set, should be a float between 0 and 1 where 1 is max volume
      *               and 0 is silent
@@ -128,6 +132,7 @@ class Sounds {
     }
 
     /**
+     * NEW
      * Stops the slot machine spinning sound when a result is produced
      */
     public void stopLooping() {

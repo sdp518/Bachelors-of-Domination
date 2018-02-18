@@ -41,8 +41,6 @@ public abstract class Phase extends Stage {
 
     private Label labelText;
 
-    public Sounds sound;
-
     /**
      *
      * @param gameScreen for accessing the map and additional game properties
@@ -66,7 +64,6 @@ public abstract class Phase extends Stage {
         gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
 
         this.setupUi();
-        this.sound = new Sounds();
     }
 
     /**
@@ -294,7 +291,7 @@ public abstract class Phase extends Stage {
      * method for tidying up phase for next player to use
      */
     public void endPhase () {
-        this.sound.playSound("menu_sound");
+        main.sounds.playSound("menu_sound");
         this.currentPlayer = null;
     }
 

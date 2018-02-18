@@ -117,10 +117,10 @@ public class PhaseAttack extends Phase{
     public void phaseAct() {
         if (attackingSector != null && defendingSector != null && numOfAttackers[0] != -1) {
             if (numOfAttackers[0] == 0) {
-                this.sound.playSound("menu_sound");
+                main.sounds.playSound("menu_sound");
                 // cancel attack
             } else {
-                this.sound.playSound("attack_sound");
+                main.sounds.playSound("attack_sound");
                 executeAttack();
                 /*this.attacksRemaining -= 1;
                 if (attacksRemaining == 0){
@@ -185,7 +185,7 @@ public class PhaseAttack extends Phase{
 
         int sectorId = gameScreen.getMap().detectSectorContainsPoint((int)worldCoord.x, (int)worldCoord.y);
         if (sectorId != -1) { // If selected a sector
-            this.sound.playSound("menu_sound");
+            main.sounds.playSound("menu_sound");
             Sector selected = gameScreen.getMap().getSectorById(sectorId); // Current sector
             boolean notAlreadySelected = this.attackingSector == null && this.defendingSector == null; // T/F if the attack sequence is complete
 
