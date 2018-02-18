@@ -31,7 +31,6 @@ public class WidgetFactory {
     private static Texture offSwitchTexture;
 
     private static Texture gameHUDBottomBarRightPartTexture;
-    private static Texture gameHUDTopBarTexture;
     private static Texture endPhaseBtnTexture;
 
     private static Texture playerLabelTexture;
@@ -92,7 +91,6 @@ public class WidgetFactory {
         menusTopBarRightTexture = new Texture("uiComponents/MenusTopBarRight.png");
 
         gameHUDBottomBarRightPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Right-Part.png");
-        gameHUDTopBarTexture = new Texture("uiComponents/HUD-Top-Bar.png");
         endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png");
 
         pauseMenuBtnTexture = new Texture("uiComponents/pauseMenuButton.png");
@@ -413,53 +411,6 @@ public class WidgetFactory {
 
         return new TextButton("    END PHASE", style);
     }
-
-    /**
-     * creates a table containing the components to make up the top bar of the HUD
-     *
-     * @param turnPhase the phase this bar is for
-     * @param gameScreen for creating the leave game dialog
-     * @return the top bar of the HUD for the specified phase
-     */
-    public static Table genGameHUDTopBar(TurnPhaseType turnPhase, final GameScreen gameScreen) {
-        TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
-        btnStyle.font = fontSmall;
-        TextButton exitButton = new TextButton("PAUSE", btnStyle);
-
-        exitButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.pause();
-            }
-        });
-
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = fontSmall;
-
-        String text = "";
-        switch (turnPhase) {
-            case REINFORCEMENT:
-                text = "REINFORCEMENT  -  Attack  -  Movement";
-                break;
-            case ATTACK:
-                text = "Reinforcement  -  ATTACK  -  Movement";
-                break;
-            case MOVEMENT:
-                text = "Reinforcement  -  Attack  -  MOVEMENT";
-                break;
-        }
-
-        Label label = new Label(text, style);
-        label.setAlignment(Align.center);
-
-        Table table = new Table();
-        table.background(new TextureRegionDrawable(new TextureRegion(gameHUDTopBarTexture)));
-        table.left().add(exitButton).padRight(190).padLeft(20);
-        table.add(label).height(60);
-
-        return table;
-    }
-
 
     /**
      * creates a selector widget with the options specified by the passed string array
