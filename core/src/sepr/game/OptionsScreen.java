@@ -160,12 +160,6 @@ public class OptionsScreen implements Screen {
         table.right();
         table.add(fullscreenSwitch).padLeft(150);
 
-        table.row();
-        table.left();
-        table.add(colourblindModeSwitchLabel).height(60).width(420).pad(20);
-        table.right();
-        table.add(colourblindModeSwitch).padLeft(150);
-
         TextButton acceptButton = WidgetFactory.genBasicButton("CONFIRM CHANGES");
         acceptButton.addListener(new ChangeListener() {
             @Override
@@ -244,7 +238,6 @@ public class OptionsScreen implements Screen {
         prefs.putInteger(RESOLUTION_HEIGHT_PREF, screenHeight);
 
         prefs.putBoolean(FULLSCREEN_PREF, fullscreenSwitch.isChecked());
-        prefs.putBoolean(COLOURBLIND_PREF, colourblindModeSwitch.isChecked());
 
         prefs.flush(); // save the updated preferences to file
         main.applyPreferences(); // apply the changes to the game
@@ -266,7 +259,6 @@ public class OptionsScreen implements Screen {
         }
 
         fullscreenSwitch.setChecked(prefs.getBoolean(OptionsScreen.FULLSCREEN_PREF, Gdx.graphics.isFullscreen()));
-        colourblindModeSwitch.setChecked(prefs.getBoolean(OptionsScreen.COLOURBLIND_PREF, false));
 
     }
 
