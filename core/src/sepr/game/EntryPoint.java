@@ -1,5 +1,10 @@
 package sepr.game;
 
+/**
+ * NEW CLASS
+ * Can be passed to screens to show where that screen was accessed from and where it
+ * should return to
+ */
 public enum EntryPoint {
     GAME_SCREEN("GAME SCREEN"),
     MENU_SCREEN("HUMAN PLAYER");

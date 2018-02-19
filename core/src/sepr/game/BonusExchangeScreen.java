@@ -16,6 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * NEW CLASS
+ * Bonus Exchange Screen to allow the player to swap pizza for new gang members
+ */
 public class BonusExchangeScreen implements Screen {
 
     private Main main;

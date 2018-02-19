@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * NEW CLASS
  * Data class stores all of the necessary data to save the game to be played another time.
  * All data is passed through the constructor and stored as variables.
  * The data is then retrieved through getters.

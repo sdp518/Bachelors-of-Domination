@@ -3,6 +3,7 @@ package SaveLoad;
 import sepr.game.Sector;
 
 /**
+ * NEW CLASS
  * This is class is the same as the ordinary Sector class in sepr.game.
  * The only difference is to make the class serializable.
  * It does this by removing all of the unnecessary information about the sectors.

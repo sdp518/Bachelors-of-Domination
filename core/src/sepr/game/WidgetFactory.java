@@ -90,9 +90,9 @@ public class WidgetFactory {
         menusTopBarRightTexture = new Texture("uiComponents/MenusTopBarRight.png");
 
         gameHUDBottomBarRightPartTexture = new Texture("uiComponents/HUD-Bottom-Bar-Right-Part.png");
-        endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png");
+        endPhaseBtnTexture = new Texture("uiComponents/End-Phase-Button.png"); //CHANGED
 
-        pauseMenuBtnTexture = new Texture("uiComponents/pauseMenuButton.png");
+        pauseMenuBtnTexture = new Texture("uiComponents/pauseMenuButton.png"); //NEW
 
         // load college logos
         alcuinLogoTexture = new Texture("logos/alcuin-logo.png");
@@ -104,6 +104,7 @@ public class WidgetFactory {
         vanbrughLogoTexture = new Texture("logos/vanbrugh-logo.png");
         wentworthLogoTexture = new Texture("logos/wentworth-logo.png");
 
+        // NEW buttons for bonusExchange
         btnUp = new Texture("uiComponents/bonusExchange/buttonUp.png");
         btnDown = new Texture("uiComponents/bonusExchange/buttonDown.png");
 
@@ -386,6 +387,7 @@ public class WidgetFactory {
     }
 
     /**
+     * NEW
      *
      * @return a button with the text CONVERT
      */
@@ -457,6 +459,7 @@ public class WidgetFactory {
     }
 
     /**
+     * NEW
      *
      * @param text the text to be displayed on the button
      * @return a pause menu button with desired text
@@ -480,6 +483,7 @@ public class WidgetFactory {
     }
 
     /**
+     * NEW
      *
      * @return a new instance of the big font
      */
@@ -489,6 +493,7 @@ public class WidgetFactory {
     }
 
     /**
+     * NEW
      *
      * @return up arrow button for changing the amount of pizza to be exchanged
      */
@@ -501,6 +506,7 @@ public class WidgetFactory {
     }
 
     /**
+     * NEW
      *
      * @return down arrow button for changing the amount of pizza to be exchanged
      */

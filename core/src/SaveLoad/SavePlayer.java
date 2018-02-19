@@ -6,6 +6,7 @@ import sepr.game.Player;
 import sepr.game.PlayerType;
 
 /**
+ * NEW CLASS
  * This is class is the same as the ordinary Player class in sepr.game.
  * The only difference is to make the class serializable.
  * Changes the class Color to the float equivalent.

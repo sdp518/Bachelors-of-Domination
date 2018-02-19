@@ -43,6 +43,7 @@ public class DialogFactory {
     }
 
     /**
+     * NEW
      * creates a dialog telling the user that they've captured the PVC
      * the minigame is started when the user presses the ok button
      *
@@ -61,6 +62,7 @@ public class DialogFactory {
     }
 
     /**
+     * NEW
      * creates a dialog telling the user how many pizzas they've converted to students
      * returns to the gameScreen upon pressing ok
      *
@@ -132,6 +134,7 @@ public class DialogFactory {
     }
 
     /**
+     * CHANGED
      * creates a dialog that says which player took control of a sector from which other player
      *
      * @param prevOwner name of the player who used to own the sector
@@ -159,6 +162,7 @@ public class DialogFactory {
     }
 
     /**
+     * CHANGED
      * creates a dialog box with a slider and okay box allowing a player who has conquered a sector to select how many troops to move onto it
      *
      * @param bonusTroops amount of troops the player is awarded for conquering the tile

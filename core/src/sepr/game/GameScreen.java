@@ -58,7 +58,7 @@ public class GameScreen implements Screen, InputProcessor{
 
     private boolean gameSetup = false; // true once setupGame has been called
 
-    // pause menu setup
+    // pause menu setup - NEW
     private Stage pauseMenuStage = new Stage();
     private boolean gamePaused, timerPaused;
     private long pauseStartTime;
@@ -156,6 +156,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * CHANGED
      * gets in seconds the amount of time remaining of the current player's turn
      *
      * @return time remaining in turn in seconds
@@ -165,12 +166,19 @@ public class GameScreen implements Screen, InputProcessor{
         return maxTurnTime - (int)((System.currentTimeMillis() - (turnTimeStart + pausedTime)) / 1000);
     }
 
+    /**
+     * NEW
+     * gets in milliseconds the amount of time elapsed this term for use in save
+     *
+     * @return time elapsed in turn in milliseconds
+     */
     public long getTurnTimeElapsed() {
         pausedTime += (System.currentTimeMillis() - pauseStartTime);
         return (System.currentTimeMillis() - (turnTimeStart + pausedTime));
     }
 
     /**
+     * NEW
      * record the time at which the timer was paused
      */
     public void pauseTimer(){
@@ -179,6 +187,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * NEW
      * resumes the timer
      */
     public void resumeTimer(){
@@ -188,6 +197,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * NEW
      * resets the paused time, called before returning after load
      */
     public void resetPausedTime(){
@@ -299,15 +309,22 @@ public class GameScreen implements Screen, InputProcessor{
         return turnTimeStart;
     }
 
+    /**
+     * NEW
+     */
     public void setGamePaused(boolean gamePaused) {
         this.gamePaused = gamePaused;
     }
 
+    /**
+     * NEW
+     */
     public boolean isGamePaused() {
         return this.gamePaused;
     }
 
     /**
+     * CHANGED
      * method is used for progression through the phases of a turn evaluating the currentPhase case label
      * if nextPhase is called during the movement phase then the game progresses to the next players turn
      */
@@ -337,6 +354,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * CHANGED
      * called when the player ends the MOVEMENT phase of their turn to advance the game to the next Player's turn
      * increments the currentPlayerPointer and resets it to 0 if it now exceeds the number of players in the list
      */
@@ -413,12 +431,20 @@ public class GameScreen implements Screen, InputProcessor{
         }
     }
 
+    /**
+     * NEW
+     * starts the minigame
+     */
     public void startMinigame(Stage stage) {
         this.pauseTimer();
         main.sounds.playSound("pvc_sound");
         DialogFactory.minigameDialogBox(stage, main, this);
     }
 
+    /**
+     * NEW
+     * updates the bonus amount displayed on the top right HUD label
+     */
     public void updateBonus() {
         this.phases.get(this.currentPhase).setBonusLabel(this.getCurrentPlayer().getBonus());
     }
@@ -481,6 +507,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * NEW
      * adds the pause menu to the pause menu stage
      */
     private void displayPauseMenu() {
@@ -555,6 +582,7 @@ public class GameScreen implements Screen, InputProcessor{
     /* Screen implementation */
 
     /**
+     * CHANGED
      * when this screen is shown updates the input handling so it is from this screen
      */
     @Override
@@ -569,6 +597,7 @@ public class GameScreen implements Screen, InputProcessor{
     }
 
     /**
+     * CHANGED
      * updates the game and renders it to the screen
      *
      * @param delta time elapsed between this and the previous update in seconds
@@ -627,6 +656,10 @@ public class GameScreen implements Screen, InputProcessor{
         this.resetCameraPosition();
     }
 
+    /**
+     * NEW
+     * runs on gamePause
+     */
     @Override
     public void pause() {
         this.pauseTimer();
@@ -635,6 +668,10 @@ public class GameScreen implements Screen, InputProcessor{
         this.displayPauseMenu();
     }
 
+    /**
+     * NEW
+     * runs on game resume
+     */
     @Override
     public void resume() {
         if (gamePaused) {

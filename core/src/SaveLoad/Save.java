@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * NEW CLASS
  * Class Save to handle all functions associated with saving the important data to be playable another time.
  * Starts by setting the file name, then writing the data object to file.
  */

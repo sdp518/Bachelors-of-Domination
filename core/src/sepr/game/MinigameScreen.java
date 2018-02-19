@@ -50,6 +50,7 @@ public class MinigameScreen implements Screen {
     /**
      *
      * @param main for changing to different screens
+     * @param gameScreen for updating the player bonus on win
      */
     public MinigameScreen (final Main main, final GameScreen gameScreen) {
         this.main = main;
@@ -133,6 +134,9 @@ public class MinigameScreen implements Screen {
         setupRichardStage();
     }
 
+    /**
+     * sets up the stage containing the launch button
+     */
     private void setupLaunchStage() {
         if (launchStage.getActors().size != 0){
             launchStage.getActors().items[0].remove();
@@ -154,6 +158,9 @@ public class MinigameScreen implements Screen {
         launchStage.addActor(launchTable);
     }
 
+    /**
+     * sets up the stage containing the messages from richard
+     */
     private void setupRichardStage() {
         moveUp = new MoveToAction();
         moveUp.setPosition(1150f,0f);
@@ -181,7 +188,6 @@ public class MinigameScreen implements Screen {
     }
 
     /**
-     * NEW
      * takes the new values as parameters and sets up the UI of the individual slots
      * @param selectOne the new value to display in slot one
      * @param selectTwo the new value to display in slot two
@@ -211,7 +217,6 @@ public class MinigameScreen implements Screen {
     }
 
     /**
-     * NEW
      * sets up the UI for the load screen
      */
     private void setupUi() {
@@ -234,7 +239,6 @@ public class MinigameScreen implements Screen {
     }
 
     /**
-     * NEW
      * handles the spin of the slot machine, using global flags to track state
      */
     private void handleSpin() {
@@ -269,7 +273,6 @@ public class MinigameScreen implements Screen {
     }
 
     /**
-     * NEW
      * calculates the result of the spin from the chosen values
      * @param one the result from slot one
      * @param two the result from slot two

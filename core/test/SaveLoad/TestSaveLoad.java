@@ -28,6 +28,7 @@ public class TestSaveLoad {
     private boolean isPaused;
     private Data testData;
 
+    @SuppressWarnings("Duplicates")
     @Before
     public void initAll() {
         this.sectors = TestShrunkenSector.loadSectors();
@@ -131,6 +132,7 @@ public class TestSaveLoad {
         assertEquals(loadedSave.isPaused(), testData.isPaused());
     }
 
+    @SuppressWarnings("Duplicates")
     //As load function requires screen, below code is a copy of the read of the file.
     private Data loadTestSave(String fileName) {
         Path currentRelativePath = Paths.get("");

@@ -23,9 +23,7 @@ public class Main extends Game implements ApplicationListener {
 	private GameSetupScreen gameSetupScreen;
 	private LoadScreen loadScreen;
 	private LoadScreen saveScreen;
-	//private MinigameScreen minigameScreen;
 	public  Sounds sounds;
-	//private BonusExchangeScreen bonusExchangeScreen;
 
 
 	/**
@@ -41,19 +39,16 @@ public class Main extends Game implements ApplicationListener {
 		this.optionsScreen = new OptionsScreen(this, EntryPoint.MENU_SCREEN);
 		this.inGameOptionsScreen = new OptionsScreen(this, EntryPoint.GAME_SCREEN);
 		this.gameSetupScreen = new GameSetupScreen(this);
-		//this.minigameScreen = new MinigameScreen(this);
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
-		//this.bonusExchangeScreen = new BonusExchangeScreen(this, gameScreen);
 
         this.sounds = new Sounds();
 		applyPreferences();
 
 		this.setMenuScreen();
-        //this.setMinigameScreen(minigameScreen);
-        //this.setBonusExchangeScreen(new BonusExchangeScreen(this, gameScreen));
 	}
 
     /**
+	 * NEW
      * changes the screen currently being displayed to the menu
      */
     public void setMinigameScreen(MinigameScreen minigameScreen) {
@@ -61,6 +56,7 @@ public class Main extends Game implements ApplicationListener {
     }
 
     /**
+	 * NEW
      * changes the screen currently being displayed to the menu
      */
     public void setBonusExchangeScreen(BonusExchangeScreen bonusExchangeScreen) {
@@ -75,6 +71,7 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
+	 * NEW
 	 * changes the screen currently being displayed to the menu and re-instantiates game screen
 	 */
 	public void exitToMenu() {
@@ -99,7 +96,8 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
-	 * returns to the game screen in the state it was left in
+	 * NEW
+	 * returns to the game screen in the state it was left in resuming the game
 	 */
 	public void returnGameScreen() {
 	    this.setScreen(gameScreen);
@@ -108,7 +106,8 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
-	 * returns to the game screen from the minigame
+	 * NEW
+	 * returns to the game screen resuming the timer only
 	 */
 	public void returnGameScreenUnpaused() {
 		this.setScreen(gameScreen);
@@ -138,6 +137,7 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
+	 * NEW
 	 * change the screen currently being displayed to the load screen
 	 */
 	public void setLoadScreen() {
@@ -146,12 +146,17 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
+	 * NEW
 	 * change the screen currently being displayed to the save screen
 	 */
 	public void setSaveScreen() {
 		this.setScreen(saveScreen);
 	}
 
+	/**
+	 * NEW
+	 * updates the save screen
+	 */
 	public void updateSaveScreen(LoadScreen saveScreen) {
 		this.saveScreen = saveScreen;
 	}

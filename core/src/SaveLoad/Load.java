@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 /**
+ * NEW CLASS
  * Class Load to handle all functions associated with loading the save file to be playable.
  * Starts by retrieving the file name, then reading the object stored into a variable.
  * Then sets up the GameScreen class as well as updating it with all of the data saved.

@@ -25,6 +25,10 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * NEW CLASS
+ * Save/Load screen to allow the user to save and load the game
+ */
 public class LoadScreen implements Screen{
 
     private Main main;
@@ -46,6 +50,9 @@ public class LoadScreen implements Screen{
     /**
      *
      * @param main for changing to different screens
+     * @param entryPoint for reference as to where screen was entered from
+     * @param gameScreen to access data for save and load
+     * @param gameSetupScreen for
      */
     public LoadScreen (final Main main, EntryPoint entryPoint, GameScreen gameScreen, GameSetupScreen gameSetupScreen) {
         this.main = main;

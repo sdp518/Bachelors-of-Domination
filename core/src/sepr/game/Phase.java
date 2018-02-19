@@ -208,7 +208,7 @@ public abstract class Phase extends Stage {
         this.updatePhaseLabelColour();
     }
 
-    /**
+    /**MOVED FROM WIDGET FACTORY
      * creates a table containing the components to make up the top bar of the HUD
      *
      * @return the top bar of the HUD for the specified phase
