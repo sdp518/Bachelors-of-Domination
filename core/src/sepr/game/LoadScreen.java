@@ -91,6 +91,8 @@ public class LoadScreen implements Screen{
         this.isLoading = false;
         this.loadingWidgetDrawn = false;
 
+        this.fileName = null;
+
         this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
         this.stage.addActor(table);
@@ -269,7 +271,7 @@ public class LoadScreen implements Screen{
         loadButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                showLoadingWidget();
+                validateLoad();
             }
         });
 
@@ -308,6 +310,15 @@ public class LoadScreen implements Screen{
             })).colspan(2);
         }
 
+    }
+
+    private void validateLoad() {
+        if (fileName == null) {
+            DialogFactory.basicDialogBox("Error!", "No save selected", stage);
+        }
+        else {
+            showLoadingWidget();
+        }
     }
 
     /**
