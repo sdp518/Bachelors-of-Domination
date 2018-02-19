@@ -162,6 +162,14 @@ public class Main extends Game implements ApplicationListener {
 	}
 
 	/**
+	 *
+	 * @return the saveScreen of the game.
+	 */
+	public LoadScreen getSaveScreen() {
+		return this.saveScreen;
+	}
+
+	/**
 	 * Applies the players options preferences
 	 * Sets the
 	 *      Music Volume
