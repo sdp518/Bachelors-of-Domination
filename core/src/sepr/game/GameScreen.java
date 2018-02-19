@@ -98,6 +98,10 @@ public class GameScreen implements Screen, InputProcessor{
      */
     public void setupGame(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime, boolean allocateNeutralPlayer) {
         this.players = players;
+        Player neutral = null;
+        if (!allocateNeutralPlayer) {
+            neutral = this.players.remove(this.NEUTRAL_PLAYER_ID);
+        }
         this.turnOrder = new ArrayList<Integer>();
         for (Integer i : players.keySet()) {
             if (players.get(i).getPlayerType() != PlayerType.NEUTRAL_AI) { // don't add the neutral player to the turn order
@@ -111,6 +115,10 @@ public class GameScreen implements Screen, InputProcessor{
         this.maxTurnTime = maxTurnTime;
 
         this.map = new Map(this.players, allocateNeutralPlayer, main, this); // setup the game map and allocate the sectors
+
+        if (!allocateNeutralPlayer) {
+            this.players.put(this.NEUTRAL_PLAYER_ID, neutral);
+        }
 
         // create the game phases and add them to the phases hashmap
         this.phases = new HashMap<TurnPhaseType, Phase>();
@@ -350,7 +358,6 @@ public class GameScreen implements Screen, InputProcessor{
         if (currentPhase != TurnPhaseType.REINFORCEMENT) {
             this.phases.get(currentPhase).enterPhase(getCurrentPlayer()); // setup the new phase for the current player
         }
-        removeEliminatedPlayers(); // check no players have been eliminated
     }
 
     /**
@@ -379,7 +386,7 @@ public class GameScreen implements Screen, InputProcessor{
     /**
      * removes all players who have 0 sectors from the turn order
      */
-    private void removeEliminatedPlayers() {
+    protected void removeEliminatedPlayers() {
         List<Integer> playerIdsToRemove = new ArrayList<Integer>(); // list of players in the turn order who have 0 sectors
         for (Integer i : turnOrder) {
             boolean hasSector = false; // has a sector belonging to player i been found
@@ -406,7 +413,7 @@ public class GameScreen implements Screen, InputProcessor{
                 main.sounds.playSound("player_eliminated");
             DialogFactory.playersOutDialog(playerNames, phases.get(currentPhase)); // display which players have been eliminated
         }
-
+        System.out.println(isGameOver());
         if (isGameOver()) { // check if game is now over
             gameOver();
         }

@@ -226,8 +226,11 @@ public class Map {
             DialogFactory.sectorOwnerChangeDialog(attacker.getPlayerName(), neutral.getPlayerName(), sectors.get(attackingSectorId).getDisplayName(), stage, null);
             sectors.get(attackingSectorId).setOwner(neutral);
             if (sectors.get(defendingSectorId).getUnitsInSector() == 0) { // both players wiped each other out
-                DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(attackingSectorId).getDisplayName(), stage, null);
                 sectors.get(defendingSectorId).setOwner(neutral);
+                if (!this.checkAllPlayersHaveASector()) {
+                    return true;
+                }
+                DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(attackingSectorId).getDisplayName(), stage, null);
             }
 
         } else if (sectors.get(defendingSectorId).getUnitsInSector() == 0 && sectors.get(attackingSectorId).getUnitsInSector() > 1) { // territory conquered
@@ -238,13 +241,40 @@ public class Map {
 
             attacker.addTroopsToAllocate(sectors.get(defendingSectorId).getReinforcementsProvided());
             sectors.get(defendingSectorId).setOwner(attacker);
+            if (!this.checkAllPlayersHaveASector()) {
+                return true;
+            }
             DialogFactory.attackSuccessDialogBox(sectors.get(defendingSectorId).getReinforcementsProvided(), sectors.get(attackingSectorId).getUnitsInSector(), unitsToMove, defender.getPlayerName(), attacker.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage, gameScreen);
 
         } else if (sectors.get(defendingSectorId).getUnitsInSector() == 0 && sectors.get(attackingSectorId).getUnitsInSector() == 1) { // territory conquered but only one attacker remaining so can't move troops onto it
-            DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage, gameScreen);
             sectors.get(defendingSectorId).setOwner(neutral);
+            if (!this.checkAllPlayersHaveASector()) {
+                return true;
+            }
+            DialogFactory.sectorOwnerChangeDialog(defender.getPlayerName(), neutral.getPlayerName(), sectors.get(defendingSectorId).getDisplayName(), stage, gameScreen);
         }
         return true;
+    }
+
+    /**
+     * Used to know if a player has won the game.
+     * @return the boolean value signalling whether each player has at least 1 sector.
+     */
+    private boolean checkAllPlayersHaveASector() {
+        boolean hasSector = false; // has a sector belonging to player i been found
+        for (Integer i : gameScreen.getTurnOrder()) {
+            hasSector = false;
+            for (Integer j : this.getSectorIds()) {
+                if (this.getSectorById(j).getOwnerId() == i) {
+                    hasSector = true; // sector owned by player i found
+                    break; // only need one sector to remain in turn order so can break once one found
+                }
+            }
+            if (hasSector == false) {
+                break;
+            }
+        }
+        return hasSector;
     }
 
     /**
