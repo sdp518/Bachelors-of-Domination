@@ -266,7 +266,6 @@ public class LoadScreen implements Screen{
                         gameScreen.isGamePaused());
                 main.updateSaveScreen(new LoadScreen(main, EntryPoint.GAME_SCREEN, gameScreen, gameSetupScreen));
                 main.setSaveScreen();
-                System.out.println(saved);
                 if (saved) {
                     LoadScreen save = main.getSaveScreen();
                     DialogFactory.basicDialogBox("Save Successful", "The game has been successfully saved.", save.getStage());
