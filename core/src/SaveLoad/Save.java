@@ -1,5 +1,6 @@
 package SaveLoad;
 
+import sepr.game.DialogFactory;
 import sepr.game.Player;
 import sepr.game.Sector;
 import sepr.game.TurnPhaseType;
@@ -16,7 +17,7 @@ import java.util.List;
  * Starts by setting the file name, then writing the data object to file.
  */
 public class Save {
-    public static void saveGame(String fileName,
+    public static boolean saveGame(String fileName,
                                 TurnPhaseType currentPhase,
                                 HashMap<Integer, Sector> sectors,
                                 HashMap<Integer, Player> players,
@@ -42,6 +43,7 @@ public class Save {
                 turnTimeElapsed,
                 isPaused);
         ObjectOutputStream oos = null;
+        boolean saved = false;
         try {
             oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filePath)));
             oos.writeObject(thisSave);
@@ -53,7 +55,7 @@ public class Save {
             System.out.println("Sorry something went wrong! Try restarting the application."); //Not a good error message, need to mitigate this.
         } finally {
             if (oos != null) {
-                System.out.println("Save Successful");
+                saved = true;
                 try {
                     oos.close();
                 } catch (IOException e) {
@@ -61,5 +63,6 @@ public class Save {
                 }
             }
         }
+        return saved;
     }
 }

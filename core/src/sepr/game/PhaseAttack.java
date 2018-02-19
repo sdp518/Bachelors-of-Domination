@@ -108,6 +108,7 @@ public class PhaseAttack extends Phase{
         if (gameScreen.getMap().attackSector(attackingSector.getId(), defendingSector.getId(), attackersLost, defendersLost, gameScreen.getPlayerById(attackingSector.getOwnerId()), gameScreen.getPlayerById(defendingSector.getOwnerId()), gameScreen.getPlayerById(gameScreen.NEUTRAL_PLAYER_ID), this)) {
             updateTroopReinforcementLabel();
         }
+        gameScreen.removeEliminatedPlayers(); // check no players have been eliminated
     }
 
     /**

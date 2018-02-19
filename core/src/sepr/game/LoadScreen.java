@@ -41,7 +41,7 @@ public class LoadScreen implements Screen{
 
     private Texture selectSaveBox;
 
-    private String fileName;
+    private String fileName = null;
 
     private Stage loadingWidgetStage;
     private boolean isLoading;
@@ -91,8 +91,6 @@ public class LoadScreen implements Screen{
         this.isLoading = false;
         this.loadingWidgetDrawn = false;
 
-        this.fileName = null;
-
         this.stage.setViewport(new ScreenViewport());
         this.table = new Table();
         this.stage.addActor(table);
@@ -115,6 +113,33 @@ public class LoadScreen implements Screen{
         loadingWidgetStage.addActor(table);
     }
 
+    private Data loadDataForSaveSlots(String fileName) {
+        Path currentRelativePath = Paths.get("");
+        String currentWorkingDir = currentRelativePath.toAbsolutePath().toString();
+        String loadFileName = currentWorkingDir + "\\saves\\"+ fileName;
+        ObjectInputStream ois = null;
+        Data loadedSave = null;
+        try {
+            ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(loadFileName)));
+            loadedSave = (Data) ois.readObject();
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        return loadedSave;
+    }
+
     /**
      * sets up table displaying saves
      *
@@ -133,29 +158,7 @@ public class LoadScreen implements Screen{
         Table[] saveTables = new Table[] {new Table(), new Table(), new Table(), new Table()};
         List<Boolean> clickedTables = Arrays.asList(new Boolean[]{false,false,false,false});
         for (int i = 0; i < saveTables.length; i++) {
-            Path currentRelativePath = Paths.get("");
-            String currentWorkingDir = currentRelativePath.toAbsolutePath().toString();
-            String loadFileName = currentWorkingDir + "\\saves\\"+ i + ".data";
-            ObjectInputStream ois = null;
-            Data loadedSave = null;
-            try {
-                ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(loadFileName)));
-                loadedSave = (Data) ois.readObject();
-            } catch (FileNotFoundException e) {
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            } finally {
-                if (ois != null) {
-                    try {
-                        ois.close();
-                    } catch (IOException e) {
-                    }
-                }
-            }
+            Data loadedSave = this.loadDataForSaveSlots(i + ".data");
             if ((loadedSave == null) && (this.entryPoint == EntryPoint.MENU_SCREEN)) {
                 continue;
             }
@@ -251,7 +254,7 @@ public class LoadScreen implements Screen{
         saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Save.saveGame(fileName,
+                boolean saved = Save.saveGame(fileName,
                         gameScreen.getCurrentPhase(),
                         gameScreen.getSectors(),
                         gameScreen.getPlayers(),
@@ -263,6 +266,10 @@ public class LoadScreen implements Screen{
                         gameScreen.isGamePaused());
                 main.updateSaveScreen(new LoadScreen(main, EntryPoint.GAME_SCREEN, gameScreen, gameSetupScreen));
                 main.setSaveScreen();
+                if (saved) {
+                    LoadScreen save = main.getSaveScreen();
+                    DialogFactory.basicDialogBox("Save Successful", "The game has been successfully saved.", save.getStage());
+                }
             }
         });
 
@@ -271,7 +278,20 @@ public class LoadScreen implements Screen{
         loadButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                validateLoad();
+                if (fileName == null) {
+                    DialogFactory.basicDialogBox("Load Failure", "No save has been selected", stage);
+                } else {
+                    try {
+                        Data loadedSave = loadDataForSaveSlots(fileName);
+                        if (loadedSave != null) {
+                            showLoadingWidget();
+                        } else {
+                            DialogFactory.basicDialogBox("Load Failure", "There is no save game to load in that slot.", stage);
+                        }
+                    } catch (Exception e) {
+                        DialogFactory.basicDialogBox("Load Failure", "There is no save game to load in that slot.", stage);
+                    }
+                }
             }
         });
 
@@ -312,13 +332,12 @@ public class LoadScreen implements Screen{
 
     }
 
-    private void validateLoad() {
-        if (fileName == null) {
-            DialogFactory.basicDialogBox("Error!", "No save selected", stage);
-        }
-        else {
-            showLoadingWidget();
-        }
+    /**
+     *
+     * @return the stage of the current screen.
+     */
+    public Stage getStage() {
+        return this.stage;
     }
 
     /**
@@ -339,7 +358,7 @@ public class LoadScreen implements Screen{
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
-                System.out.println("Load Unsuccessful");
+                DialogFactory.basicDialogBox("Load Failure","Load has been Unsuccessful", stage);
             }
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
