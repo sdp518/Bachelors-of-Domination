@@ -11,7 +11,7 @@ import java.util.HashMap;
 //  TODO Add classes to packages
 
 /**
- * executable http://www.riskydevelopments.co.uk/bod/BoD.zip
+ * executable http://sidmeiers.me/documents/code/BachelorsOfDomination2.0.zip
  *
  * main game class used for controlling what screen is currently being displayed
  */
