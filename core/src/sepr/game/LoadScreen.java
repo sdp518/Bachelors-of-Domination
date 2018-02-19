@@ -41,7 +41,7 @@ public class LoadScreen implements Screen{
 
     private Texture selectSaveBox;
 
-    private String fileName;
+    private String fileName = null;
 
     private Stage loadingWidgetStage;
     private boolean isLoading;
@@ -269,7 +269,11 @@ public class LoadScreen implements Screen{
         loadButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                showLoadingWidget();
+                if (fileName == null) {
+                    DialogFactory.basicDialogBox("Load Failure", "No save has been selected", stage);
+                } else {
+                    showLoadingWidget();
+                }
             }
         });
 
@@ -328,7 +332,7 @@ public class LoadScreen implements Screen{
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
-                System.out.println("Load Unsuccessful");
+                DialogFactory.basicDialogBox("Load Failure","Load has been Unsuccessful", stage);
             }
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
