@@ -131,6 +131,7 @@ public class DialogFactory {
         dialog.button("Yes", "1");
         dialog.button("No", "0");
         dialog.show(stage);
+        dialog.setPosition((Gdx.graphics.getWidth()/2)-dialog.getWidth()/2, ((Gdx.graphics.getHeight()/2)-dialog.getHeight()/2)-300); // Not a nice fix but doesn't display correctly otherwise
     }
 
     /**
