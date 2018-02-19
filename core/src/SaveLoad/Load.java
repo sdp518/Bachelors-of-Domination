@@ -1,9 +1,7 @@
 package SaveLoad;
 
-import sepr.game.GameScreen;
-import sepr.game.Main;
-import sepr.game.Player;
-import sepr.game.TurnPhaseType;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import sepr.game.*;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -64,13 +62,13 @@ public class Load {
             gameScreen.updateBonus();
             gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());
             if (loadedSave.isTurnTimerEnabled()) {
-                System.out.println("On load: " + loadedSave.getTurnTimeElapsed() / 1000);
                 gameScreen.setTurnTimeStart(System.currentTimeMillis() - loadedSave.getTurnTimeElapsed());
             }
             main.returnGameScreen();
             gameScreen.getPhases().get(gameScreen.getCurrentPhase()).enterPhase(gameScreen.getCurrentPlayer());
             gameScreen.resetPausedTime(); // To reset pausedTime to 0 now load is finished
-            System.out.println("Load Successful");
+            Stage stage = main.getSaveScreen().getStage();
+            DialogFactory.basicDialogBox("Load Successful", "The game has been loaded successfully.", stage);
         } else {
             throw new IOException("Load Error");
         }

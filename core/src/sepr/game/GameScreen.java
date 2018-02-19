@@ -170,7 +170,6 @@ public class GameScreen implements Screen, InputProcessor{
      * @return time remaining in turn in seconds
      */
     private int getTurnTimeRemaining(){
-        //System.out.println(getTurnTimeElapsed());
         return maxTurnTime - (int)((System.currentTimeMillis() - (turnTimeStart + pausedTime)) / 1000);
     }
 
@@ -413,7 +412,6 @@ public class GameScreen implements Screen, InputProcessor{
                 main.sounds.playSound("player_eliminated");
             DialogFactory.playersOutDialog(playerNames, phases.get(currentPhase)); // display which players have been eliminated
         }
-        System.out.println(isGameOver());
         if (isGameOver()) { // check if game is now over
             gameOver();
         }
