@@ -29,9 +29,6 @@ public class Save {
                                 boolean isPaused) {
         Path currentRelativePath = Paths.get("");
         String currentWorkingDir = currentRelativePath.toAbsolutePath().toString();
-        if (!currentWorkingDir.contains("assets")) {
-            currentWorkingDir += "\\assets";
-        }
         String filePath = currentWorkingDir + "\\saves\\" + fileName;
         Data thisSave = new Data(currentPhase,
                 sectors,

@@ -22,7 +22,6 @@ public class Load {
         ObjectInputStream ois = null;
         Data loadedSave = null;
         try {
-            int test;
             ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filePath)));
             loadedSave = (Data) ois.readObject();
         } catch (FileNotFoundException e) {
@@ -45,6 +44,7 @@ public class Load {
         }
         if (loadedSave != null) {
             HashMap<Integer, Player> players = loadedSave.getFullPlayers();
+            players.put(4, Player.createNeutralPlayer(4));
             boolean allocateNeutralPlayer = false;
             if (players.keySet().contains(4)) {
                 allocateNeutralPlayer = true;
@@ -57,7 +57,7 @@ public class Load {
             gameScreen.setTurnOrder(loadedSave.getTurnOrder());
             gameScreen.setCurrentPlayerPointer(loadedSave.getCurrentPlayerPointer());
             if (loadedSave.getCurrentPhase() == TurnPhaseType.REINFORCEMENT) {
-                gameScreen.getCurrentPlayer().addTroopsToAllocate(-5);
+                gameScreen.getCurrentPlayer().addTroopsToAllocate(-3);
             }
             gameScreen.updateBonus();
             gameScreen.setCurrentPhase(loadedSave.getCurrentPhase());

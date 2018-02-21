@@ -23,6 +23,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -254,10 +255,14 @@ public class LoadScreen implements Screen{
         saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                HashMap<Integer, Player> players = gameScreen.getPlayers();
+                if (!main.getAllocateNeutralPlayer()) {
+                    players.remove(4);
+                }
                 boolean saved = Save.saveGame(fileName,
                         gameScreen.getCurrentPhase(),
                         gameScreen.getSectors(),
-                        gameScreen.getPlayers(),
+                        players,
                         gameScreen.getTurnOrder(),
                         gameScreen.getCurrentPlayerPointer(),
                         gameScreen.isTurnTimerEnabled(),
@@ -270,6 +275,7 @@ public class LoadScreen implements Screen{
                     LoadScreen save = main.getSaveScreen();
                     DialogFactory.basicDialogBox("Save Successful", "The game has been successfully saved.", save.getStage());
                 }
+                players.put(4, Player.createNeutralPlayer(4));
             }
         });
 

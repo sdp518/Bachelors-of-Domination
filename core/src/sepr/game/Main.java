@@ -25,6 +25,8 @@ public class Main extends Game implements ApplicationListener {
 	private LoadScreen saveScreen;
 	public  Sounds sounds;
 
+	private boolean allocateNeutralPlayer;
+
 
 	/**
 	 * Setup the screens and set the first screen as the menu
@@ -89,10 +91,15 @@ public class Main extends Game implements ApplicationListener {
 	 * @param allocateNeutralPlayer should the neutral player be given sectors to start with
 	 */
 	public void setGameScreen(HashMap<Integer, Player> players, boolean turnTimerEnabled, int maxTurnTime, boolean allocateNeutralPlayer) {
+		this.allocateNeutralPlayer = allocateNeutralPlayer;
 		gameScreen.setupGame(players, turnTimerEnabled, maxTurnTime, allocateNeutralPlayer);
 		this.saveScreen = new LoadScreen(this, EntryPoint.GAME_SCREEN, this.gameScreen, this.gameSetupScreen);
 		this.setScreen(gameScreen);
 		gameScreen.startGame();
+	}
+
+	public boolean getAllocateNeutralPlayer() {
+		return this.allocateNeutralPlayer;
 	}
 
 	/**
